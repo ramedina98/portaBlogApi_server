@@ -3,7 +3,7 @@
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
-import IUser from "../../interfaces/IUser";
+import { IUser } from "../../interfaces/IUser";
 
 interface UserCreationAttributes extends Optional<IUser, 'id_user'>{}
 

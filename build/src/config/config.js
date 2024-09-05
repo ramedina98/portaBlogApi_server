@@ -20,5 +20,7 @@ exports.SERVER = {
     PORT: process.env.DB_PORT,
     HOST: process.env.DB_HOST,
     MONGO_URI: process.env.MONGO_URI,
-    SERVER_PORT: process.env.PORT_TS_SERVER
+    SERVER_PORT: process.env.PORT_TS_SERVER,
+    KEY: process.env.KEY_JWT,
+    TIME: process.env.EXPIRES_TIME,
 };

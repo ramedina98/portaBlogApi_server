@@ -10,5 +10,7 @@ declare namespace NodeJS{
         DB_PORT: string;
         MONGO_URI: string;
         PORT_TS_SERVER: string;
+        KEY_JWT: string;
+        EXPIRES_TIME: string;
     }
 }

@@ -1,5 +1,5 @@
 // This is the user Interfaces...
-export default interface IUser {
+interface IUser {
     id_user: string;
     name1?: string;
     name2?: string;
@@ -9,3 +9,10 @@ export default interface IUser {
     passwrd?: string;
     photo?: Buffer;
 }
+
+interface IUserLogin {
+    id_user: string;
+    jwt: string;
+}
+
+export { IUser, IUserLogin }
