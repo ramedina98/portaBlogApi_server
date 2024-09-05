@@ -19,7 +19,7 @@ exports.mongoConnect = exports.sequelizeMysql = void 0;
 const sequelize_1 = require("sequelize");
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = require("./config");
-require("./config/logging");
+const logging_1 = __importDefault(require("./logging"));
 // MySQL db connection configuration using sequelize...
 const sequelizeMysql = new sequelize_1.Sequelize(config_1.SERVER.NAME, config_1.SERVER.USER, config_1.SERVER.PASWORD, {
     host: config_1.SERVER.HOST,
@@ -32,12 +32,12 @@ exports.sequelizeMysql = sequelizeMysql;
 const mongoConnect = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(config_1.SERVER.MONGO_URI);
-        logging.info('----------------------------------------------');
-        logging.info('Connect to Mongodb');
-        logging.info('----------------------------------------------');
+        logging_1.default.info('----------------------------------------------');
+        logging_1.default.info('Connect to Mongodb');
+        logging_1.default.info('----------------------------------------------');
     }
     catch (error) {
-        logging.error('Mongodb connection error: ' + error.message);
+        logging_1.default.error('Mongodb connection error: ' + error.message);
         process.exit(1);
     }
 });

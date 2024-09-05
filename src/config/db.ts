@@ -4,7 +4,7 @@
 import { Sequelize } from "sequelize";
 import mongoose from 'mongoose';
 import { SERVER } from "./config";
-import './config/logging';
+import logging from "./logging";
 
 // MySQL db connection configuration using sequelize...
 const sequelizeMysql = new Sequelize(

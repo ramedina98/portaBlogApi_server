@@ -1,6 +1,6 @@
 import app from "./app";
 import { SERVER } from "./config/config";
-import './config/logging';
+import logging from "./config/logging";
 
 // set the por from enviroment variables or default to 3000...
 const PORT: any = process.env.PORT || SERVER.SERVER_PORT;
