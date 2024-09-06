@@ -11,7 +11,7 @@ import { IUser, IUserLogin } from "../interfaces/IUser";
 import { IJwtPayload } from '../interfaces/IJwtPayload';
 import { generateJwToken } from '../utils/jwtUtils';
 
-// this service helps us to login the users (or not)...
+// (GET) this service helps us to login the users (or not)...
 const loginUser = async (email:string, password:string): Promise<IUserLogin | null> => {
     try{
         const user = await User.findOne({ where: { email }});
@@ -53,7 +53,7 @@ const loginUser = async (email:string, password:string): Promise<IUserLogin | nu
     }
 }
 
-// this service helps us to get the data of a user...
+// (GET) this service helps us to get the data of a user...
 const getUserData = async (id_user: string): Promise<IUser | null> => {
     try {
         // search for the user...
@@ -71,4 +71,34 @@ const getUserData = async (id_user: string): Promise<IUser | null> => {
     }
 }
 
-export { loginUser, getUserData };
+// (PUT) This service helps us to edit information...
+// TODO: Verificar si necesita ser setida de un tipo en especifico la funcion...
+const EditUserInfo = async (id_user: string, data: IUser): Promise<string | null> => {
+    try {
+        // search for the correct user and edit its info...
+        const response: any = await User.update({
+            name1: data.name1,
+            name2: data.name2,
+            surname: data.surname,
+            phone: data.phone,
+            email: data.email,
+            passwrd: data.passwrd,
+            photo: data.photo
+        }, {
+            where: { id_user }
+        });
+
+        if(response === 0){
+            logging.error('No records were updated. User may not exist or no changes were made.');
+            return null;
+        }
+
+        return 'User updated successfully';
+
+    } catch (error: any) {
+        logging.error('Error fetching de user data: ' + error.message);
+        throw error;
+    }
+}
+
+export { loginUser, getUserData, EditUserInfo};

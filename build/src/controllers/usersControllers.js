@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.loginSession = void 0;
+exports.putUpdatedUserInfo = exports.getUser = exports.loginSession = void 0;
 const usersServices_1 = require("../services/usersServices");
+// login Controller...
 const loginSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
@@ -22,6 +23,7 @@ const loginSession = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.loginSession = loginSession;
+// this controller helps us to search a user...
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_user } = req.body;
     try {
@@ -33,3 +35,17 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
+// this controller helps us to update the data of a specific user...
+const putUpdatedUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // this is an object with all the required data...
+    const { id_user, userData } = req.body;
+    try {
+        const response = yield (0, usersServices_1.EditUserInfo)(id_user, userData);
+        // response has to be (User updated successfully.): string
+        res.status(200).json({ message: response });
+    }
+    catch (error) {
+        res.status(401).json({ message: error.message });
+    }
+});
+exports.putUpdatedUserInfo = putUpdatedUserInfo;

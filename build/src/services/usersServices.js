@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserData = exports.loginUser = void 0;
+exports.EditUserInfo = exports.getUserData = exports.loginUser = void 0;
 /**
  * Here we have all the required services for users
  * 1. Get all the data.
@@ -23,7 +23,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const usersModel_1 = __importDefault(require("../models/mysql/usersModel"));
 const logging_1 = __importDefault(require("../config/logging"));
 const jwtUtils_1 = require("../utils/jwtUtils");
-// this service helps us to login the users (or not)...
+// (GET) this service helps us to login the users (or not)...
 const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield usersModel_1.default.findOne({ where: { email } });
@@ -58,7 +58,7 @@ const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.loginUser = loginUser;
-// this service helps us to get the data of a user...
+// (GET) this service helps us to get the data of a user...
 const getUserData = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // search for the user...
@@ -75,3 +75,31 @@ const getUserData = (id_user) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.getUserData = getUserData;
+// (PUT) This service helps us to edit information...
+// TODO: Verificar si necesita ser setida de un tipo en especifico la funcion...
+const EditUserInfo = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // search for the correct user and edit its info...
+        const response = yield usersModel_1.default.update({
+            name1: data.name1,
+            name2: data.name2,
+            surname: data.surname,
+            phone: data.phone,
+            email: data.email,
+            passwrd: data.passwrd,
+            photo: data.photo
+        }, {
+            where: { id_user }
+        });
+        if (response === 0) {
+            logging_1.default.error('No records were updated. User may not exist or no changes were made.');
+            return null;
+        }
+        return 'User updated successfully';
+    }
+    catch (error) {
+        logging_1.default.error('Error fetching de user data: ' + error.message);
+        throw error;
+    }
+});
+exports.EditUserInfo = EditUserInfo;

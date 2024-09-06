@@ -6,4 +6,6 @@ const usersControllers_1 = require("../controllers/usersControllers");
 const userRoutes = (0, express_1.Router)();
 userRoutes.get('/login', usersControllers_1.loginSession);
 userRoutes.get('/userinfo', usersControllers_1.getUser);
+// TODO: hacer pruebas de este endpoint...
+userRoutes.put('/updateuserinfo', usersControllers_1.putUpdatedUserInfo);
 exports.default = userRoutes;
