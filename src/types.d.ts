@@ -12,5 +12,6 @@ declare namespace NodeJS{
         PORT_TS_SERVER: string;
         KEY_JWT: string;
         EXPIRES_TIME: string;
+        ENCRYPT_ROUNDS: string;
     }
 }

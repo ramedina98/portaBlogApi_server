@@ -20,4 +20,5 @@ export const SERVER = {
     SERVER_PORT: process.env.PORT_TS_SERVER,
     KEY: process.env.KEY_JWT,
     TIME: process.env.EXPIRES_TIME,
+    SET_ROUNDS: Number(process.env.ENCRYPT_ROUNDS),
 }

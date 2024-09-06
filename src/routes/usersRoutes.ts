@@ -6,7 +6,6 @@ const userRoutes = Router();
 
 userRoutes.get('/login', loginSession);
 userRoutes.get('/userinfo', getUser);
-// TODO: hacer pruebas de este endpoint...
 userRoutes.put('/updateuserinfo', putUpdatedUserInfo);
 
 export default userRoutes;
