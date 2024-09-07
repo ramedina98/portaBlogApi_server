@@ -18,7 +18,7 @@ const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(200).json({ message: 'Successfully obtained', emails });
     }
     catch (error) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AllEmailsResponse = AllEmailsResponse;
@@ -29,7 +29,7 @@ const AllEmailsSentResponse = (_req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(200).json({ message: 'Successfully obtained', emailSend });
     }
     catch (error) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AllEmailsSentResponse = AllEmailsSentResponse;
@@ -41,7 +41,7 @@ const AnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(200).json({ message: 'Successfully obtained', email });
     }
     catch (error) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AnEmailResponse = AnEmailResponse;

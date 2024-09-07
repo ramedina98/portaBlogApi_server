@@ -8,7 +8,7 @@ import { Emails, EmailType } from "../../interfaces/IEmails";
 interface EmailsAtributtes extends Optional<Emails, 'id_email'>{}
 
 class Email extends Model <Emails, EmailsAtributtes>{
-    id_emails!: number;
+    id_emails!: string;
     email_sender!: string;
     name_sender!: string;
     email_recipient!: string;

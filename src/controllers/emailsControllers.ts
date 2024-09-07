@@ -9,7 +9,7 @@ const AllEmailsResponse = async (_req: Request, res: Response) => {
         const emails: Emails[] | null = await AllEmails();
         res.status(200).json({ message: 'Successfully obtained', emails });
     } catch (error: any) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 }
 
@@ -19,7 +19,7 @@ const AllEmailsSentResponse = async (_req:Request, res: Response) => {
         const emailSend: Emails[] | null = await AllEmailsSent();
         res.status(200).json({ message: 'Successfully obtained', emailSend });
     } catch (error: any) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 }
 
@@ -31,7 +31,7 @@ const AnEmailResponse = async (req: Request, res: Response) => {
         const email: Emails | null = await AnEmail(id_email);
         res.status(200).json({ message: 'Successfully obtained', email});
     } catch (error: any) {
-        res.status(401).json({ message: error.message});
+        res.status(401).json({ message: 'Internal server error: ' + error.message});
     }
 }
 

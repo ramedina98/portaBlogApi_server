@@ -10,7 +10,7 @@ const loginSession = async (req:Request, res: Response) => {
         const login = await loginUser(email, password);
         res.status(200).json({ message: 'Successful login', login });
     } catch (error: any) {
-        res.status(401).json({ message: error.message })
+        res.status(401).json({ message: 'Internal server error: ' + error.message })
     }
 }
 
@@ -22,7 +22,7 @@ const getUser = async (req: Request, res: Response) => {
         const user = await getUserData(id_user);
         res.status(200).json({ message: 'User found', user })
     } catch (error: any) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 }
 
@@ -36,7 +36,7 @@ const putUpdatedUserInfo = async (req: Request, res:Response) => {
         // response has to be (User updated successfully.): string
         res.status(200).json({ message: response });
     } catch (error: any) {
-        res.status(401).json({ message: error.message });
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 }
 

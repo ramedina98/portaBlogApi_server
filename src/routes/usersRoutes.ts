@@ -6,6 +6,6 @@ const userRoutes = Router();
 
 userRoutes.get('/login', loginSession);
 userRoutes.get('/userinfo', getUser);
-userRoutes.put('/updateuserinfo', putUpdatedUserInfo);
+userRoutes.put('/updateuser', putUpdatedUserInfo);
 
 export default userRoutes;
