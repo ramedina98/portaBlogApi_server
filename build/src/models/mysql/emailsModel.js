@@ -12,7 +12,7 @@ class Email extends sequelize_1.Model {
 exports.Email = Email;
 Email.init({
     id_email: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.CHAR(36),
         primaryKey: true
     },
     email_sender: {

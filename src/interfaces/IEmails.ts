@@ -6,7 +6,7 @@ enum EmailType {
 }
 
 interface Emails {
-    id_email: number;
+    id_email: string;
     email_sender: string;
     name_sender: string;
     email_recipient: string;

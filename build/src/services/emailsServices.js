@@ -25,7 +25,6 @@ exports.AllEmails = void 0;
  */
 const emailsModel_1 = require("../models/mysql/emailsModel");
 const logging_1 = __importDefault(require("../config/logging"));
-const encryptedIDs_1 = require("../utils/encryptedIDs");
 // (GET) This service helps me to get all the records from the emails table...
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -34,22 +33,7 @@ const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
             logging_1.default.error('No emails found');
             return null;
         }
-        // Use map to iterate over the array of emails...
-        const newEmailsArray = yield Promise.all(emails.map((email) => __awaiter(void 0, void 0, void 0, function* () {
-            // encrypt the id_emails by converting it to a string and using this function...
-            const encryptedId = yield (0, encryptedIDs_1.encryptedElemen)(email.id_email.toString());
-            // return a new object with the encrypted id and keep the rest unchanged...
-            return {
-                id_email: encryptedId,
-                email_sender: email.email_sender,
-                name_sender: email.name_sender,
-                email_recipient: email.email_recipient,
-                message: email.message,
-                date_message: email.date_message,
-                email_type: email.email_type
-            };
-        })));
-        return newEmailsArray;
+        return emails;
     }
     catch (error) {
         logging_1.default.error('Error: ' + error.message);

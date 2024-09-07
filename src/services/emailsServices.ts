@@ -11,12 +11,9 @@
 import { Email } from "../models/mysql/emailsModel";
 import logging from "../config/logging";
 import { Emails } from "../interfaces/IEmails";
-import { encryptedElemen } from "../utils/encryptedIDs";
 
-// I Create a new type where the `id_emails` field is a string instead of a number...
-type EmailsWithEncryptedId = Omit<Emails, 'id_email'> & { id_email: string};
 // (GET) This service helps me to get all the records from the emails table...
-const AllEmails = async (): Promise<EmailsWithEncryptedId[] | null> => {
+const AllEmails = async (): Promise<Emails[] | null> => {
     try {
         const emails: any[] = await Email.findAll();
 
@@ -25,24 +22,7 @@ const AllEmails = async (): Promise<EmailsWithEncryptedId[] | null> => {
             return null;
         }
 
-        // Use map to iterate over the array of emails...
-        const newEmailsArray: EmailsWithEncryptedId[] = await Promise.all(emails.map(async (email) => {
-            // encrypt the id_emails by converting it to a string and using this function...
-            const encryptedId = await encryptedElemen(email.id_email.toString());
-
-            // return a new object with the encrypted id and keep the rest unchanged...
-            return {
-                id_email:encryptedId,
-                email_sender: email.email_sender,
-                name_sender: email.name_sender,
-                email_recipient: email.email_recipient,
-                message: email.message,
-                date_message: email.date_message,
-                email_type: email.email_type
-            };
-        }))
-
-        return newEmailsArray;
+        return emails;
 
     } catch (error: any) {
         logging.error('Error: ' + error.message);

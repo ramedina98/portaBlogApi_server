@@ -19,7 +19,7 @@ class Email extends Model <Emails, EmailsAtributtes>{
 
 Email.init({
     id_email: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.CHAR(36),
         primaryKey: true
     },
     email_sender: {
