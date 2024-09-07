@@ -1,9 +1,9 @@
 // we have all the emails controllers here...
 import { Request, Response } from "express";
-import { AllEmails } from "../services/emailsServices";
+import { AllEmails, AllEmailsSent, AnEmail } from "../services/emailsServices";
 import { Emails } from "../interfaces/IEmails";
 
-// All emails controller...
+// All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = async (_req: Request, res: Response) => {
     try {
         const emails: Emails[] | null = await AllEmails();
@@ -13,4 +13,26 @@ const AllEmailsResponse = async (_req: Request, res: Response) => {
     }
 }
 
-export { AllEmailsResponse };
+// All the emails that its type is 'response' controller...
+const AllEmailsSentResponse = async (_req:Request, res: Response) => {
+    try {
+        const emailSend: Emails[] | null = await AllEmailsSent();
+        res.status(200).json({ message: 'Successfully obtained', emailSend });
+    } catch (error: any) {
+        res.status(401).json({ message: error.message });
+    }
+}
+
+// An specific email by its id...
+const AnEmailResponse = async (req: Request, res: Response) => {
+    try {
+        const { id_email } = req.params;
+
+        const email: Emails | null = await AnEmail(id_email);
+        res.status(200).json({ message: 'Successfully obtained', email});
+    } catch (error: any) {
+        res.status(401).json({ message: error.message});
+    }
+}
+
+export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse };

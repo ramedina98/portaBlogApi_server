@@ -2,7 +2,8 @@ enum EmailType {
     Work = 'work',
     Opinion = 'opinion',
     Greetings = 'greetings',
-    ErrorReport = 'error_report'
+    ErrorReport = 'error_report',
+    Response = 'response'
 }
 
 interface Emails {

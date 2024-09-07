@@ -7,4 +7,5 @@ var EmailType;
     EmailType["Opinion"] = "opinion";
     EmailType["Greetings"] = "greetings";
     EmailType["ErrorReport"] = "error_report";
+    EmailType["Response"] = "response";
 })(EmailType || (exports.EmailType = EmailType = {}));

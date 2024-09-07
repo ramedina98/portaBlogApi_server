@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AllEmailsResponse = void 0;
+exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
-// All emails controller...
+// All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const emails = yield (0, emailsServices_1.AllEmails)();
@@ -22,3 +22,26 @@ const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.AllEmailsResponse = AllEmailsResponse;
+// All the emails that its type is 'response' controller...
+const AllEmailsSentResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const emailSend = yield (0, emailsServices_1.AllEmailsSent)();
+        res.status(200).json({ message: 'Successfully obtained', emailSend });
+    }
+    catch (error) {
+        res.status(401).json({ message: error.message });
+    }
+});
+exports.AllEmailsSentResponse = AllEmailsSentResponse;
+// An specific email by its id...
+const AnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_email } = req.params;
+        const email = yield (0, emailsServices_1.AnEmail)(id_email);
+        res.status(200).json({ message: 'Successfully obtained', email });
+    }
+    catch (error) {
+        res.status(401).json({ message: error.message });
+    }
+});
+exports.AnEmailResponse = AnEmailResponse;
