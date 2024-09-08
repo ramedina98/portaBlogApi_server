@@ -1,5 +1,6 @@
 import app from "./app";
 import { SERVER } from "./config/config";
+import "./webSocketServer"; // file that configurates the websocket server...
 import logging from "./config/logging";
 
 // set the por from enviroment variables or default to 3000...

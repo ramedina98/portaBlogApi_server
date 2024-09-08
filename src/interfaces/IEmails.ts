@@ -16,4 +16,22 @@ interface Emails {
     email_type: EmailType;
 }
 
-export { Emails, EmailType }
+interface EmailBaseMethods {
+    send(): Promise<void>;
+}
+
+interface IEFactory{
+    id_email: string;
+    name: string;
+    email: string;
+    tz: string;
+}
+
+interface MailOptions {
+    from: string;
+    to: string;
+    subject: string;
+    html: string;
+}
+
+export { Emails, EmailType, EmailBaseMethods, IEFactory, MailOptions }

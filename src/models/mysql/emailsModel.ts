@@ -19,7 +19,8 @@ class Email extends Model <Emails, EmailsAtributtes>{
 
 Email.init({
     id_email: {
-        type: DataTypes.CHAR(36),
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
     email_sender: {

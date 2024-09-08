@@ -13,5 +13,11 @@ declare namespace NodeJS{
         KEY_JWT: string;
         EXPIRES_TIME: string;
         ENCRYPT_ROUNDS: string;
+        EMAIL_HOST: string;
+        EMAIL_PORT: string;
+        EMAIL_USER: string;
+        EMAIL_PASS: string;
+        WEB: string;
+        EAMIL_BLOGPORT: string;
     }
 }

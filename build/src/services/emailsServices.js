@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * Here we have all the required services for handle the emails...
  * 1. Get on by its id...
@@ -26,6 +26,7 @@ exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 const sequelize_1 = require("sequelize");
 const emailsModel_1 = require("../models/mysql/emailsModel");
 const logging_1 = __importDefault(require("../config/logging"));
+const webSocketServer_1 = require("../webSocketServer");
 // (GET) This service helps me to get all the records from the emails table that I recived...
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -88,3 +89,31 @@ const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.AnEmail = AnEmail;
+;
+/**
+ * TODO: AVISO IMPORTANTE
+ * hay que agregarle la logica para que dicho correo llegue tambien a mi correo designado y
+ * le llegue al usuario un correo agradeciendole por querer ponerse en contacto...
+*/
+const insertEmail = (emailData) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const newEmail = yield emailsModel_1.Email.create(emailData);
+        // notify connected clients to the websocket...
+        webSocketServer_1.wss.clients.forEach((client) => {
+            if (client.readyState === 1) { // cliente conectado...
+                client.send(JSON.stringify({
+                    message: 'New emails received.',
+                    email: newEmail,
+                }));
+            }
+        });
+        //AGRADECER AL CLIENTE... (crear un html perfecto y personalizar el mensaje, nombre y el idioma...)
+        // ENVIARME UN CORREO PARA AVISARME DE DICHO CORREO.. (con un link para ir al apartado...)
+        return 'Sent successfully';
+    }
+    catch (error) {
+        logging_1.default.error('Error: ' + error.message);
+        throw error;
+    }
+});
+exports.insertEmail = insertEmail;

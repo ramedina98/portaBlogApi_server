@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
 // All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,3 +45,15 @@ const AnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.AnEmailResponse = AnEmailResponse;
+// this is the controller that hepls me to insert new emails into the email's table...
+const insertEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email_data } = req.body;
+        const email = yield (0, emailsServices_1.insertEmail)(email_data);
+        res.status(200).json({ message: email });
+    }
+    catch (error) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.insertEmailResponse = insertEmailResponse;

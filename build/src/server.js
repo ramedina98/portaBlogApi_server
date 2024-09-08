@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const config_1 = require("./config/config");
+require("./webSocketServer"); // file that configurates the websocket server...
 const logging_1 = __importDefault(require("./config/logging"));
 // set the por from enviroment variables or default to 3000...
 const PORT = process.env.PORT || config_1.SERVER.SERVER_PORT;
