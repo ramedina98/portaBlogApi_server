@@ -7,15 +7,18 @@
  */
 import { GreetingEmail } from "./GreetingEmail";
 import { OpinionEmails } from "./OpinionEmail";
+import { WorkEmail } from "./WorkEmail";
 import { IEFactory } from "../interfaces/IEmails";
 
 class EmailFactory {
-    static CreateEmail(type: string, opinion: IEFactory): object | null{
+    static CreateEmail(type: string, option: IEFactory): object | null{
         switch(type){
             case 'greetings':
-                return new GreetingEmail(opinion.name, opinion.email, opinion.tz);
+                return new GreetingEmail(option.name, option.email, option.tz);
             case 'opinion':
-                return new OpinionEmails(opinion.name, opinion.email, opinion.id_email);
+                return new OpinionEmails(option.name, option.email, option.id_email);
+            case 'work':
+                return new WorkEmail(option.name, option.email, option.tz, option.id_email);
         }
         return null;
     }

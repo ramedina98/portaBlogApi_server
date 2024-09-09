@@ -12,17 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OpinionEmails = void 0;
+exports.WorkEmail = void 0;
 const randomenizer_1 = require("../utils/randomenizer");
 const emailSender_1 = require("../utils/emailSender");
+const timeOfDay_1 = require("../utils/timeOfDay");
 const config_1 = require("../config/config");
 const logging_1 = __importDefault(require("../config/logging"));
-class OpinionEmails {
-    constructor(name, email, id_email) {
+class WorkEmail {
+    constructor(name, email, tz, id_email) {
         this.name = name;
         this.email = email;
+        this.tz = tz;
         this.id_email = id_email;
     }
+    // function to handle the info log...
     logsInfo(response) {
         logging_1.default.info('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
         logging_1.default.info('Email sent successfully.');
@@ -32,51 +35,50 @@ class OpinionEmails {
         logging_1.default.info('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
     }
     correctMessage() {
-        // a randome number is generated between 0 - 4...
-        const option = (0, randomenizer_1.generateRandomNumber)(0, 4);
+        // a randome number is generated between 0 - 5...
+        const option = (0, randomenizer_1.generateRandomNumber)(0, 5);
         // this array contains the answers...
         const answers = [
-            `Hello ${this.name}, thank you so much for sharing your opinion. Your feedback is incredibly valuable and helps me improve continuously.`,
-            `Hi ${this.name}, I appreciate you taking the time to provide your thoughts. Every piece of feedback contributes to my growth as a writer and engineer.`,
-            `Greetings ${this.name}, your insights are greatly appreciated. They allow me to reflect and improve both my writing and programming skills. Thank you!`,
-            `Hello ${this.name}, I truly value your feedback. It’s through opinions like yours that I can continue to evolve and deliver better content and solutions.`,
-            `Hi ${this.name}, thank you for your thoughtful input. I’m always striving to improve, and your feedback plays a key role in helping me become a better developer and creator.`
+            `Hi ${this.name}, thank you so much for considering me for your project. I'm confident that my skills and experience can contribute to making it a success. I’ll get back to you as soon as possible!`,
+            `Hello ${this.name}, I greatly appreciate your message and your interest in working together. I’m excited about the opportunity and I’m confident that I can help achieve great results. I'll be in touch soon!`,
+            `Hi ${this.name}, thanks for reaching out! Your proposal sounds interesting, and I’m eager to explore how we can work together to make your project successful. I’ll respond shortly with more details.`,
+            `Hello ${this.name}, I’m thrilled by the opportunity you've presented. I truly believe I can add value to your project or team and am excited to discuss further. I'll reply soon with more information.`,
+            `Hi ${this.name}, I appreciate your interest in my services! I’m confident I can be the right fit to help your project succeed. I’ll be reviewing your message and will respond shortly.`,
+            `Good ${(0, timeOfDay_1.determineTimeTimeOfDay)(this.tz)}, ${this.name}! Thank you for considering me for this opportunity. I'm excited to explore how I can help make your project a success. I'll get back to you shortly!`
         ];
         return answers[option];
     }
     messageForMe() {
         return `
-            <h2>El usuario ${this.name} ha dejado un comentario en tu sitio web.</h2>
+            <h2>${this.name} esta interesado en colaborar contigo.</h2>
             <p>
-                Deberías hecharle un vistazo, y si gustas ponerte en contacto con el para
-                agradecerle personalmente su feedback.
+                Hay una oferta laboral que deberías revisar lo antes posible, ${this.name} tiene algo
+                interesante entre manos, ponte en contacto lo antes posible.
                 <br>
                 Este es su correo: ${this.email}
-                Link al comentario: ${config_1.SERVER.WEB}/inbox/${this.id_email}
+                Propuesta laboral: ${config_1.SERVER.WEB}/inbox/${this.id_email}
             </p>
+            <h3>¡Te deseo mucho exito!</h3>
         `;
     }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
-            logging_1.default.info('Sending greeting message...');
-            // randomly choose a message for the client...
+            // This is a message to the prospective customer
             const message = this.correctMessage();
-            // message for me...
+            // And this is a message to me, to let me know that I have a possible job offer...
             const messageForMe = this.messageForMe();
-            // the subject of the email for the client...
-            const subject = `Your Feedback Matters, ${this.name} – Thanks for Helping Me Grow!`;
-            // this subject will be forme...
-            const subjectForMe = `You have received an opinion from ${this.name} - Take a looka!`;
-            // send email message through sendEmail function...
+            // this is the subject for the customer message...
+            const subjectC = `Thank you for reaching out, ${this.name}! I'm excited to discuss your project.`;
+            // and this is the subject of the email that notify me...
+            const subjectM = `Nueva consulta de trabajo de ${this.name}: Oportunidad de colaboración potencial`;
             try {
-                //make a double call to the sendEmail function...
                 const [response1, response2] = yield Promise.all([
-                    (0, emailSender_1.sendEmail)(this.email, subject, message),
-                    (0, emailSender_1.sendEmail)(config_1.SERVER.EMAIL, subjectForMe, messageForMe)
+                    (0, emailSender_1.sendEmail)(this.email, subjectC, message),
+                    (0, emailSender_1.sendEmail)(config_1.SERVER.EMAILW, subjectM, messageForMe)
                 ]);
-                // Log relevant information about the sent email to the user...
+                // log of the respones one (customer)
                 this.logsInfo(response1);
-                // Log relevant information about the sent email to me...
+                // log of the response two (Email to me)
                 this.logsInfo(response2);
             }
             catch (error) {
@@ -89,4 +91,4 @@ class OpinionEmails {
         });
     }
 }
-exports.OpinionEmails = OpinionEmails;
+exports.WorkEmail = WorkEmail;

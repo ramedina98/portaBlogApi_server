@@ -1,5 +1,5 @@
 /**
- * This class is for handle the opinions type emails...
+ * This class is for handle the opinions emails type...
  */
 import { EmailBaseMethods } from "../interfaces/IEmails";
 import { generateRandomNumber } from "../utils/randomenizer";
@@ -32,7 +32,7 @@ class OpinionEmails implements EmailBaseMethods{
         // a randome number is generated between 0 - 4...
         const option: number = generateRandomNumber(0, 4);
 
-        //
+        // this array contains the answers...
         const answers: string[] = [
             `Hello ${this.name}, thank you so much for sharing your opinion. Your feedback is incredibly valuable and helps me improve continuously.`,
             `Hi ${this.name}, I appreciate you taking the time to provide your thoughts. Every piece of feedback contributes to my growth as a writer and engineer.`,

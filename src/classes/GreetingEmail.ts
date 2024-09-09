@@ -1,5 +1,5 @@
 /**
- * This class is for handle the greetings type emails...
+ * This class is for handle the greetings emails type...
  */
 import { EmailBaseMethods } from "../interfaces/IEmails";
 import logging from "../config/logging";

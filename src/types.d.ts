@@ -19,5 +19,6 @@ declare namespace NodeJS{
         EMAIL_PASS: string;
         WEB: string;
         EAMIL_BLOGPORT: string;
+        EAMIL_WORK: string;
     }
 }
