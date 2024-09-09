@@ -102,7 +102,7 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
 
         // create an object of type IEFactory to store the information and then pass it as the second argument...
         const options: IEFactory = {
-            id_email: emailData.id_email,
+            id_email: newEmail.id_email,
             name: emailData.name_sender,
             email: emailData.email_sender,
             tz: tzClient

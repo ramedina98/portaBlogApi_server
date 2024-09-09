@@ -48,8 +48,8 @@ exports.AnEmailResponse = AnEmailResponse;
 // this is the controller that hepls me to insert new emails into the email's table...
 const insertEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email_data } = req.body;
-        const email = yield (0, emailsServices_1.insertEmail)(email_data);
+        const { email_data, tzClient } = req.body;
+        const email = yield (0, emailsServices_1.insertEmail)(email_data, tzClient);
         res.status(200).json({ message: email });
     }
     catch (error) {

@@ -27,6 +27,7 @@ const sequelize_1 = require("sequelize");
 const emailsModel_1 = require("../models/mysql/emailsModel");
 const logging_1 = __importDefault(require("../config/logging"));
 const webSocketServer_1 = require("../webSocketServer");
+const EmailFactory_1 = require("../classes/EmailFactory");
 // (GET) This service helps me to get all the records from the emails table that I recived...
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -89,13 +90,8 @@ const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.AnEmail = AnEmail;
-;
-/**
- * TODO: AVISO IMPORTANTE
- * hay que agregarle la logica para que dicho correo llegue tambien a mi correo designado y
- * le llegue al usuario un correo agradeciendole por querer ponerse en contacto...
-*/
-const insertEmail = (emailData) => __awaiter(void 0, void 0, void 0, function* () {
+; // Emails interface without id_emails
+const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newEmail = yield emailsModel_1.Email.create(emailData);
         // notify connected clients to the websocket...
@@ -107,8 +103,18 @@ const insertEmail = (emailData) => __awaiter(void 0, void 0, void 0, function* (
                 }));
             }
         });
-        //AGRADECER AL CLIENTE... (crear un html perfecto y personalizar el mensaje, nombre y el idioma...)
-        // ENVIARME UN CORREO PARA AVISARME DE DICHO CORREO.. (con un link para ir al apartado...)
+        // create an object of type IEFactory to store the information and then pass it as the second argument...
+        const options = {
+            id_email: newEmail.id_email,
+            name: emailData.name_sender,
+            email: emailData.email_sender,
+            tz: tzClient
+        };
+        // set up the email factory... 2 arguments (type, options)
+        const eamilCreator = EmailFactory_1.EmailFactory.CreateEmail(emailData.email_type, options);
+        // put the send method into action...
+        eamilCreator.send();
+        // return a message of success...
         return 'Sent successfully';
     }
     catch (error) {

@@ -24,4 +24,10 @@ exports.SERVER = {
     KEY: process.env.KEY_JWT,
     TIME: process.env.EXPIRES_TIME,
     SET_ROUNDS: Number(process.env.ENCRYPT_ROUNDS),
+    EHOST: process.env.EMAIL_HOST,
+    EPORT: Number(process.env.EMAIL_PORT),
+    EUSER: process.env.EMAIL_USER,
+    EPASS: process.env.EMAIL_PASS,
+    WEB: process.env.WEB,
+    EMAIL: process.env.EAMIL_BLOGPORT,
 };
