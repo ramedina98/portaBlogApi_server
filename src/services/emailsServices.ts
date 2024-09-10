@@ -16,7 +16,10 @@ import { EmailFactory } from "../classes/EmailFactory";
 import { notificationTitle } from "../utils/typeOfNotification";
 import logging from "../config/logging";
 
-// (GET) This service helps me to get all the records from the emails table that I recived...
+/**
+ * @MethodGET
+ * This service helps me to get all the records from the emails table that I recived...
+ * */
 const AllEmails = async (): Promise<Emails[] | null> => {
     try {
         // I need all the emails that its types !== response...
@@ -41,7 +44,10 @@ const AllEmails = async (): Promise<Emails[] | null> => {
     }
 }
 
-// (GET) This service helps me to retrive all the emails that I send as a response of other emails...
+/**
+ * @MethodGET
+ * This service helps me to retrive all the emails that I send as a response of other emails...
+ * */
 const AllEmailsSent = async (): Promise<Emails[] | null> => {
     try {
         // the only emails that I need to retrive are the emails that its type is 'response'...
@@ -65,7 +71,10 @@ const AllEmailsSent = async (): Promise<Emails[] | null> => {
     }
 }
 
-// (GET) This service helps me to get an specific record from the table emails...
+/**
+ * @MethodGET
+ * This service helps me to get an specific record from the table emails...
+ * */
 const AnEmail = async (id_email: string): Promise<Emails | null> => {
     try{
         const email: any = await Email.findOne({ where: { id_email }});
@@ -83,7 +92,7 @@ const AnEmail = async (id_email: string): Promise<Emails | null> => {
 }
 
 /**
- * (POST) This service helps me to create a new email record in the table, also helps me to
+ * @MethodPOST This service helps me to create a new email record in the table, also helps me to
  * notify that a new email has arrrived...
  * */
 interface IEmailInserted extends Omit<Emails, 'id_emails'>{}; // Emails interface without id_emails
@@ -143,4 +152,41 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail};
+/**
+ * @MethodPATCH
+ * This service helps me to modify a specific email, its only functionality is to change
+ * from false to true, or true to false, the "is read" field...
+ * @is_read -> From false to true, or true to false...
+ */
+const updateIsReadField = async (id: string): Promise<string | null> => {
+    try {
+        const email: any = await Email.findByPk(id);
+
+        if(!email){
+            // log...
+            logging.warning('::::::::::::::::::::::::::');
+            logging.error('Email not found!');
+            logging.warning('::::::::::::::::::::::::::');
+            // return null the email doesn't exist...
+            return null;
+        }
+
+        // toggle the "is_read" field (if it's true, set it to false and vice versa)...
+        const newIsReadStatus = !email.is_read;
+        // update the is_read field to true...
+        await email.update({ is_read: newIsReadStatus });
+
+        logging.info('::::::::::::::::::::::::::');
+        logging.info(`Email ${id} has been updated.`);
+        logging.info('::::::::::::::::::::::::::');
+
+        return `Email ${id} has been updated.`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField };

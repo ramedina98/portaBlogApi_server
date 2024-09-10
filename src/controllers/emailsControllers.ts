@@ -1,6 +1,6 @@
 // we have all the emails controllers here...
 import { Request, Response } from "express";
-import { AllEmails, AllEmailsSent, AnEmail, insertEmail } from "../services/emailsServices";
+import { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField } from "../services/emailsServices";
 import { Emails } from "../interfaces/IEmails";
 
 // All emails that its type is diferent to 'response' controller...
@@ -47,4 +47,16 @@ const insertEmailResponse = async (req:Request, res:Response) => {
     }
 }
 
-export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse };
+// this is the controller that helps me update the is read field of a specific email...
+const updateAnEmailResponse = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const email: string | null = await updateIsReadField(id);
+        res.status(200).json({ message: email });
+    } catch (error: any) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse };

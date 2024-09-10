@@ -10,4 +10,6 @@ emailRoutes.get('/sent', emailsControllers_1.AllEmailsSentResponse);
 emailRoutes.get('/:id_email', emailsControllers_1.AnEmailResponse);
 // POST
 emailRoutes.post('/newemail', emailsControllers_1.insertEmailResponse);
+// PATCH
+emailRoutes.patch('/:id/toggle-read', emailsControllers_1.updateAnEmailResponse);
 exports.default = emailRoutes;

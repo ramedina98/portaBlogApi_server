@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * Here we have all the required services for handle the emails...
  * 1. Get on by its id...
@@ -30,7 +30,10 @@ const webSocketServer_1 = require("../webSocketServer");
 const EmailFactory_1 = require("../classes/EmailFactory");
 const typeOfNotification_1 = require("../utils/typeOfNotification");
 const logging_1 = __importDefault(require("../config/logging"));
-// (GET) This service helps me to get all the records from the emails table that I recived...
+/**
+ * @MethodGET
+ * This service helps me to get all the records from the emails table that I recived...
+ * */
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // I need all the emails that its types !== response...
@@ -53,7 +56,10 @@ const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.AllEmails = AllEmails;
-// (GET) This service helps me to retrive all the emails that I send as a response of other emails...
+/**
+ * @MethodGET
+ * This service helps me to retrive all the emails that I send as a response of other emails...
+ * */
 const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // the only emails that I need to retrive are the emails that its type is 'response'...
@@ -76,7 +82,10 @@ const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.AllEmailsSent = AllEmailsSent;
-// (GET) This service helps me to get an specific record from the table emails...
+/**
+ * @MethodGET
+ * This service helps me to get an specific record from the table emails...
+ * */
 const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = yield emailsModel_1.Email.findOne({ where: { id_email } });
@@ -144,3 +153,37 @@ const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.insertEmail = insertEmail;
+/**
+ * @MethodPATCH
+ * This service helps me to modify a specific email, its only functionality is to change
+ * from false to true, or true to false, the "is read" field...
+ * @is_read -> From false to true, or true to false...
+ */
+const updateIsReadField = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const email = yield emailsModel_1.Email.findByPk(id);
+        if (!email) {
+            // log...
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            logging_1.default.error('Email not found!');
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            // return null the email doesn't exist...
+            return null;
+        }
+        // toggle the "is_read" field (if it's true, set it to false and vice versa)...
+        const newIsReadStatus = !email.is_read;
+        // update the is_read field to true...
+        yield email.update({ is_read: newIsReadStatus });
+        logging_1.default.info('::::::::::::::::::::::::::');
+        logging_1.default.info(`Email ${id} has been updated.`);
+        logging_1.default.info('::::::::::::::::::::::::::');
+        return `Email ${id} has been updated.`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateIsReadField = updateIsReadField;

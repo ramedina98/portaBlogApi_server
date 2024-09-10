@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
 // All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -57,3 +57,15 @@ const insertEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.insertEmailResponse = insertEmailResponse;
+// this is the controller that helps me update the is read field of a specific email...
+const updateAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const email = yield (0, emailsServices_1.updateIsReadField)(id);
+        res.status(200).json({ message: email });
+    }
+    catch (error) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.updateAnEmailResponse = updateAnEmailResponse;
