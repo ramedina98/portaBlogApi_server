@@ -36,7 +36,7 @@ Email.init({
         allowNull: false,
     },
     message: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     date_message: {
@@ -46,6 +46,11 @@ Email.init({
     email_type: {
         type: DataTypes.ENUM(...Object.values(EmailType)),
         allowNull: false
+    },
+    is_read: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
     }
 },{
     sequelize: sequelizeMysql,

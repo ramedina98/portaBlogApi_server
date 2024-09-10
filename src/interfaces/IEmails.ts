@@ -14,6 +14,7 @@ interface Emails {
     message: string;
     date_message: Date;
     email_type: EmailType;
+    is_read: boolean;
 }
 
 interface EmailBaseMethods {
