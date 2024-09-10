@@ -5,7 +5,8 @@ import {
     AllEmailsSentResponse,
     AnEmailResponse,
     insertEmailResponse,
-    updateAnEmailResponse
+    updateAnEmailResponse,
+    updateAllEmailsFalseToTrueResponse
 }
     from "../controllers/emailsControllers";
 
@@ -19,5 +20,6 @@ emailRoutes.get('/:id_email', AnEmailResponse);
 emailRoutes.post('/newemail', insertEmailResponse);
 // PATCH
 emailRoutes.patch('/:id/toggle-read', updateAnEmailResponse);
+emailRoutes.patch('/mark-unread', updateAllEmailsFalseToTrueResponse);
 
 export default emailRoutes;

@@ -1,6 +1,6 @@
 // we have all the emails controllers here...
 import { Request, Response } from "express";
-import { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField } from "../services/emailsServices";
+import { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateAllEmailsFalseToTrue, updateIsReadField } from "../services/emailsServices";
 import { Emails } from "../interfaces/IEmails";
 
 // All emails that its type is diferent to 'response' controller...
@@ -59,4 +59,17 @@ const updateAnEmailResponse = async (req: Request, res: Response) => {
     }
 }
 
-export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse };
+/**
+ * this controller helps me to update the status of is_read from true to false, of all those
+ * that have that condition...
+ */
+const updateAllEmailsFalseToTrueResponse = async (_req: Request, res: Response) => {
+    try {
+        const email: string | null = await updateAllEmailsFalseToTrue();
+        res.status(200).json({ message: email });
+    } catch (error: any) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse, updateAllEmailsFalseToTrueResponse };

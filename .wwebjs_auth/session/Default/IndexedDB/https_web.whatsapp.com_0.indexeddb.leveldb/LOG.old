@@ -1,15 +1,13 @@
-2024/09/10-17:13:14.515 fa03 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/09/10-17:13:14.516 fa03 Recovering log #51
-2024/09/10-17:13:14.545 fa03 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000051.log 
-2024/09/10-17:13:14.545 fa03 Delete type=2 #49
-2024/09/10-17:13:14.545 fa03 Delete type=2 #52
-2024/09/10-17:13:17.842 15e03 Level-0 table #56: started
-2024/09/10-17:13:17.855 15e03 Level-0 table #56: 158759 bytes OK
-2024/09/10-17:13:17.867 15e03 Delete type=0 #51
-2024/09/10-17:13:17.868 8703 Manual compaction at level-0 from '\x00\x1b\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1c\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/09/10-17:13:20.596 1f503 Compacting 1@1 + 1@2 files
-2024/09/10-17:13:20.661 1f503 Generated table #57@1: 26172 keys, 849426 bytes
-2024/09/10-17:13:20.661 1f503 Compacted 1@1 + 1@2 files => 849426 bytes
-2024/09/10-17:13:20.666 1f503 compacted to: files[ 0 0 1 0 0 0 0 ]
-2024/09/10-17:13:20.667 1f503 Delete type=2 #56
-2024/09/10-17:13:20.667 1f503 Delete type=2 #53
+2024/09/10-17:16:38.404 a803 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/09/10-17:16:38.404 a803 Recovering log #55
+2024/09/10-17:16:38.421 a803 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000055.log 
+2024/09/10-17:16:40.270 a803 Level-0 table #60: started
+2024/09/10-17:16:40.280 a803 Level-0 table #60: 95407 bytes OK
+2024/09/10-17:16:40.287 a803 Delete type=0 #55
+2024/09/10-17:16:40.287 a803 Manual compaction at level-0 from '\x00\x1c\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1d\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/09/10-17:16:42.816 12003 Compacting 1@1 + 1@2 files
+2024/09/10-17:16:42.878 12003 Generated table #61@1: 27115 keys, 881396 bytes
+2024/09/10-17:16:42.878 12003 Compacted 1@1 + 1@2 files => 881396 bytes
+2024/09/10-17:16:42.885 12003 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/09/10-17:16:42.886 12003 Delete type=2 #60
+2024/09/10-17:16:42.886 12003 Delete type=2 #57

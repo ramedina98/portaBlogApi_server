@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * Here we have all the required services for handle the emails...
  * 1. Get on by its id...
@@ -187,3 +187,32 @@ const updateIsReadField = (id) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.updateIsReadField = updateIsReadField;
+/**
+ * @MethodPATCH
+ * This service helps me to change the status of is read, from true to false
+ */
+const updateAllEmailsFalseToTrue = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // find all the emails where is_read equals to true
+        const emailsToUpdate = yield emailsModel_1.Email.findAll({
+            where: { is_read: true }
+        });
+        if (emailsToUpdate.length === 0) {
+            logging_1.default.warning('No emails with is_read = true found.');
+            return null;
+        }
+        // update the status of all found emails...
+        yield emailsModel_1.Email.update({ is_read: false }, { where: { is_read: true } });
+        logging_1.default.info('::::::::::::::::::::::::::');
+        logging_1.default.info(`${emailsToUpdate.length} emails have been updated to unread.`);
+        logging_1.default.info('::::::::::::::::::::::::::');
+        return `${emailsToUpdate.length} emails have been updated to unread.`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateAllEmailsFalseToTrue = updateAllEmailsFalseToTrue;

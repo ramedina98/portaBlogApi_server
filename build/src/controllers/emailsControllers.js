@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.updateAllEmailsFalseToTrueResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
 // All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,3 +69,17 @@ const updateAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.updateAnEmailResponse = updateAnEmailResponse;
+/**
+ * this controller helps me to update the status of is_read from true to false, of all those
+ * that have that condition...
+ */
+const updateAllEmailsFalseToTrueResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const email = yield (0, emailsServices_1.updateAllEmailsFalseToTrue)();
+        res.status(200).json({ message: email });
+    }
+    catch (error) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.updateAllEmailsFalseToTrueResponse = updateAllEmailsFalseToTrueResponse;

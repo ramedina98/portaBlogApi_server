@@ -189,4 +189,39 @@ const updateIsReadField = async (id: string): Promise<string | null> => {
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField };
+/**
+ * @MethodPATCH
+ * This service helps me to change the status of is read, from true to false
+ */
+const updateAllEmailsFalseToTrue = async (): Promise<string | null> => {
+    try{
+        // find all the emails where is_read equals to true
+        const emailsToUpdate = await Email.findAll({
+            where: { is_read: true }
+        });
+
+        if(emailsToUpdate.length === 0){
+            logging.warning('No emails with is_read = true found.');
+            return null;
+        }
+
+        // update the status of all found emails...
+        await Email.update(
+            { is_read: false },
+            { where: { is_read: true }}
+        )
+
+        logging.info('::::::::::::::::::::::::::');
+        logging.info(`${emailsToUpdate.length} emails have been updated to unread.`);
+        logging.info('::::::::::::::::::::::::::');
+
+        return `${emailsToUpdate.length} emails have been updated to unread.`;
+    } catch(error: any){
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue };
