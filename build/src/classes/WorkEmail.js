@@ -63,6 +63,7 @@ class WorkEmail {
     }
     send() {
         return __awaiter(this, void 0, void 0, function* () {
+            logging_1.default.info('Sending the message...');
             // This is a message to the prospective customer
             const message = this.correctMessage();
             // And this is a message to me, to let me know that I have a possible job offer...

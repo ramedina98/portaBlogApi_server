@@ -28,4 +28,5 @@ export const SERVER = {
     WEB: process.env.WEB,
     EMAIL: process.env.EAMIL_BLOGPORT,
     EMAILW: process.env.EAMIL_WORK,
+    NUMBER: process.env.NUMBER,
 }

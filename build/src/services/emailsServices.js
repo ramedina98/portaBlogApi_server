@@ -25,9 +25,11 @@ exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmail
  */
 const sequelize_1 = require("sequelize");
 const emailsModel_1 = require("../models/mysql/emailsModel");
-const logging_1 = __importDefault(require("../config/logging"));
+const IEmails_1 = require("../interfaces/IEmails");
 const webSocketServer_1 = require("../webSocketServer");
 const EmailFactory_1 = require("../classes/EmailFactory");
+const typeOfNotification_1 = require("../utils/typeOfNotification");
+const logging_1 = __importDefault(require("../config/logging"));
 // (GET) This service helps me to get all the records from the emails table that I recived...
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -94,12 +96,27 @@ exports.AnEmail = AnEmail;
 const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newEmail = yield emailsModel_1.Email.create(emailData);
-        // TODO: hacer una funcion que determine que tipo de email es, para hacer un buen mensaje para la seccion "message" del ws...
+        //if email type === response, then just sent a message notifying that the data was registered whitout any problemas...
+        if (newEmail.email_type === IEmails_1.EmailType.Response) {
+            // log...
+            logging_1.default.info('Email of type response sent successfully');
+            // return a message of success...
+            return 'Sent successfully';
+        }
+        // this functon generate a specific title to notify of the new incoming email...
+        const title = (0, typeOfNotification_1.notificationTitle)(newEmail.email_type);
         // notify connected clients to the websocket...
+        /**
+         * @message -> this object property contain the title of the notification...
+         * @typeNumber -> this property contains a number that indicates the type of email
+         * it is, in order to optimize the graphical interface...
+         * @email -> this property contains the response of the server when sending the data to be registered in the db...
+         */
         webSocketServer_1.wss.clients.forEach((client) => {
-            if (client.readyState === 1) { // cliente conectado...
+            if (client.readyState === 1) {
                 client.send(JSON.stringify({
-                    message: 'New emails received.',
+                    message: title === null || title === void 0 ? void 0 : title.title,
+                    typeNumber: title === null || title === void 0 ? void 0 : title.num,
                     email: newEmail,
                 }));
             }
@@ -109,7 +126,8 @@ const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, f
             id_email: newEmail.id_email,
             name: emailData.name_sender,
             email: emailData.email_sender,
-            tz: tzClient
+            tz: tzClient,
+            message: newEmail.message,
         };
         // set up the email factory... 2 arguments (type, options)
         const eamilCreator = EmailFactory_1.EmailFactory.CreateEmail(emailData.email_type, options);
@@ -119,7 +137,9 @@ const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, f
         return 'Sent successfully';
     }
     catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 });

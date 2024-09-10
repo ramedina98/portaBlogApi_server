@@ -20,5 +20,6 @@ declare namespace NodeJS{
         WEB: string;
         EAMIL_BLOGPORT: string;
         EAMIL_WORK: string;
+        NUMBER: string;
     }
 }

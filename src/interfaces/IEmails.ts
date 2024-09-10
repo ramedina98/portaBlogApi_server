@@ -25,6 +25,7 @@ interface IEFactory{
     name: string;
     email: string;
     tz: string;
+    message: string;
 }
 
 interface MailOptions {
@@ -34,4 +35,10 @@ interface MailOptions {
     html: string;
 }
 
-export { Emails, EmailType, EmailBaseMethods, IEFactory, MailOptions }
+// interface to type the notificationTitle function...
+interface INotificationTitle {
+    title: string;
+    num: number;
+}
+
+export { Emails, EmailType, EmailBaseMethods, IEFactory, MailOptions, INotificationTitle }

@@ -1,0 +1,13 @@
+2024/09/09-22:16:41.222 13b03 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/09/09-22:16:41.223 13b03 Recovering log #39
+2024/09/09-22:16:41.234 13b03 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000039.log 
+2024/09/09-22:16:45.139 8403 Level-0 table #44: started
+2024/09/09-22:16:45.144 8403 Level-0 table #44: 25906 bytes OK
+2024/09/09-22:16:45.154 8403 Delete type=0 #39
+2024/09/09-22:16:45.156 8403 Manual compaction at level-0 from '\x00\x18\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x19\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/09/09-22:16:48.148 11f03 Compacting 1@1 + 1@2 files
+2024/09/09-22:16:48.218 11f03 Generated table #45@1: 22881 keys, 724575 bytes
+2024/09/09-22:16:48.218 11f03 Compacted 1@1 + 1@2 files => 724575 bytes
+2024/09/09-22:16:48.225 11f03 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/09/09-22:16:48.226 11f03 Delete type=2 #41
+2024/09/09-22:16:48.226 11f03 Delete type=2 #44

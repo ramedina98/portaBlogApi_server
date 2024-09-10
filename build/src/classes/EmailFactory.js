@@ -11,6 +11,7 @@ exports.EmailFactory = void 0;
 const GreetingEmail_1 = require("./GreetingEmail");
 const OpinionEmail_1 = require("./OpinionEmail");
 const WorkEmail_1 = require("./WorkEmail");
+const ErrorEmail_1 = require("./ErrorEmail");
 class EmailFactory {
     static CreateEmail(type, option) {
         switch (type) {
@@ -20,6 +21,8 @@ class EmailFactory {
                 return new OpinionEmail_1.OpinionEmails(option.name, option.email, option.id_email);
             case 'work':
                 return new WorkEmail_1.WorkEmail(option.name, option.email, option.tz, option.id_email);
+            case 'error_report':
+                return new ErrorEmail_1.ErrorEmail(option.name, option.email, option.tz, option.id_email, option.message);
         }
         return null;
     }

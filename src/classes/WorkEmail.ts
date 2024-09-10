@@ -66,6 +66,8 @@ class WorkEmail implements EmailBaseMethods {
     }
 
     async send(): Promise<void> {
+        logging.info('Sending the message...');
+        
         // This is a message to the prospective customer
         const message: string = this.correctMessage();
 

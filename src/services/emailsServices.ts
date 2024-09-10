@@ -10,10 +10,11 @@
  */
 import { Op } from "sequelize";
 import { Email } from "../models/mysql/emailsModel";
-import logging from "../config/logging";
-import { Emails, IEFactory } from "../interfaces/IEmails";
+import { Emails, IEFactory, INotificationTitle, EmailType } from "../interfaces/IEmails";
 import { wss } from "../webSocketServer";
 import { EmailFactory } from "../classes/EmailFactory";
+import { notificationTitle } from "../utils/typeOfNotification";
+import logging from "../config/logging";
 
 // (GET) This service helps me to get all the records from the emails table that I recived...
 const AllEmails = async (): Promise<Emails[] | null> => {
@@ -90,12 +91,29 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
     try {
         const newEmail: any = await Email.create(emailData);
 
-        // TODO: hacer una funcion que determine que tipo de email es, para hacer un buen mensaje para la seccion "message" del ws...
+        //if email type === response, then just sent a message notifying that the data was registered whitout any problemas...
+        if(newEmail.email_type === EmailType.Response){
+            // log...
+            logging.info('Email of type response sent successfully');
+            // return a message of success...
+            return 'Sent successfully';
+        }
+
+        // this functon generate a specific title to notify of the new incoming email...
+        const title: INotificationTitle | null = notificationTitle(newEmail.email_type);
+
         // notify connected clients to the websocket...
+        /**
+         * @message -> this object property contain the title of the notification...
+         * @typeNumber -> this property contains a number that indicates the type of email
+         * it is, in order to optimize the graphical interface...
+         * @email -> this property contains the response of the server when sending the data to be registered in the db...
+         */
         wss.clients.forEach((client) => {
-            if(client.readyState === 1){// cliente conectado...
+            if(client.readyState === 1){
                 client.send(JSON.stringify({
-                    message: 'New emails received.',
+                    message: title?.title,
+                    typeNumber: title?.num,
                     email: newEmail,
                 }));
             }
@@ -106,7 +124,8 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
             id_email: newEmail.id_email,
             name: emailData.name_sender,
             email: emailData.email_sender,
-            tz: tzClient
+            tz: tzClient,
+            message: newEmail.message,
         };
 
         // set up the email factory... 2 arguments (type, options)
@@ -117,7 +136,9 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
         // return a message of success...
         return 'Sent successfully';
     } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 }
