@@ -2,10 +2,9 @@
  * This utils helps me to handle the sending of error reports in my website, reports made by the users...
 */
 import { client } from "../config/wahtsAppClien";
-import { SERVER } from "../config/config";
 import logging from "../config/logging";
 
-const sendWhatsAppMessage = async (message: string): Promise<void> => {
+const sendWhatsAppMessage = async (recipientNumber: string, message: string): Promise<void> => {
     try {
 
         if (!client.info || !client.info.wid) {
@@ -13,8 +12,8 @@ const sendWhatsAppMessage = async (message: string): Promise<void> => {
             return;
         }
 
-        const number: string = SERVER.NUMBER;
-        const chatId: string = number.substring(1) + "@c.us";
+        // ensure the recipient number is in international format without '+'...
+        const chatId: string = `${recipientNumber}@c.us`;
 
         // send message...
         await client.sendMessage(chatId, message);

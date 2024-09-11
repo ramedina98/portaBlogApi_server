@@ -60,7 +60,7 @@ class ErrorEmail {
                         \nEl usuario ${this.name}, con zona horaria ${this.tz}, fue quien genero el reporte.
                         \nEste es el mensaje de error: ${this.error_message}`;
             try {
-                yield (0, whatsappSender_1.sendWhatsAppMessage)(message);
+                yield (0, whatsappSender_1.sendWhatsAppMessage)(config_1.SERVER.NUMBER, message);
                 logging_1.default.info('Whats App successfully sent');
             }
             catch (error) {

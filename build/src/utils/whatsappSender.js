@@ -17,16 +17,15 @@ exports.sendWhatsAppMessage = void 0;
  * This utils helps me to handle the sending of error reports in my website, reports made by the users...
 */
 const wahtsAppClien_1 = require("../config/wahtsAppClien");
-const config_1 = require("../config/config");
 const logging_1 = __importDefault(require("../config/logging"));
-const sendWhatsAppMessage = (message) => __awaiter(void 0, void 0, void 0, function* () {
+const sendWhatsAppMessage = (recipientNumber, message) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!wahtsAppClien_1.client.info || !wahtsAppClien_1.client.info.wid) {
             logging_1.default.error('WhatsApp client is not ready yet.');
             return;
         }
-        const number = config_1.SERVER.NUMBER;
-        const chatId = number.substring(1) + "@c.us";
+        // ensure the recipient number is in international format without '+'...
+        const chatId = `${recipientNumber}@c.us`;
         // send message...
         yield wahtsAppClien_1.client.sendMessage(chatId, message);
         logging_1.default.info(':::::::::::::::::::::::::::::::::::::::::');

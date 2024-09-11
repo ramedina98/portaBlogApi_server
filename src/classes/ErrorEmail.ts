@@ -64,7 +64,7 @@ class ErrorEmail implements EmailBaseMethods {
                         \nEste es el mensaje de error: ${this.error_message}`;
 
         try {
-            await sendWhatsAppMessage(message);
+            await sendWhatsAppMessage(SERVER.NUMBER, message);
             logging.info('Whats App successfully sent');
         } catch (error: any) {
             logging.error('There was an error while sending the Whats app message: ' + error.message)
