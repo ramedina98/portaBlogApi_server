@@ -6,7 +6,8 @@ import {
     AnEmail, insertEmail,
     updateAllEmailsFalseToTrue,
     updateIsReadField,
-    deleteAnEmail
+    deleteAnEmail,
+    deleteSeveralEmails
 } from "../services/emailsServices";
 import { Emails } from "../interfaces/IEmails";
 
@@ -91,4 +92,16 @@ const deleteAnEmailResponse = async (req: Request, res: Response) => {
     }
 }
 
-export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse, updateAllEmailsFalseToTrueResponse, deleteAnEmailResponse };
+// this controller helps me to delete several emails at the same time with their ids...
+const deleteSeveralEmailsResponse = async (req: Request, res: Response) => {
+    try {
+        const { ids } = req.body;
+
+        const email: string | null = await deleteSeveralEmails(ids);
+        res.status(200).json({ message: email });
+    } catch (error: any) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse, updateAllEmailsFalseToTrueResponse, deleteAnEmailResponse, deleteSeveralEmailsResponse };

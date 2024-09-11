@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAnEmailResponse = exports.updateAllEmailsFalseToTrueResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.deleteSeveralEmailsResponse = exports.deleteAnEmailResponse = exports.updateAllEmailsFalseToTrueResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
 // All emails that its type is diferent to 'response' controller...
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -95,3 +95,15 @@ const deleteAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.deleteAnEmailResponse = deleteAnEmailResponse;
+// this controller helps me to delete several emails at the same time with their ids...
+const deleteSeveralEmailsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { ids } = req.body;
+        const email = yield (0, emailsServices_1.deleteSeveralEmails)(ids);
+        res.status(200).json({ message: email });
+    }
+    catch (error) {
+        res.status(401).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.deleteSeveralEmailsResponse = deleteSeveralEmailsResponse;

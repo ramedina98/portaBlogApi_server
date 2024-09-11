@@ -256,4 +256,41 @@ const deleteAnEmail = async (id: string): Promise<string | null> => {
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue, deleteAnEmail };
+/**
+ * @methodDELETE
+ * This service helps me to delete several emails at the same time with their ids...
+ * @param ids - an array of email IDs to delete...
+ */
+const deleteSeveralEmails = async (ids: string[]): Promise<string| null> => {
+    try {
+        if(ids.length === 0){
+            logging.warning('::::::::::::::::::::::::::');
+            logging.error('No IDs provided for deletion!');
+            logging.warning('::::::::::::::::::::::::::');
+            return 'No IDs provided for deletion.';
+        }
+
+        // Delete the emails which ids are in the array...
+        const deletedCount: number = await Email.destroy({ where: {id_email: ids} });
+
+        if(deletedCount === 0){
+            logging.warning('::::::::::::::::::::::::::');
+            logging.error('No emails found to delete!');
+            logging.warning('::::::::::::::::::::::::::');
+            return 'No emails found to delete.';
+        }
+
+        logging.info('::::::::::::::::::::::::::');
+        logging.info(`${deletedCount} emails have been deleted.`);
+        logging.info('::::::::::::::::::::::::::');
+
+        return `${deletedCount} emails have been deleted.`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue, deleteAnEmail, deleteSeveralEmails };

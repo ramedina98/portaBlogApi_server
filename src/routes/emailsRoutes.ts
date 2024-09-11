@@ -7,7 +7,8 @@ import {
     insertEmailResponse,
     updateAnEmailResponse,
     updateAllEmailsFalseToTrueResponse,
-    deleteAnEmailResponse
+    deleteAnEmailResponse,
+    deleteSeveralEmailsResponse
 } from "../controllers/emailsControllers";
 
 const emailRoutes = Router();
@@ -23,5 +24,6 @@ emailRoutes.patch('/:id/toggle-read', updateAnEmailResponse);
 emailRoutes.patch('/mark-unread', updateAllEmailsFalseToTrueResponse);
 //DELETE
 emailRoutes.delete('/delete', deleteAnEmailResponse);
+emailRoutes.delete('/delete-multiple', deleteSeveralEmailsResponse);
 
 export default emailRoutes;

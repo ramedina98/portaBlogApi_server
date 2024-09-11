@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAnEmail = exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.deleteSeveralEmails = exports.deleteAnEmail = exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * Here we have all the required services for handle the emails...
  * 1. Get on by its id...
@@ -245,3 +245,37 @@ const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.deleteAnEmail = deleteAnEmail;
+/**
+ * @methodDELETE
+ * This service helps me to delete several emails at the same time with their ids...
+ * @param ids - an array of email IDs to delete...
+ */
+const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (ids.length === 0) {
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            logging_1.default.error('No IDs provided for deletion!');
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            return 'No IDs provided for deletion.';
+        }
+        // Delete the emails which ids are in the array...
+        const deletedCount = yield emailsModel_1.Email.destroy({ where: { id_email: ids } });
+        if (deletedCount === 0) {
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            logging_1.default.error('No emails found to delete!');
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            return 'No emails found to delete.';
+        }
+        logging_1.default.info('::::::::::::::::::::::::::');
+        logging_1.default.info(`${deletedCount} emails have been deleted.`);
+        logging_1.default.info('::::::::::::::::::::::::::');
+        return `${deletedCount} emails have been deleted.`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.deleteSeveralEmails = deleteSeveralEmails;
