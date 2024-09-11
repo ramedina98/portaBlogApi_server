@@ -224,4 +224,36 @@ const updateAllEmailsFalseToTrue = async (): Promise<string | null> => {
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue };
+/**
+ * @methodDELETE
+ * This service helps me to delete and specific email...
+ */
+const deleteAnEmail = async (id: string): Promise<string | null> => {
+    try {
+        // find email by its id...
+        const email: any = await Email.findByPk(id);
+
+        if(!email){
+            logging.warning('::::::::::::::::::::::::::');
+            logging.warning('Email not found!');
+            logging.warning('::::::::::::::::::::::::::');
+            return null;
+        }
+
+        // delete email...
+        await Email.destroy( { where: { id_email: id }});
+
+        logging.info('::::::::::::::::::::::::::');
+        logging.info(`Email with ID ${id} has been deleted.`);
+        logging.info('::::::::::::::::::::::::::');
+
+        return `The email has been deleted.`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue, deleteAnEmail };

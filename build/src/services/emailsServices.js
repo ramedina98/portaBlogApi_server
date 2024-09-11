@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.deleteAnEmail = exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * Here we have all the required services for handle the emails...
  * 1. Get on by its id...
@@ -216,3 +216,32 @@ const updateAllEmailsFalseToTrue = () => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.updateAllEmailsFalseToTrue = updateAllEmailsFalseToTrue;
+/**
+ * @methodDELETE
+ * This service helps me to delete and specific email...
+ */
+const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // find email by its id...
+        const email = yield emailsModel_1.Email.findByPk(id);
+        if (!email) {
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            logging_1.default.warning('Email not found!');
+            logging_1.default.warning('::::::::::::::::::::::::::');
+            return null;
+        }
+        // delete email...
+        yield emailsModel_1.Email.destroy({ where: { id_email: id } });
+        logging_1.default.info('::::::::::::::::::::::::::');
+        logging_1.default.info(`Email with ID ${id} has been deleted.`);
+        logging_1.default.info('::::::::::::::::::::::::::');
+        return `The email has been deleted.`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.deleteAnEmail = deleteAnEmail;

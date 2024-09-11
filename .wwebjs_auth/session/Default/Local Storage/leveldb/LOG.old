@@ -1,3 +1,6 @@
-2024/09/10-17:16:37.549 a803 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
-2024/09/10-17:16:37.549 a803 Recovering log #3
-2024/09/10-17:16:37.581 a803 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2024/09/10-17:44:43.511 a403 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/09/10-17:44:43.526 a403 Recovering log #3
+2024/09/10-17:44:43.576 a403 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2024/09/10-17:46:45.435 1f503 Level-0 table #5: started
+2024/09/10-17:46:45.445 1f503 Level-0 table #5: 17878 bytes OK
+2024/09/10-17:46:45.457 1f503 Delete type=0 #3
