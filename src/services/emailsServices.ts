@@ -39,7 +39,9 @@ const AllEmails = async (): Promise<Emails[] | null> => {
         return emails;
 
     } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 }
@@ -66,7 +68,9 @@ const AllEmailsSent = async (): Promise<Emails[] | null> => {
 
         return emails;
     } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 }
@@ -86,7 +90,9 @@ const AnEmail = async (id_email: string): Promise<Emails | null> => {
 
         return email;
     } catch(error: any){
+        logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 }

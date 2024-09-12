@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Email = void 0;
 /**
- * Here we have the model of the emails model...
+ * Here we have the emails model...
  */
 const sequelize_1 = require("sequelize");
 const db_1 = require("../../config/db");
@@ -17,15 +17,15 @@ Email.init({
         primaryKey: true
     },
     email_sender: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING(150),
         allowNull: false,
     },
     name_sender: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING(150),
         allowNull: false,
     },
     email_recipient: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.STRING(150),
         allowNull: false,
     },
     message: {

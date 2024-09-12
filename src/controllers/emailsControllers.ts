@@ -12,7 +12,7 @@ import {
 import { Emails } from "../interfaces/IEmails";
 
 // All emails that its type is diferent to 'response' controller...
-const AllEmailsResponse = async (_req: Request, res: Response) => {
+const AllEmailsResponse = async (_req: Request, res: Response): Promise<void> => {
     try {
         const emails: Emails[] | null = await AllEmails();
         res.status(200).json({ message: 'Successfully obtained', emails });
@@ -22,7 +22,7 @@ const AllEmailsResponse = async (_req: Request, res: Response) => {
 }
 
 // All the emails that its type is 'response' controller...
-const AllEmailsSentResponse = async (_req:Request, res: Response) => {
+const AllEmailsSentResponse = async (_req:Request, res: Response): Promise<void> => {
     try {
         const emailSend: Emails[] | null = await AllEmailsSent();
         res.status(200).json({ message: 'Successfully obtained', emailSend });
@@ -32,7 +32,7 @@ const AllEmailsSentResponse = async (_req:Request, res: Response) => {
 }
 
 // An specific email by its id...
-const AnEmailResponse = async (req: Request, res: Response) => {
+const AnEmailResponse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id_email } = req.params;
 
@@ -44,7 +44,7 @@ const AnEmailResponse = async (req: Request, res: Response) => {
 }
 
 // this is the controller that hepls me to insert new emails into the email's table...
-const insertEmailResponse = async (req:Request, res:Response) => {
+const insertEmailResponse = async (req:Request, res:Response): Promise<void> => {
     try {
         const { email_data, tzClient } = req.body;
 
@@ -56,7 +56,7 @@ const insertEmailResponse = async (req:Request, res:Response) => {
 }
 
 // this is the controller that helps me update the is read field of a specific email...
-const updateAnEmailResponse = async (req: Request, res: Response) => {
+const updateAnEmailResponse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
 
@@ -71,7 +71,7 @@ const updateAnEmailResponse = async (req: Request, res: Response) => {
  * this controller helps me to update the status of is_read from true to false, of all those
  * that have that condition...
  */
-const updateAllEmailsFalseToTrueResponse = async (_req: Request, res: Response) => {
+const updateAllEmailsFalseToTrueResponse = async (_req: Request, res: Response): Promise<void> => {
     try {
         const email: string | null = await updateAllEmailsFalseToTrue();
         res.status(200).json({ message: email });
@@ -81,7 +81,7 @@ const updateAllEmailsFalseToTrueResponse = async (_req: Request, res: Response) 
 }
 
 // This controller helps me to delete an specific email by its id...
-const deleteAnEmailResponse = async (req: Request, res: Response) => {
+const deleteAnEmailResponse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.body;
 
@@ -93,7 +93,7 @@ const deleteAnEmailResponse = async (req: Request, res: Response) => {
 }
 
 // this controller helps me to delete several emails at the same time with their ids...
-const deleteSeveralEmailsResponse = async (req: Request, res: Response) => {
+const deleteSeveralEmailsResponse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { ids } = req.body;
 

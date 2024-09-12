@@ -1,5 +1,5 @@
 /**
- * Here we have the model of the emails model...
+ * Here we have the emails model...
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
@@ -24,15 +24,15 @@ Email.init({
         primaryKey: true
     },
     email_sender: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(150),
         allowNull: false,
     },
     name_sender: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(150),
         allowNull: false,
     },
     email_recipient: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(150),
         allowNull: false,
     },
     message: {

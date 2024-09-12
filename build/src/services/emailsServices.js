@@ -51,7 +51,9 @@ const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
         return emails;
     }
     catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 });
@@ -77,7 +79,9 @@ const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
         return emails;
     }
     catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 });
@@ -96,7 +100,9 @@ const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
         return email;
     }
     catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
         throw error;
     }
 });
