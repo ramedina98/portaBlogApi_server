@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getResume = void 0;
+exports.getResume = exports.getIdResume = void 0;
 /**
  * @service ->
  * Here we have all the require services to handle the resume endpoints...
@@ -25,6 +25,30 @@ const resumeModel_1 = require("../models/mysql/resumeModel");
 const sequelize_1 = require("sequelize");
 const checkEmptyResults_1 = require("../utils/checkEmptyResults");
 const logging_1 = __importDefault(require("../config/logging"));
+/**
+ * @MethodGET ->
+ * This service helps me to get the ID of a resume by seraching with the id of a user...
+ */
+const getIdResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const resume = yield resumeModel_1.Resume.findOne({ where: { user_id: id } });
+        if (!resume) {
+            logging_1.default.warning(':::::::::::::::::::::::');
+            logging_1.default.warning('Resume not found!');
+            logging_1.default.warning(':::::::::::::::::::::::');
+            return null;
+        }
+        const resume_id = resume.id_resume;
+        return resume_id;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.getIdResume = getIdResume;
 /**
  * @MethodGET
  * This service helps to take the data from the tables:

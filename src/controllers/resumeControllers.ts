@@ -1,7 +1,26 @@
 // here I have all the resume controllers...
 import { Request, Response } from "express";
 import { IResumeService } from "../interfaces/IResume";
-import { getResume } from "../services/resumeServices";
+import { getIdResume, getResume } from "../services/resumeServices";
+
+/**
+ * This controller helps me to get the id of a resume searching by user_id...
+ */
+const getIdResumeResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.body;
+
+        const resumeId: string | null = await getIdResume(id);
+
+        if(resumeId === null){
+            res.status(404).json({ message: 'Id not found' });
+        }
+
+        res.status(200).json({ message: 'Successfully obtained!', resumeId });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error' + error.message });
+    }
+}
 
 /**
  * this controller helps me to handle the getResume service and return
@@ -24,4 +43,4 @@ const getResumeResponse = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
-export { getResumeResponse };
+export { getIdResumeResponse, getResumeResponse };

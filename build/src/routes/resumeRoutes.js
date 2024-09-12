@@ -5,5 +5,6 @@ const express_1 = require("express");
 const resumeControllers_1 = require("../controllers/resumeControllers");
 const resumeRoutes = (0, express_1.Router)();
 // GET
+resumeRoutes.get('/resume-by-user', resumeControllers_1.getIdResumeResponse);
 resumeRoutes.get('/:id', resumeControllers_1.getResumeResponse);
 exports.default = resumeRoutes;

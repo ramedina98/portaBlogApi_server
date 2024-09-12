@@ -1,13 +1,13 @@
-2024/09/11-21:45:01.061 ad03 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/09/11-21:45:01.062 ad03 Recovering log #91
-2024/09/11-21:45:01.077 ad03 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000091.log 
-2024/09/11-21:45:03.210 b303 Level-0 table #96: started
-2024/09/11-21:45:03.223 b303 Level-0 table #96: 101768 bytes OK
-2024/09/11-21:45:03.236 b303 Delete type=0 #91
-2024/09/11-21:45:03.237 b303 Manual compaction at level-0 from '\x00%\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00&\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/09/11-21:45:06.528 b303 Compacting 1@1 + 1@2 files
-2024/09/11-21:45:06.638 b303 Generated table #97@1: 38582 keys, 1290533 bytes
-2024/09/11-21:45:06.638 b303 Compacted 1@1 + 1@2 files => 1290533 bytes
-2024/09/11-21:45:06.647 b303 compacted to: files[ 0 0 1 0 0 0 0 ]
-2024/09/11-21:45:06.648 b303 Delete type=2 #96
-2024/09/11-21:45:06.648 b303 Delete type=2 #93
+2024/09/12-13:21:14.387 fc03 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/09/12-13:21:14.387 fc03 Recovering log #95
+2024/09/12-13:21:14.402 fc03 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000095.log 
+2024/09/12-13:21:17.257 b007 Level-0 table #100: started
+2024/09/12-13:21:17.268 b007 Level-0 table #100: 98338 bytes OK
+2024/09/12-13:21:17.284 b007 Delete type=0 #95
+2024/09/12-13:21:17.294 b007 Manual compaction at level-0 from '\x00&\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00'\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/09/12-13:21:19.976 8103 Compacting 1@1 + 1@2 files
+2024/09/12-13:21:20.053 8103 Generated table #101@1: 39504 keys, 1320500 bytes
+2024/09/12-13:21:20.053 8103 Compacted 1@1 + 1@2 files => 1320500 bytes
+2024/09/12-13:21:20.060 8103 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/09/12-13:21:20.061 8103 Delete type=2 #100
+2024/09/12-13:21:20.061 8103 Delete type=2 #97

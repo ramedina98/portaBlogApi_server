@@ -22,6 +22,32 @@ import {
 import logging from "../config/logging";
 
 /**
+ * @MethodGET ->
+ * This service helps me to get the ID of a resume by seraching with the id of a user...
+ */
+const getIdResume = async (id: string): Promise<string | null> => {
+    try {
+        const resume: any = await Resume.findOne({ where: { user_id: id }});
+
+        if(!resume){
+            logging.warning(':::::::::::::::::::::::');
+            logging.warning('Resume not found!');
+            logging.warning(':::::::::::::::::::::::');
+            return null;
+        }
+
+        const resume_id: string = resume.id_resume;
+
+        return resume_id;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+/**
  * @MethodGET
  * This service helps to take the data from the tables:
  * 1. Tecnologies.
@@ -94,4 +120,4 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
     }
 }
 
-export { getResume };
+export { getIdResume, getResume };

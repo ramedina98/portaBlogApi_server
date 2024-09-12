@@ -1,13 +1,13 @@
-2024/09/11-21:43:11.300 a203 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/09/11-21:43:11.300 a203 Recovering log #87
-2024/09/11-21:43:11.539 a203 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000087.log 
-2024/09/11-21:43:14.206 13e03 Level-0 table #92: started
-2024/09/11-21:43:14.235 13e03 Level-0 table #92: 692781 bytes OK
-2024/09/11-21:43:14.248 13e03 Delete type=0 #87
-2024/09/11-21:43:14.249 1ec03 Manual compaction at level-0 from '\x00$\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00%\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/09/11-21:43:16.816 1ec03 Compacting 1@1 + 1@2 files
-2024/09/11-21:43:16.965 1ec03 Generated table #93@1: 37743 keys, 1258691 bytes
-2024/09/11-21:43:16.966 1ec03 Compacted 1@1 + 1@2 files => 1258691 bytes
-2024/09/11-21:43:16.973 1ec03 compacted to: files[ 0 0 1 0 0 0 0 ]
-2024/09/11-21:43:16.977 1ec03 Delete type=2 #89
-2024/09/11-21:43:16.977 1ec03 Delete type=2 #92
+2024/09/11-21:45:01.061 ad03 Reusing MANIFEST /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/09/11-21:45:01.062 ad03 Recovering log #91
+2024/09/11-21:45:01.077 ad03 Reusing old log /Users/ricardomedina/Desktop/Proyectos/portaBlogApi_server/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000091.log 
+2024/09/11-21:45:03.210 b303 Level-0 table #96: started
+2024/09/11-21:45:03.223 b303 Level-0 table #96: 101768 bytes OK
+2024/09/11-21:45:03.236 b303 Delete type=0 #91
+2024/09/11-21:45:03.237 b303 Manual compaction at level-0 from '\x00%\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00&\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/09/11-21:45:06.528 b303 Compacting 1@1 + 1@2 files
+2024/09/11-21:45:06.638 b303 Generated table #97@1: 38582 keys, 1290533 bytes
+2024/09/11-21:45:06.638 b303 Compacted 1@1 + 1@2 files => 1290533 bytes
+2024/09/11-21:45:06.647 b303 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/09/11-21:45:06.648 b303 Delete type=2 #96
+2024/09/11-21:45:06.648 b303 Delete type=2 #93
