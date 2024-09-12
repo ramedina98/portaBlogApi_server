@@ -66,6 +66,8 @@ interface IResume {
     logo_id: number;
     email: string;
 }
+// to recive information...
+interface ICreateResume extends Omit<IResume, 'id_resume'>{}
 
 // resume service interfece...
 interface IResumeService {
@@ -76,4 +78,5 @@ interface IResumeService {
     schooling: ISchooling [];
 }
 
-export{ ITech, IExperience, Position, TypeExpe, ICourse, ISchooling ,IResume, IResumeService };
+
+export{ ITech, IExperience, Position, TypeExpe, ICourse, ISchooling ,IResume, ICreateResume, IResumeService };

@@ -10,13 +10,14 @@ import { Resume } from "../models/mysql/resumeModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
 import {
+    IResume,
     // ITech,
     // IExperience,
     // Position,
     // TypeExpe,
     // ICourse,
     //ISchooling,
-    // IResume,
+    ICreateResume,
     IResumeService
 } from "../interfaces/IResume";
 import logging from "../config/logging";
@@ -120,4 +121,28 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
     }
 }
 
-export { getIdResume, getResume };
+/**
+ * @MethoPOST -->
+ * this service helps me to create a new register in the resume table...
+ */
+const createResume = async (data: ICreateResume): Promise<string | null> => {
+    try {
+        const resume: IResume = await Resume.create(data);
+
+        if(!resume){
+            logging.warning(':::::::::::::::::::::::');
+            logging.warning('Record not made!');
+            logging.warning(':::::::::::::::::::::::');
+            return null;
+        }
+
+        return 'Successfully registration';
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getIdResume, getResume, createResume };

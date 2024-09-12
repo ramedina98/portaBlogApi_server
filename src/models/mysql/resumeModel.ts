@@ -21,7 +21,6 @@ Resume.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false
     },
     user_id: {
         type: DataTypes.CHAR(36),

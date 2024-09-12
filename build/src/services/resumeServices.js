@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getResume = exports.getIdResume = void 0;
+exports.createResume = exports.getResume = exports.getIdResume = void 0;
 /**
  * @service ->
  * Here we have all the require services to handle the resume endpoints...
@@ -117,3 +117,26 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getResume = getResume;
+/**
+ * @MethoPOST -->
+ * this service helps me to create a new register in the resume table...
+ */
+const createResume = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const resume = yield resumeModel_1.Resume.create(data);
+        if (!resume) {
+            logging_1.default.warning(':::::::::::::::::::::::');
+            logging_1.default.warning('Record not made!');
+            logging_1.default.warning(':::::::::::::::::::::::');
+            return null;
+        }
+        return 'Successfully registration';
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.createResume = createResume;

@@ -7,4 +7,6 @@ const resumeRoutes = (0, express_1.Router)();
 // GET
 resumeRoutes.get('/resume-by-user', resumeControllers_1.getIdResumeResponse);
 resumeRoutes.get('/:id', resumeControllers_1.getResumeResponse);
+// POST
+resumeRoutes.post('/create', resumeControllers_1.createResumeResponse);
 exports.default = resumeRoutes;

@@ -15,7 +15,6 @@ Resume.init({
         type: sequelize_1.DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false
     },
     user_id: {
         type: sequelize_1.DataTypes.CHAR(36),

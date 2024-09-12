@@ -1,7 +1,7 @@
 // here I have all the resume controllers...
 import { Request, Response } from "express";
-import { IResumeService } from "../interfaces/IResume";
-import { getIdResume, getResume } from "../services/resumeServices";
+import { ICreateResume, IResumeService } from "../interfaces/IResume";
+import { getIdResume, getResume, createResume } from "../services/resumeServices";
 
 /**
  * This controller helps me to get the id of a resume searching by user_id...
@@ -43,4 +43,25 @@ const getResumeResponse = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
-export { getIdResumeResponse, getResumeResponse };
+/**
+ * This controller helps me to handle the createResume service, this to
+ * create a resume record for a specific user...
+ */
+const createResumeResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { resumeData } = req.body;
+        const data: ICreateResume = resumeData;
+
+        const resume: string | null = await createResume(data);
+
+        if(resume === null){
+            res.status(404).json({ message: 'Record not made!'});
+        }
+
+        res.status(200).json({ message: 'Successfully registration'});
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error' + error.message });
+    }
+}
+
+export { getIdResumeResponse, getResumeResponse, createResumeResponse };
