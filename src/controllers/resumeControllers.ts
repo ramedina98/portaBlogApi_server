@@ -1,8 +1,6 @@
 /**
  * @Controller --> In this file can find all the controllers of the endpoint resume
  * and all the elements related to it...
- * 1. Resume
- * 2. technologies
  */
 import { Request, Response } from "express";
 import { ICreateResume, IResumeService } from "../interfaces/IResume";
