@@ -1,6 +1,6 @@
 /**
- * @service ->
- * Here we have all the require services to handle the resume endpoints...
+ * @Services -> All the services that can be found here are for managing updates, creating records and
+ * obtaining information about the resume and all the elements related to it...
  */
 import { Tech } from "../models/mysql/technologiesModel";
 import { Expe } from "../models/mysql/experienceModel";
@@ -9,18 +9,12 @@ import { Schooling } from "../models/mysql/schoolingModel";
 import { Resume } from "../models/mysql/resumeModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
-import {
-    IResume,
-    // ITech,
-    // IExperience,
-    // Position,
-    // TypeExpe,
-    // ICourse,
-    //ISchooling,
-    ICreateResume,
-    IResumeService
-} from "../interfaces/IResume";
+import { IResume, ICreateResume, IResumeService } from "../interfaces/IResume";
 import logging from "../config/logging";
+
+/**
+ * @ResumeServices ...
+ */
 
 /**
  * @MethodGET ->
@@ -73,6 +67,9 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
                     id_resume: {
                         [Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             Expe.findAll({
@@ -80,6 +77,9 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
                     id_expe: {
                         [Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             Course.findAll({
@@ -87,6 +87,9 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
                     id_course: {
                         [Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             Schooling.findAll({
@@ -94,6 +97,9 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
                     id_sch: {
                         [Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             })
         ]);
@@ -145,4 +151,33 @@ const createResume = async (data: ICreateResume): Promise<string | null> => {
     }
 }
 
-export { getIdResume, getResume, createResume };
+/**
+ * This service helps me to handle the update the data of a specific record in the
+ * resume table...
+ */
+const updateAResumeRecord = async (id: number, data: ICreateResume): Promise<string | null> => {
+    try {
+        const updateResume: any = await Resume.update(data, {
+            where: { id_resume: {
+                [Op.eq]: id
+            }}
+        });
+
+        if(updateResume === 0){
+            logging.warning(':::::::::::::::::::::::');
+            logging.warning(`No resume found with id: ${id}`);
+            logging.warning(':::::::::::::::::::::::');
+            return null;
+        }
+
+        return 'Resume successfully updated!';
+
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getIdResume, getResume, createResume, updateAResumeRecord };

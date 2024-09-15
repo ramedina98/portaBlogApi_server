@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createResume = exports.getResume = exports.getIdResume = void 0;
+exports.updateAResumeRecord = exports.createResume = exports.getResume = exports.getIdResume = void 0;
 /**
- * @service ->
- * Here we have all the require services to handle the resume endpoints...
+ * @Services -> All the services that can be found here are for managing updates, creating records and
+ * obtaining information about the resume and all the elements related to it...
  */
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const experienceModel_1 = require("../models/mysql/experienceModel");
@@ -25,6 +25,9 @@ const resumeModel_1 = require("../models/mysql/resumeModel");
 const sequelize_1 = require("sequelize");
 const checkEmptyResults_1 = require("../utils/checkEmptyResults");
 const logging_1 = __importDefault(require("../config/logging"));
+/**
+ * @ResumeServices ...
+ */
 /**
  * @MethodGET ->
  * This service helps me to get the ID of a resume by seraching with the id of a user...
@@ -72,6 +75,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
                     id_resume: {
                         [sequelize_1.Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             experienceModel_1.Expe.findAll({
@@ -79,6 +85,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
                     id_expe: {
                         [sequelize_1.Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             coursesModel_1.Course.findAll({
@@ -86,6 +95,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
                     id_course: {
                         [sequelize_1.Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             }),
             schoolingModel_1.Schooling.findAll({
@@ -93,6 +105,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
                     id_sch: {
                         [sequelize_1.Op.eq]: id
                     }
+                },
+                attributes: {
+                    exclude: ['id_resume']
                 }
             })
         ]);
@@ -140,3 +155,30 @@ const createResume = (data) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.createResume = createResume;
+/**
+ * This service helps me to handle the update the data of a specific record in the
+ * resume table...
+ */
+const updateAResumeRecord = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updateResume = yield resumeModel_1.Resume.update(data, {
+            where: { id_resume: {
+                    [sequelize_1.Op.eq]: id
+                } }
+        });
+        if (updateResume === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::');
+            logging_1.default.warning(`No resume found with id: ${id}`);
+            logging_1.default.warning(':::::::::::::::::::::::');
+            return null;
+        }
+        return 'Resume successfully updated!';
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateAResumeRecord = updateAResumeRecord;

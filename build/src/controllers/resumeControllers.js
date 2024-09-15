@@ -9,8 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createResumeResponse = exports.getResumeResponse = exports.getIdResumeResponse = void 0;
+exports.updateAResumeRecordResponse = exports.createResumeResponse = exports.getResumeResponse = exports.getIdResumeResponse = void 0;
 const resumeServices_1 = require("../services/resumeServices");
+/**
+ * @ResumeControllers ...
+ */
 /**
  * This controller helps me to get the id of a resume searching by user_id...
  */
@@ -66,3 +69,21 @@ const createResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.createResumeResponse = createResumeResponse;
+/**
+ * This controller helps me to hadle all the process to update an specesific record in the resume table...
+ */
+const updateAResumeRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_resume, resumeData } = req.body;
+        const data = resumeData;
+        const updateResume = yield (0, resumeServices_1.updateAResumeRecord)(id_resume, data);
+        if (updateResume === null) {
+            res.status(404).json({ message: 'Record not found!' });
+        }
+        res.status(200).json({ message: updateResume });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error' + error.message });
+    }
+});
+exports.updateAResumeRecordResponse = updateAResumeRecordResponse;

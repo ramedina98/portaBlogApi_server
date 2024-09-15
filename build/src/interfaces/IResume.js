@@ -1,8 +1,4 @@
 "use strict";
-/**
- * In this file we have all the necessary interfaces to work with the models, controllers and
- * services of the endpoint related to the resume...
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypeExpe = exports.Position = void 0;
 // experience interface...

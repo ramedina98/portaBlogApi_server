@@ -8,10 +8,10 @@ import { ITech } from "../../interfaces/IResume";
 interface TechAtributtes extends Optional<ITech, 'id_tech'>{}
 
 class Tech extends Model <ITech, TechAtributtes>{
-    id_tech!: Number;
+    id_tech!: number;
     name_tech!: string;
     icon_tech!: string;
-    id_resume!: Number;
+    id_resume!: number;
 }
 
 Tech.init({

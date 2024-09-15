@@ -1,15 +1,8 @@
 /**
  * In this file we have all the necessary interfaces to work with the models, controllers and
- * services of the endpoint related to the resume...
+ * services of the endpoint resume...
  */
-
-// technologies interface...
-interface ITech {
-    id_tech: number;
-    name_tech: string;
-    icon_tech: string;
-    id_resume: number;
-}
+import { ITech } from "./ITechnologies";
 
 // experience interface...
 // elemtns of this iinterface...
@@ -79,4 +72,4 @@ interface IResumeService {
 }
 
 
-export{ ITech, IExperience, Position, TypeExpe, ICourse, ISchooling ,IResume, ICreateResume, IResumeService };
+export{ IExperience, Position, TypeExpe, ICourse, ISchooling ,IResume, ICreateResume, IResumeService };
