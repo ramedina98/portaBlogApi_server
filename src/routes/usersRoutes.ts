@@ -4,8 +4,10 @@ import { getUser, loginSession, putUpdatedUserInfo} from "../controllers/usersCo
 
 const userRoutes = Router();
 
+// GET
 userRoutes.get('/login', loginSession);
 userRoutes.get('/userinfo', getUser);
+//PUT
 userRoutes.put('/updateuser', putUpdatedUserInfo);
 
 export default userRoutes;

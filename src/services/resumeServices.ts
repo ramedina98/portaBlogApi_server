@@ -7,8 +7,7 @@ import { Expe } from "../models/mysql/experienceModel";
 import { Course } from "../models/mysql/coursesModel";
 import { Schooling } from "../models/mysql/schoolingModel";
 import { Resume } from "../models/mysql/resumeModel";
-// TODO: arreglar este problema, (export {})...
-import User  from "../models/mysql/usersModel";
+import { User }  from "../models/mysql/usersModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
 import { IResume, ICreateResume, IResumeService } from "../interfaces/IResume";

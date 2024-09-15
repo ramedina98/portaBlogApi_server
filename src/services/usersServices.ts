@@ -4,12 +4,12 @@
  * 2. Login.
  * 3. Update data.
  */
-import bcrypt from 'bcrypt';
-import User from "../models/mysql/usersModel";
-import logging from "../config/logging";
+import { User } from "../models/mysql/usersModel";
 import { IUser, IUserLogin } from "../interfaces/IUser";
 import { IJwtPayload } from '../interfaces/IJwtPayload';
 import { generateJwToken } from '../utils/jwtUtils';
+import bcrypt from 'bcrypt';
+import logging from "../config/logging";
 
 // (GET) this service helps us to login the users (or not)...
 const loginUser = async (email:string, password:string): Promise<IUserLogin | null> => {
