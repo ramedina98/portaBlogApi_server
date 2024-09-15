@@ -58,11 +58,11 @@ const createResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, fun
     try {
         const { resumeData } = req.body;
         const data = resumeData;
-        const resume = yield (0, resumeServices_1.createResume)(data);
+        const resume = yield (0, resumeServices_1.createResume)(data.user_id, data);
         if (resume === null) {
             res.status(404).json({ message: 'Record not made!' });
         }
-        res.status(200).json({ message: 'Successfully registration' });
+        res.status(200).json({ message: resume });
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error' + error.message });

@@ -59,13 +59,13 @@ const createResumeResponse = async (req: Request, res: Response): Promise<void> 
         const { resumeData } = req.body;
         const data: ICreateResume = resumeData;
 
-        const resume: string | null = await createResume(data);
+        const resume: string | null = await createResume(data.user_id, data);
 
         if(resume === null){
             res.status(404).json({ message: 'Record not made!'});
         }
 
-        res.status(200).json({ message: 'Successfully registration'});
+        res.status(200).json({ message: resume });
     } catch (error: any) {
         res.status(500).json({ message: 'Internal server error' + error.message });
     }

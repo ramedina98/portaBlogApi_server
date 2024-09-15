@@ -7,6 +7,8 @@ import { Expe } from "../models/mysql/experienceModel";
 import { Course } from "../models/mysql/coursesModel";
 import { Schooling } from "../models/mysql/schoolingModel";
 import { Resume } from "../models/mysql/resumeModel";
+// TODO: arreglar este problema, (export {})...
+import User  from "../models/mysql/usersModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
 import { IResume, ICreateResume, IResumeService } from "../interfaces/IResume";
@@ -107,7 +109,9 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
         const check: boolean = checkEmptyResults([technologies, experience, courses, schooling]);
 
         if(check){
+            logging.warning(':::::::::::::::::::');
             logging.warning('Data not found!');
+            logging.warning(':::::::::::::::::::');
             return null;
         }
 
@@ -130,9 +134,41 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
 /**
  * @MethoPOST -->
  * this service helps me to create a new register in the resume table...
+ *
+ *  It is necessary to validate that the user id is valid (exists) and
+ * that it does not already have a resume created, since in that case it could
+ * only be edited, it cannot have more than one...
+ * @CheckForUser --> verify if the user exists...
+ * @checkForResume --> verify if the user have already a resume
  */
-const createResume = async (data: ICreateResume): Promise<string | null> => {
+const createResume = async (id_user: string, data: ICreateResume): Promise<string | null> => {
     try {
+        // check if the id_user exists...
+        const checkForUser: any = await User.findByPk(id_user);
+
+        if(!checkForUser){
+            logging.warning(':::::::::::::::::::::::::::');
+            logging.warning(`User deosn't exists, id: ${id_user} is wrong!`);
+            logging.warning(':::::::::::::::::::::::::::');
+            return `User deosn't exists, id: ${id_user} is wrong!`;
+        }
+
+        // then I verify if there is already a resume associated with the user...
+        const checkForResume: any = await Resume.findOne({
+            where: {
+                user_id: {
+                    [Op.eq]: id_user
+                }
+            }
+        });
+
+        if(checkForResume){
+            logging.warning(':::::::::::::::::::::::::::');
+            logging.warning('The user already has a resume!')
+            logging.warning(':::::::::::::::::::::::::::');
+            return 'There is already a resume associated with the user';
+        }
+
         const resume: IResume = await Resume.create(data);
 
         if(!resume){

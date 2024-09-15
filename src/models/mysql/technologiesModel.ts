@@ -3,7 +3,7 @@
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
-import { ITech } from "../../interfaces/IResume";
+import { ITech } from "../../interfaces/ITechnologies";
 
 interface TechAtributtes extends Optional<ITech, 'id_tech'>{}
 

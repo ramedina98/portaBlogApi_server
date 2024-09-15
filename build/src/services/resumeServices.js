@@ -22,6 +22,8 @@ const experienceModel_1 = require("../models/mysql/experienceModel");
 const coursesModel_1 = require("../models/mysql/coursesModel");
 const schoolingModel_1 = require("../models/mysql/schoolingModel");
 const resumeModel_1 = require("../models/mysql/resumeModel");
+// TODO: arreglar este problema, (export {})...
+const usersModel_1 = __importDefault(require("../models/mysql/usersModel"));
 const sequelize_1 = require("sequelize");
 const checkEmptyResults_1 = require("../utils/checkEmptyResults");
 const logging_1 = __importDefault(require("../config/logging"));
@@ -135,9 +137,37 @@ exports.getResume = getResume;
 /**
  * @MethoPOST -->
  * this service helps me to create a new register in the resume table...
+ *
+ *  It is necessary to validate that the user id is valid (exists) and
+ * that it does not already have a resume created, since in that case it could
+ * only be edited, it cannot have more than one...
+ * @CheckForUser --> verify if the user exists...
+ * @checkForResume --> verify if the user have already a resume
  */
-const createResume = (data) => __awaiter(void 0, void 0, void 0, function* () {
+const createResume = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // check if the id_user exists...
+        const checkForUser = yield usersModel_1.default.findByPk(id_user);
+        if (!checkForUser) {
+            logging_1.default.warning(':::::::::::::::::::::::::::');
+            logging_1.default.warning(`User deosn't exists, id: ${id_user} is wrong!`);
+            logging_1.default.warning(':::::::::::::::::::::::::::');
+            return `User deosn't exists, id: ${id_user} is wrong!`;
+        }
+        // then I verify if there is already a resume associated with the user...
+        const checkForResume = yield resumeModel_1.Resume.findOne({
+            where: {
+                user_id: {
+                    [sequelize_1.Op.eq]: id_user
+                }
+            }
+        });
+        if (checkForResume) {
+            logging_1.default.warning(':::::::::::::::::::::::::::');
+            logging_1.default.warning('The user already has a resume!');
+            logging_1.default.warning(':::::::::::::::::::::::::::');
+            return 'There is already a resume associated with the user';
+        }
         const resume = yield resumeModel_1.Resume.create(data);
         if (!resume) {
             logging_1.default.warning(':::::::::::::::::::::::');
