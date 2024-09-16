@@ -22,8 +22,7 @@ const experienceModel_1 = require("../models/mysql/experienceModel");
 const coursesModel_1 = require("../models/mysql/coursesModel");
 const schoolingModel_1 = require("../models/mysql/schoolingModel");
 const resumeModel_1 = require("../models/mysql/resumeModel");
-// TODO: arreglar este problema, (export {})...
-const usersModel_1 = __importDefault(require("../models/mysql/usersModel"));
+const usersModel_1 = require("../models/mysql/usersModel");
 const sequelize_1 = require("sequelize");
 const checkEmptyResults_1 = require("../utils/checkEmptyResults");
 const logging_1 = __importDefault(require("../config/logging"));
@@ -115,7 +114,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
         ]);
         const check = (0, checkEmptyResults_1.checkEmptyResults)([technologies, experience, courses, schooling]);
         if (check) {
+            logging_1.default.warning(':::::::::::::::::::');
             logging_1.default.warning('Data not found!');
+            logging_1.default.warning(':::::::::::::::::::');
             return null;
         }
         return {
@@ -147,7 +148,7 @@ exports.getResume = getResume;
 const createResume = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // check if the id_user exists...
-        const checkForUser = yield usersModel_1.default.findByPk(id_user);
+        const checkForUser = yield usersModel_1.User.findByPk(id_user);
         if (!checkForUser) {
             logging_1.default.warning(':::::::::::::::::::::::::::');
             logging_1.default.warning(`User deosn't exists, id: ${id_user} is wrong!`);

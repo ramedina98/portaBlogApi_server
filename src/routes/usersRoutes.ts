@@ -6,7 +6,7 @@ const userRoutes = Router();
 
 // GET
 userRoutes.get('/login', loginSession);
-userRoutes.get('/userinfo', getUser);
+userRoutes.get('/:id', getUser);
 //PUT
 userRoutes.put('/updateuser', putUpdatedUserInfo);
 

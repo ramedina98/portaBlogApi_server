@@ -11,11 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.putUpdatedUserInfo = exports.getUser = exports.loginSession = void 0;
 const usersServices_1 = require("../services/usersServices");
-// login Controller...
+/**
+ * @LoginSessionController --> To log in
+ * 1 = invalid email
+ * 2 = invaild password
+ */
 const loginSession = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     try {
         const login = yield (0, usersServices_1.loginUser)(email, password);
+        // Here is the correct answer...
+        if (typeof login === 'number') {
+            const message = login === 1 ? 'Invalid email' : login === 2 ? 'Invalid password' : 'Unknow error';
+            res.status(404).json({ message });
+            return;
+        }
         res.status(200).json({ message: 'Successful login', login });
     }
     catch (error) {
@@ -23,25 +33,35 @@ const loginSession = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.loginSession = loginSession;
-// this controller helps us to search a user...
+/**
+ * @GetUserController --> This controller helps to search a specific user...
+ * If nothing was found the service returns a null...
+ */
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_user } = req.body;
     try {
-        const user = yield (0, usersServices_1.getUserData)(id_user);
-        res.status(200).json({ message: 'User found', user });
+        const { id } = req.params;
+        const user = yield (0, usersServices_1.getUserData)(id);
+        if (user === null) {
+            res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'User successfully found', user });
     }
     catch (error) {
         res.status(401).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.getUser = getUser;
-// this controller helps us to update the data of a specific user...
+/**
+ *  @UpdateUserInfoController
+ * This controller helps me to update the data of a specific user
+ */
 const putUpdatedUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // this is an object with all the required data...
-    const { id_user, userData } = req.body;
     try {
+        const { id_user, userData } = req.body;
         const response = yield (0, usersServices_1.EditUserInfo)(id_user, userData);
-        // response has to be (User updated successfully.): string
+        if (response === null) {
+            res.status(404).json({ message: 'Non-existent user' });
+        }
         res.status(200).json({ message: response });
     }
     catch (error) {

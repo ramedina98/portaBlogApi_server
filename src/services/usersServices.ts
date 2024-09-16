@@ -1,5 +1,5 @@
 /**
- * Here we have all the required services for users
+ * @UserServices --> Here I have all the required services to handle the users controllers...
  * 1. Get all the data.
  * 2. Login.
  * 3. Update data.
@@ -11,22 +11,35 @@ import { generateJwToken } from '../utils/jwtUtils';
 import bcrypt from 'bcrypt';
 import logging from "../config/logging";
 
-// (GET) this service helps us to login the users (or not)...
-const loginUser = async (email:string, password:string): Promise<IUserLogin | null> => {
+/**
+ * @MethodGET -> This service helps me to login the users...
+ * @param email
+ * @param password
+ *
+ * If the email or password does not match, then a number is returned
+ * indicating this...
+ * 1 = Invalid email
+ * 2 = Invalid password
+ */
+const loginUser = async (email:string, password:string): Promise<IUserLogin | number> => {
     try{
-        const user = await User.findOne({ where: { email }});
+        const user: any = await User.findOne({ where: { email }});
 
         if(!user){
+            logging.warning('::::::::::::::::::::');
             logging.error('Invalid email'); // user not found, email incorrect...
-            return null;
+            logging.warning('::::::::::::::::::::');
+            return 1;
         }
 
         // check if both are the same...
         const isPasswordValid = await bcrypt.compare(password, user.passwrd);
 
         if(!isPasswordValid){
-            logging.error('Invalid password');
-            throw new Error('Invalid password');
+            logging.warning('::::::::::::::::::::');
+            logging.error('Invalid password'); // password not found, password incorrect...
+            logging.warning('::::::::::::::::::::');
+            return 2;
         }
 
         // generar un JWT para re enviar los datos...
@@ -48,31 +61,48 @@ const loginUser = async (email:string, password:string): Promise<IUserLogin | nu
         return response;
 
     } catch(error: any){
+        logging.warning(':::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
+        logging.warning(':::::::::::::::::::::::::::');
         throw error;
     }
 }
 
-// (GET) this service helps us to get the data of a user...
+/**
+ * @MethodGET -> This service helps me to reach the data of a specific user...
+ * @param id_user
+ *
+ * If the user was not found it returns a null to indicate this and in the controller
+ * I send the message and the corresponding status...
+ */
 const getUserData = async (id_user: string): Promise<IUser | null> => {
     try {
         // search for the user...
-        const user = await User.findOne({ where: { id_user }});
+        const user: any = await User.findOne({ where: { id_user }});
 
         if(!user){
-            logging.error('Invalid credential');
+            logging.warning(':::::::::::::::::');
+            logging.error('User not found');
+            logging.warning(':::::::::::::::::');
             return null;
         }
 
         return user;
     } catch (error: any) {
-        logging.error('Error fetching de user data: ' + error.message);
+        logging.warning('::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warning('::::::::::::::::::::::::::::');
         throw error;
     }
 }
 
-// (PUT) This service helps us to edit information...
-// TODO: Verificar si necesita ser setida de un tipo en especifico la funcion...
+/**
+ * @MethodPUT --> This service helps me to edit the register of a specific user...
+ * @param id_user
+ * @param data
+ *
+ * If no record corresponds to the id_user, it returns a null to indicate this...
+ */
 const EditUserInfo = async (id_user: string, data: IUser): Promise<string | null> => {
     try {
         // search for the correct user and edit its info...
@@ -89,14 +119,18 @@ const EditUserInfo = async (id_user: string, data: IUser): Promise<string | null
         });
 
         if(response === 0){
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging.error('No records were updated. User may not exist or no changes were made.');
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
 
         return 'User updated successfully';
 
     } catch (error: any) {
-        logging.error('Error fetching de user data: ' + error.message);
+        logging.warning('::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warning('::::::::::::::::::::::::::');
         throw error;
     }
 }

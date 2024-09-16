@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.User = void 0;
 /**
  * Here we have the model of the users instances...
  */
@@ -7,6 +8,7 @@ const sequelize_1 = require("sequelize");
 const db_1 = require("../../config/db");
 class User extends sequelize_1.Model {
 }
+exports.User = User;
 User.init({
     id_user: {
         type: sequelize_1.DataTypes.CHAR(36),
@@ -47,4 +49,3 @@ User.init({
     modelName: 'User',
     timestamps: false
 });
-exports.default = User;

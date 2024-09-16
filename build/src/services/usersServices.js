@@ -14,28 +14,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EditUserInfo = exports.getUserData = exports.loginUser = void 0;
 /**
- * Here we have all the required services for users
+ * @UserServices --> Here I have all the required services to handle the users controllers...
  * 1. Get all the data.
  * 2. Login.
  * 3. Update data.
  */
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const usersModel_1 = __importDefault(require("../models/mysql/usersModel"));
-const logging_1 = __importDefault(require("../config/logging"));
+const usersModel_1 = require("../models/mysql/usersModel");
 const jwtUtils_1 = require("../utils/jwtUtils");
-// (GET) this service helps us to login the users (or not)...
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const logging_1 = __importDefault(require("../config/logging"));
+/**
+ * @MethodGET -> This service helps me to login the users...
+ * @param email
+ * @param password
+ *
+ * If the email or password does not match, then a number is returned
+ * indicating this...
+ * 1 = Invalid email
+ * 2 = Invalid password
+ */
 const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield usersModel_1.default.findOne({ where: { email } });
+        const user = yield usersModel_1.User.findOne({ where: { email } });
         if (!user) {
+            logging_1.default.warning('::::::::::::::::::::');
             logging_1.default.error('Invalid email'); // user not found, email incorrect...
-            return null;
+            logging_1.default.warning('::::::::::::::::::::');
+            return 1;
         }
         // check if both are the same...
         const isPasswordValid = yield bcrypt_1.default.compare(password, user.passwrd);
         if (!isPasswordValid) {
-            logging_1.default.error('Invalid password');
-            throw new Error('Invalid password');
+            logging_1.default.warning('::::::::::::::::::::');
+            logging_1.default.error('Invalid password'); // password not found, password incorrect...
+            logging_1.default.warning('::::::::::::::::::::');
+            return 2;
         }
         // generar un JWT para re enviar los datos...
         const payload = {
@@ -53,34 +66,51 @@ const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, functio
         return response;
     }
     catch (error) {
+        logging_1.default.warning(':::::::::::::::::::::::::::');
         logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warning(':::::::::::::::::::::::::::');
         throw error;
     }
 });
 exports.loginUser = loginUser;
-// (GET) this service helps us to get the data of a user...
+/**
+ * @MethodGET -> This service helps me to reach the data of a specific user...
+ * @param id_user
+ *
+ * If the user was not found it returns a null to indicate this and in the controller
+ * I send the message and the corresponding status...
+ */
 const getUserData = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // search for the user...
-        const user = yield usersModel_1.default.findOne({ where: { id_user } });
+        const user = yield usersModel_1.User.findOne({ where: { id_user } });
         if (!user) {
-            logging_1.default.error('Invalid credential');
+            logging_1.default.warning(':::::::::::::::::');
+            logging_1.default.error('User not found');
+            logging_1.default.warning(':::::::::::::::::');
             return null;
         }
         return user;
     }
     catch (error) {
-        logging_1.default.error('Error fetching de user data: ' + error.message);
+        logging_1.default.warning('::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warning('::::::::::::::::::::::::::::');
         throw error;
     }
 });
 exports.getUserData = getUserData;
-// (PUT) This service helps us to edit information...
-// TODO: Verificar si necesita ser setida de un tipo en especifico la funcion...
+/**
+ * @MethodPUT --> This service helps me to edit the register of a specific user...
+ * @param id_user
+ * @param data
+ *
+ * If no record corresponds to the id_user, it returns a null to indicate this...
+ */
 const EditUserInfo = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // search for the correct user and edit its info...
-        const response = yield usersModel_1.default.update({
+        const response = yield usersModel_1.User.update({
             name1: data.name1,
             name2: data.name2,
             surname: data.surname,
@@ -92,13 +122,17 @@ const EditUserInfo = (id_user, data) => __awaiter(void 0, void 0, void 0, functi
             where: { id_user }
         });
         if (response === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging_1.default.error('No records were updated. User may not exist or no changes were made.');
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
         return 'User updated successfully';
     }
     catch (error) {
-        logging_1.default.error('Error fetching de user data: ' + error.message);
+        logging_1.default.warning('::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warning('::::::::::::::::::::::::::');
         throw error;
     }
 });
