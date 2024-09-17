@@ -26,7 +26,7 @@ const loginSession = async (req:Request, res: Response): Promise<void> => {
 
         res.status(200).json({ message: 'Successful login', login });
     } catch (error: any) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message })
+        res.status(500).json({ message: 'Internal server error: ' + error.message })
     }
 }
 
@@ -46,7 +46,7 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
 
         res.status(200).json({ message: 'User successfully found', user })
     } catch (error: any) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 }
 
@@ -66,7 +66,7 @@ const putUpdatedUserInfo = async (req: Request, res:Response): Promise<void> => 
 
         res.status(200).json({ message: response });
     } catch (error: any) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 }
 
