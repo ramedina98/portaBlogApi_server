@@ -1,5 +1,5 @@
 /**
- * Here we have all the required services for handle the emails...
+ * @EmailsServices -> Here I have all the required services for handle the emails...
  * 1. Get on by its id...
  * 2. Get all the emails...
  * 3. Post (this is when somebody answer an email..)
@@ -19,6 +19,8 @@ import logging from "../config/logging";
 /**
  * @MethodGET
  * This service helps me to get all the records from the emails table that I recived...
+ *
+ * If no email was found, a null is returned...
  * */
 const AllEmails = async (): Promise<Emails[] | null> => {
     try {
@@ -32,7 +34,9 @@ const AllEmails = async (): Promise<Emails[] | null> => {
         });
 
         if(!emails || emails.length === 0){
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging.error('No emails found that do not have type_email = response');
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
 
@@ -49,6 +53,8 @@ const AllEmails = async (): Promise<Emails[] | null> => {
 /**
  * @MethodGET
  * This service helps me to retrive all the emails that I send as a response of other emails...
+ *
+ * If no email was found, a null is returned...
  * */
 const AllEmailsSent = async (): Promise<Emails[] | null> => {
     try {
@@ -62,7 +68,9 @@ const AllEmailsSent = async (): Promise<Emails[] | null> => {
         });
 
         if(!emails || emails.length === 0){
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging.error('No emails found that do not have type_email = response');
+            logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
 
@@ -78,13 +86,17 @@ const AllEmailsSent = async (): Promise<Emails[] | null> => {
 /**
  * @MethodGET
  * This service helps me to get an specific record from the table emails...
+ * @param id_email
+ * If no email was found, a null is returned...
  * */
 const AnEmail = async (id_email: string): Promise<Emails | null> => {
     try{
         const email: any = await Email.findOne({ where: { id_email }});
 
         if(!email){
+            logging.warning(':::::::::::::::::::::::::::::::::::::');
             logging.error('Invalid id, no email found');
+            logging.warning(':::::::::::::::::::::::::::::::::::::');
             return null;
         }
 
@@ -98,20 +110,34 @@ const AnEmail = async (id_email: string): Promise<Emails | null> => {
 }
 
 /**
- * @MethodPOST This service helps me to create a new email record in the table, also helps me to
+ * @MethodPOST --> This service helps me to create a new email record in the table, also helps me to
  * notify that a new email has arrrived...
+ *
+ * @EmailTypeResponse --> If the type of the email is response, a message is returned that
+ * was sent successfully...
+ *
  * */
 interface IEmailInserted extends Omit<Emails, 'id_emails'>{}; // Emails interface without id_emails
 const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise<string | null> => {
     try {
         const newEmail: any = await Email.create(emailData);
 
+        // verify if the new Email record was done correctly...
+        if(!newEmail){
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::::');
+            logging.error('Error when trying to create the record in the database');
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::::');
+            return null;
+        }
+
         //if email type === response, then just sent a message notifying that the data was registered whitout any problemas...
         if(newEmail.email_type === EmailType.Response){
             // log...
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::::');
             logging.info('Email of type response sent successfully');
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::::');
             // return a message of success...
-            return 'Sent successfully';
+            return `Email successfully sent to ${newEmail.email_recipient}`;
         }
 
         // this functon generate a specific title to notify of the new incoming email...
@@ -149,7 +175,7 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
         eamilCreator.send();
 
         // return a message of success...
-        return 'Sent successfully';
+        return 'Email sent successfully';
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
@@ -196,10 +222,10 @@ const updateIsReadField = async (id: string): Promise<string | null> => {
 }
 
 /**
- * @MethodPATCH
- * This service helps me to change the status of is read, from true to false
+ * @MethodPATCH --> This service helps me to change the status of is read, from true to false. This to
+ * set all emails as unread again...
  */
-const updateAllEmailsFalseToTrue = async (): Promise<string | null> => {
+const updateAllEmailsTrueToFalse = async (): Promise<string | null> => {
     try{
         // find all the emails where is_read equals to true
         const emailsToUpdate = await Email.findAll({
@@ -207,7 +233,9 @@ const updateAllEmailsFalseToTrue = async (): Promise<string | null> => {
         });
 
         if(emailsToUpdate.length === 0){
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::');
             logging.warning('No emails with is_read = true found.');
+            logging.warning('::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
 
@@ -232,7 +260,7 @@ const updateAllEmailsFalseToTrue = async (): Promise<string | null> => {
 
 /**
  * @methodDELETE
- * This service helps me to delete and specific email...
+ * This service helps me to delete and specific email by its id...
  */
 const deleteAnEmail = async (id: string): Promise<string | null> => {
     try {
@@ -253,7 +281,7 @@ const deleteAnEmail = async (id: string): Promise<string | null> => {
         logging.info(`Email with ID ${id} has been deleted.`);
         logging.info('::::::::::::::::::::::::::');
 
-        return `The email has been deleted.`;
+        return 'The email has been deleted.';
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
@@ -266,14 +294,18 @@ const deleteAnEmail = async (id: string): Promise<string | null> => {
  * @methodDELETE
  * This service helps me to delete several emails at the same time with their ids...
  * @param ids - an array of email IDs to delete...
+ *
+ * 1 = No IDs provided for deletion.
+ * 2 = No emails found to delete.
  */
-const deleteSeveralEmails = async (ids: string[]): Promise<string| null> => {
+const deleteSeveralEmails = async (ids: string[]): Promise<string| number> => {
     try {
         if(ids.length === 0){
             logging.warning('::::::::::::::::::::::::::');
             logging.error('No IDs provided for deletion!');
             logging.warning('::::::::::::::::::::::::::');
-            return 'No IDs provided for deletion.';
+            //return 'No IDs provided for deletion.';
+            return 1;
         }
 
         // Delete the emails which ids are in the array...
@@ -283,7 +315,8 @@ const deleteSeveralEmails = async (ids: string[]): Promise<string| null> => {
             logging.warning('::::::::::::::::::::::::::');
             logging.error('No emails found to delete!');
             logging.warning('::::::::::::::::::::::::::');
-            return 'No emails found to delete.';
+            // return 'No emails found to delete.';
+            return 2;
         }
 
         logging.info('::::::::::::::::::::::::::');
@@ -299,4 +332,4 @@ const deleteSeveralEmails = async (ids: string[]): Promise<string| null> => {
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsFalseToTrue, deleteAnEmail, deleteSeveralEmails };
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsTrueToFalse, deleteAnEmail, deleteSeveralEmails };

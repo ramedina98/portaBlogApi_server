@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSeveralEmails = exports.deleteAnEmail = exports.updateAllEmailsFalseToTrue = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.deleteSeveralEmails = exports.deleteAnEmail = exports.updateAllEmailsTrueToFalse = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
- * Here we have all the required services for handle the emails...
+ * @EmailsServices -> Here I have all the required services for handle the emails...
  * 1. Get on by its id...
  * 2. Get all the emails...
  * 3. Post (this is when somebody answer an email..)
@@ -33,6 +33,8 @@ const logging_1 = __importDefault(require("../config/logging"));
 /**
  * @MethodGET
  * This service helps me to get all the records from the emails table that I recived...
+ *
+ * If no email was found, a null is returned...
  * */
 const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -45,7 +47,9 @@ const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         if (!emails || emails.length === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging_1.default.error('No emails found that do not have type_email = response');
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
         return emails;
@@ -61,6 +65,8 @@ exports.AllEmails = AllEmails;
 /**
  * @MethodGET
  * This service helps me to retrive all the emails that I send as a response of other emails...
+ *
+ * If no email was found, a null is returned...
  * */
 const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -73,7 +79,9 @@ const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         if (!emails || emails.length === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             logging_1.default.error('No emails found that do not have type_email = response');
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
         return emails;
@@ -89,12 +97,16 @@ exports.AllEmailsSent = AllEmailsSent;
 /**
  * @MethodGET
  * This service helps me to get an specific record from the table emails...
+ * @param id_email
+ * If no email was found, a null is returned...
  * */
 const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = yield emailsModel_1.Email.findOne({ where: { id_email } });
         if (!email) {
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::');
             logging_1.default.error('Invalid id, no email found');
+            logging_1.default.warning(':::::::::::::::::::::::::::::::::::::');
             return null;
         }
         return email;
@@ -111,12 +123,21 @@ exports.AnEmail = AnEmail;
 const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newEmail = yield emailsModel_1.Email.create(emailData);
+        // verify if the new Email record was done correctly...
+        if (!newEmail) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::');
+            logging_1.default.error('Error when trying to create the record in the database');
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::');
+            return null;
+        }
         //if email type === response, then just sent a message notifying that the data was registered whitout any problemas...
         if (newEmail.email_type === IEmails_1.EmailType.Response) {
             // log...
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::');
             logging_1.default.info('Email of type response sent successfully');
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::');
             // return a message of success...
-            return 'Sent successfully';
+            return `Email successfully sent to ${newEmail.email_recipient}`;
         }
         // this functon generate a specific title to notify of the new incoming email...
         const title = (0, typeOfNotification_1.notificationTitle)(newEmail.email_type);
@@ -149,7 +170,7 @@ const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, f
         // put the send method into action...
         eamilCreator.send();
         // return a message of success...
-        return 'Sent successfully';
+        return 'Email sent successfully';
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');
@@ -194,17 +215,19 @@ const updateIsReadField = (id) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.updateIsReadField = updateIsReadField;
 /**
- * @MethodPATCH
- * This service helps me to change the status of is read, from true to false
+ * @MethodPATCH --> This service helps me to change the status of is read, from true to false. This to
+ * set all emails as unread again...
  */
-const updateAllEmailsFalseToTrue = () => __awaiter(void 0, void 0, void 0, function* () {
+const updateAllEmailsTrueToFalse = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // find all the emails where is_read equals to true
         const emailsToUpdate = yield emailsModel_1.Email.findAll({
             where: { is_read: true }
         });
         if (emailsToUpdate.length === 0) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::');
             logging_1.default.warning('No emails with is_read = true found.');
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
         // update the status of all found emails...
@@ -221,10 +244,10 @@ const updateAllEmailsFalseToTrue = () => __awaiter(void 0, void 0, void 0, funct
         throw error;
     }
 });
-exports.updateAllEmailsFalseToTrue = updateAllEmailsFalseToTrue;
+exports.updateAllEmailsTrueToFalse = updateAllEmailsTrueToFalse;
 /**
  * @methodDELETE
- * This service helps me to delete and specific email...
+ * This service helps me to delete and specific email by its id...
  */
 const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -241,7 +264,7 @@ const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
         logging_1.default.info('::::::::::::::::::::::::::');
         logging_1.default.info(`Email with ID ${id} has been deleted.`);
         logging_1.default.info('::::::::::::::::::::::::::');
-        return `The email has been deleted.`;
+        return 'The email has been deleted.';
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');
@@ -255,6 +278,9 @@ exports.deleteAnEmail = deleteAnEmail;
  * @methodDELETE
  * This service helps me to delete several emails at the same time with their ids...
  * @param ids - an array of email IDs to delete...
+ *
+ * 1 = No IDs provided for deletion.
+ * 2 = No emails found to delete.
  */
 const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -262,7 +288,8 @@ const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function*
             logging_1.default.warning('::::::::::::::::::::::::::');
             logging_1.default.error('No IDs provided for deletion!');
             logging_1.default.warning('::::::::::::::::::::::::::');
-            return 'No IDs provided for deletion.';
+            //return 'No IDs provided for deletion.';
+            return 1;
         }
         // Delete the emails which ids are in the array...
         const deletedCount = yield emailsModel_1.Email.destroy({ where: { id_email: ids } });
@@ -270,7 +297,8 @@ const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function*
             logging_1.default.warning('::::::::::::::::::::::::::');
             logging_1.default.error('No emails found to delete!');
             logging_1.default.warning('::::::::::::::::::::::::::');
-            return 'No emails found to delete.';
+            // return 'No emails found to delete.';
+            return 2;
         }
         logging_1.default.info('::::::::::::::::::::::::::');
         logging_1.default.info(`${deletedCount} emails have been deleted.`);

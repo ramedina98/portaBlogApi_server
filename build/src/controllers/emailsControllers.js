@@ -9,39 +9,61 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSeveralEmailsResponse = exports.deleteAnEmailResponse = exports.updateAllEmailsFalseToTrueResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.deleteSeveralEmailsResponse = exports.deleteAnEmailResponse = exports.updateAllEmailsTrueToFalseResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
-// All emails that its type is diferent to 'response' controller...
+/**
+ * @allEmailsController -> All emails that its type is diferent to "response" controller...
+ *
+ * @status404 If the service returns null, the controller has to returne the following: Emails not found!...
+ */
 const AllEmailsResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const emails = yield (0, emailsServices_1.AllEmails)();
-        res.status(200).json({ message: 'Successfully obtained', emails });
+        if (emails === null) {
+            res.status(404).json({ message: 'Emails not found!' });
+        }
+        res.status(200).json({ message: 'Successfully obtained emails', emails });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AllEmailsResponse = AllEmailsResponse;
-// All the emails that its type is 'response' controller...
+/**
+ * @EmailsResponseTypes --> Al the emails that their types are "response" controller...
+ *
+ * @status404 --> if there are eny email that their type are response...
+ */
 const AllEmailsSentResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const emailSend = yield (0, emailsServices_1.AllEmailsSent)();
-        res.status(200).json({ message: 'Successfully obtained', emailSend });
+        if (emailSend === null) {
+            res.status(404).json({ message: 'Emails not found!' });
+        }
+        res.status(200).json({ message: 'Successfully obtained emails', emailSend });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AllEmailsSentResponse = AllEmailsSentResponse;
 // An specific email by its id...
+/**
+ * @AnEmailController --> this controller helps me to handle the search for a specific email...
+ *
+ * @status404 --> if the response is null...
+ */
 const AnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id_email } = req.params;
         const email = yield (0, emailsServices_1.AnEmail)(id_email);
+        if (email === null) {
+            res.status(404).json({ message: 'Email successfully obtained' });
+        }
         res.status(200).json({ message: 'Successfully obtained', email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.AnEmailResponse = AnEmailResponse;
@@ -50,60 +72,93 @@ const insertEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, func
     try {
         const { email_data, tzClient } = req.body;
         const email = yield (0, emailsServices_1.insertEmail)(email_data, tzClient);
+        if (email === null) {
+            res.status(404).json({ message: 'Error sending email!' });
+        }
         res.status(200).json({ message: email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.insertEmailResponse = insertEmailResponse;
-// this is the controller that helps me update the is read field of a specific email...
+/**
+ * @UpdateReadEmail --> this is the controller that helps me to update the is read field of a specific email...
+ *
+ * @status404 --> if there is no email with the provided id, null is received from the service...
+ */
 const updateAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const email = yield (0, emailsServices_1.updateIsReadField)(id);
+        if (email === null) {
+            res.status(404).json({ message: 'Email not updated!' });
+        }
         res.status(200).json({ message: email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.updateAnEmailResponse = updateAnEmailResponse;
 /**
+ * @UnreadController
  * this controller helps me to update the status of is_read from true to false, of all those
  * that have that condition...
+ *
+ * @status404 -> if there is any email with is_read = true, return a 404 status...
  */
-const updateAllEmailsFalseToTrueResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateAllEmailsTrueToFalseResponse = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const email = yield (0, emailsServices_1.updateAllEmailsFalseToTrue)();
+        const email = yield (0, emailsServices_1.updateAllEmailsTrueToFalse)();
+        if (email === null) {
+            res.status(404).json({ message: 'No read email found' });
+        }
         res.status(200).json({ message: email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
-exports.updateAllEmailsFalseToTrueResponse = updateAllEmailsFalseToTrueResponse;
-// This controller helps me to delete an specific email by its id...
+exports.updateAllEmailsTrueToFalseResponse = updateAllEmailsTrueToFalseResponse;
+/**
+ * @DeleteAnEmailController --> This controller helps me to delete an specific email by its id...
+ *
+ * @status404 --> if no email is found with the provided id...
+ */
 const deleteAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.body;
         const email = yield (0, emailsServices_1.deleteAnEmail)(id);
+        if (email === null) {
+            res.status(404).json({ message: 'Email not deleted!' });
+        }
         res.status(200).json({ message: email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.deleteAnEmailResponse = deleteAnEmailResponse;
-// this controller helps me to delete several emails at the same time with their ids...
+/**
+ * @deleteSeveralEmailsController --> this controller helps me to delete several emails at the same time with their ids...
+ *
+ * @status404 --> the service will return 2 numbers, which are:
+ * 1 = No IDs provided for deletion!
+ * 2 = No emails found to delete!
+ */
 const deleteSeveralEmailsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { ids } = req.body;
         const email = yield (0, emailsServices_1.deleteSeveralEmails)(ids);
+        if (typeof email === 'number') {
+            const message = email === 1 ? 'No IDs provided for deletion' : email === 2 ? 'No emails found to delete' : 'Unknow error';
+            res.status(404).json({ message });
+        }
         res.status(200).json({ message: email });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.deleteSeveralEmailsResponse = deleteSeveralEmailsResponse;

@@ -6,7 +6,7 @@ import {
     AnEmailResponse,
     insertEmailResponse,
     updateAnEmailResponse,
-    updateAllEmailsFalseToTrueResponse,
+    updateAllEmailsTrueToFalseResponse,
     deleteAnEmailResponse,
     deleteSeveralEmailsResponse
 } from "../controllers/emailsControllers";
@@ -21,7 +21,7 @@ emailRoutes.get('/:id_email', AnEmailResponse);
 emailRoutes.post('/newemail', insertEmailResponse);
 // PATCH
 emailRoutes.patch('/:id/toggle-read', updateAnEmailResponse);
-emailRoutes.patch('/mark-unread', updateAllEmailsFalseToTrueResponse);
+emailRoutes.patch('/mark-unread', updateAllEmailsTrueToFalseResponse);
 //DELETE
 emailRoutes.delete('/delete', deleteAnEmailResponse);
 emailRoutes.delete('/delete-multiple', deleteSeveralEmailsResponse);
