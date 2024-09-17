@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tech = void 0;
 /**
- * Here we have the technologies model...
+ * @TechModel
+ * Here I have the technologies model...
  */
 const sequelize_1 = require("sequelize");
 const db_1 = require("../../config/db");

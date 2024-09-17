@@ -6,20 +6,30 @@ import { getTechnologies } from "../services/technologiesServices";
 import { ITechNoResumeId } from "../interfaces/ITechnologies";
 
 /**
- * This controller helps me to handle the service getTechnologies, and reach
- * to the technologies table data...
+ * @GetTechsController --> This controller helps me to manage the
+ * geTechnologiesService and get data from the table, data related to a specific user.
  */
 const getTechnologiesResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_resume } = req.body;
+        const { id_user } = req.body;
 
-        const technologies: ITechNoResumeId[] | null = await getTechnologies(id_resume);
+        const technologies: ITechNoResumeId[] | number = await getTechnologies(id_user);
 
-        if(technologies?.length === 0){
-            res.status(404).json({ message: 'Technologies not found!' });
+        if(typeof technologies === 'number'){
+            let message: string = '';
+
+            if(technologies === 1){
+                message = 'User does not exist';
+            } else if(technologies === 2){
+                message = 'User does not have a resume attached jet';
+            } else if(technologies === 3){
+                message = 'Technologies not found';
+            }
+
+            res.status(404).json({ message });
         }
 
-        res.status(200).json({ message: 'Successfully obteined!', technologies});
+        res.status(200).json({ message: 'Successfully', technologies});
     } catch (error: any) {
         res.status(500).json({ message: 'Internal server error' + error.message });
     }

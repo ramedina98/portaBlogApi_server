@@ -1,3 +1,8 @@
+/**
+ * @TechnologiesInterfaces
+ * This file has all the interfeces needed to handle the technologies module...
+ */
+
 // technologies interface...
 interface ITech {
     id_tech: number;

@@ -14,19 +14,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
+const resumeModel_1 = require("../models/mysql/resumeModel");
+const usersModel_1 = require("../models/mysql/usersModel");
 const sequelize_1 = require("sequelize");
 const logging_1 = __importDefault(require("../config/logging"));
 /**
  * @MethodGET -->
  * This service helps me to reach all the information of the tecnologies table,
  * searching with a resume id...
+ *
+ * @param id_resume
+ *
+ * There are 3 types of message of warning, as it checks if the user exists, if the
+ * user has a resume attached and if any techs have already been added to that resume.
+ *
+ * 1 = The user does not exists...
+ * 2 = The user does not have any resume attached jet...
+ * 3 = Technologies not foud (No tech has been added to the user's resume yet).
  */
-const getTechnologies = (id_resume) => __awaiter(void 0, void 0, void 0, function* () {
+const getTechnologies = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // I search for the user to verify that he/she exists
+        const user = yield usersModel_1.User.findByPk(id);
+        if (user === null) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning('The user does not exists');
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+        const id_resume = yield resumeModel_1.Resume.findOne({
+            where: {
+                user_id: id
+            },
+            attributes: {
+                exclude: ['user_id', 'pdf_resume', 'profile_resume', 'logo_id', 'email']
+            } // I don't need all the attributes, just the id...
+        });
+        if (!id_resume) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning(`The user ${user.name1} does not have a resume attached`);
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
         const technologies = yield technologiesModel_1.Tech.findAll({
             where: {
                 id_resume: {
-                    [sequelize_1.Op.eq]: id_resume
+                    [sequelize_1.Op.eq]: id_resume.id_resume
                 }
             },
             attributes: {
@@ -35,10 +68,13 @@ const getTechnologies = (id_resume) => __awaiter(void 0, void 0, void 0, functio
         });
         if (technologies.length === 0) {
             logging_1.default.warning(':::::::::::::::::::::::');
-            logging_1.default.warning(`No technologies found with resume id: ${id_resume}`);
+            logging_1.default.warning(`Technologies not found with resume id: ${id_resume}`);
             logging_1.default.warning(':::::::::::::::::::::::');
-            return null;
+            return 3;
         }
+        logging_1.default.info(':::::::::::::::::::::::::::::::');
+        logging_1.default.info('Technologies found!');
+        logging_1.default.info(':::::::::::::::::::::::::::::::');
         return technologies;
     }
     catch (error) {

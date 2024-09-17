@@ -29,7 +29,7 @@ const loginSession = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(200).json({ message: 'Successful login', login });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.loginSession = loginSession;
@@ -47,7 +47,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({ message: 'User successfully found', user });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.getUser = getUser;
@@ -65,7 +65,7 @@ const putUpdatedUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(200).json({ message: response });
     }
     catch (error) {
-        res.status(401).json({ message: 'Internal server error: ' + error.message });
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
 exports.putUpdatedUserInfo = putUpdatedUserInfo;

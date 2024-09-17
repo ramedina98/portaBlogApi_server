@@ -12,17 +12,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTechnologiesResponse = void 0;
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
- * This controller helps me to handle the service getTechnologies, and reach
- * to the technologies table data...
+ * @GetTechsController --> This controller helps me to manage the
+ * geTechnologiesService and get data from the table, data related to a specific user.
  */
 const getTechnologiesResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_resume } = req.body;
-        const technologies = yield (0, technologiesServices_1.getTechnologies)(id_resume);
-        if ((technologies === null || technologies === void 0 ? void 0 : technologies.length) === 0) {
-            res.status(404).json({ message: 'Technologies not found!' });
+        const { id_user } = req.body;
+        const technologies = yield (0, technologiesServices_1.getTechnologies)(id_user);
+        if (typeof technologies === 'number') {
+            let message = '';
+            if (technologies === 1) {
+                message = 'User does not exist';
+            }
+            else if (technologies === 2) {
+                message = 'User does not have a resume attached jet';
+            }
+            else if (technologies === 3) {
+                message = 'Technologies not found';
+            }
+            res.status(404).json({ message });
         }
-        res.status(200).json({ message: 'Successfully obteined!', technologies });
+        res.status(200).json({ message: 'Successfully', technologies });
     }
     catch (error) {
         res.status(500).json({ message: 'Internal server error' + error.message });

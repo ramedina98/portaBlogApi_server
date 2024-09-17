@@ -1,5 +1,6 @@
 /**
- * Here we have the technologies model...
+ * @TechModel
+ * Here I have the technologies model...
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
