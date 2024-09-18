@@ -7,11 +7,9 @@
  * @PUT
  */
 import { ITech, ITechNoResumeId, ITechNoIdNoresumeId, ITechNoId } from "../interfaces/ITechnologies";
-import { IUser } from "../interfaces/IUser";
 import { Tech } from "../models/mysql/technologiesModel";
-import { Resume } from "../models/mysql/resumeModel";
-import { User } from "../models/mysql/usersModel";
 import { Op } from "sequelize";
+import { loggingInfo, userResumeVerifier, Iverifier} from "../utils/resumeModulesUtilF";
 import logging from "../config/logging";
 
 /**
@@ -28,38 +26,22 @@ import logging from "../config/logging";
  * 2 = The user does not have any resume attached jet...
  * 3 = Technologies not foud (No tech has been added to the user's resume yet).
  */
-const getTechnologies = async (id: number): Promise<ITechNoResumeId[] | number> => {
+const getTechnologies = async (id: string): Promise<ITechNoResumeId[] | number> => {
     try {
-        // I search for the user to verify that he/she exists
-        const user: IUser | null = await User.findByPk(id);
+        const verification: Iverifier = await userResumeVerifier(id);
 
-        if(user === null){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning('The user does not exists');
-            logging.warning(':::::::::::::::::::::::::');
-            return 1;
-        }
-
-        const id_resume: any = await Resume.findOne({
-            where: {
-                user_id: id
-            },
-            attributes: {
-                exclude: ['user_id', 'pdf_resume', 'profile_resume', 'logo_id', 'email']
-            } // I don't need all the attributes, just the id...
-        });
-
-        if(!id_resume){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning(`The user ${user.name1} does not have a resume attached`);
-            logging.warning(':::::::::::::::::::::::::');
-            return 2;
+        /**
+         * If the id resume field is undefine, then it only returns the response number,
+         * which the controller will already know how to handle...
+         */
+        if(verification.id_resume === undefined){
+            return verification.num_response;
         }
 
         const technologies: ITech[] = await Tech.findAll({
             where: {
                 id_resume: {
-                    [Op.eq]: id_resume.id_resume
+                    [Op.eq]: verification.id_resume
                 }
             },
             attributes: {
@@ -69,14 +51,12 @@ const getTechnologies = async (id: number): Promise<ITechNoResumeId[] | number> 
 
         if(technologies.length === 0){
             logging.warning(':::::::::::::::::::::::');
-            logging.warning(`Technologies not found with resume id: ${id_resume}`);
+            logging.warning(`Technologies not found with resume id: ${verification.id_resume}`);
             logging.warning(':::::::::::::::::::::::');
             return 3;
         }
 
-        logging.info(':::::::::::::::::::::::::::::::');
-        logging.info('Technologies found!');
-        logging.info(':::::::::::::::::::::::::::::::');
+        loggingInfo('Technologies found!');
 
         return technologies;
 
@@ -88,8 +68,6 @@ const getTechnologies = async (id: number): Promise<ITechNoResumeId[] | number> 
     }
 }
 
-// TODO: consultar una forma para poder hacer que los datos se actualicen en tiempo real cuando haga un nuevo registro...
-// NOTE: ¿qué combiene más? -> en el frontend algo o un ws...
 /**
  * @MethodPOST -> insertNewTechnologie
  * This service helps me to create a new record in the technologies table...
@@ -100,37 +78,20 @@ const getTechnologies = async (id: number): Promise<ITechNoResumeId[] | number> 
  */
 const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId): Promise<string | number> => {
     try {
-        // verify if the user exists...
-        const user: IUser| null = await User.findByPk(id_user);
+        const verification: Iverifier = await userResumeVerifier(id_user);
 
-        if(!user){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning('The user does not exists');
-            logging.warning(':::::::::::::::::::::::::');
-            return 1;
-        }
-
-        // resume id...
-        const id_resume: any = await Resume.findOne({
-            where: {
-                user_id: user.id_user
-            },
-            attributes: {
-                exclude: ['user_id', 'pdf_resume', 'profile_resume', 'logo_id', 'email']
-            } // I don't need all the attributes, just the id...
-        });
-
-        if(!id_resume){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning(`The user ${user.name1} does not have a resume attached`);
-            logging.warning(':::::::::::::::::::::::::');
-            return 2;
+        /**
+         * If the id resume field is undefine, then it only returns the response number,
+         * which the controller will already know how to handle...
+         */
+        if(verification.id_resume === undefined){
+            return verification.num_response;
         }
 
         const newData: ITechNoId = {
             name_tech: data.name_tech,
             icon_tech: data.icon_tech,
-            id_resume: id_resume.id_resume
+            id_resume: verification.id_resume
         }
 
         // make the new register...
@@ -143,9 +104,7 @@ const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId)
             return 3;
         }
 
-        logging.info('::::::::::::::::::::::::::::::');
-        logging.info('Successfully registration!');
-        logging.info('::::::::::::::::::::::::::::::');
+        loggingInfo('Successfully registration!');
 
         return 'Successfully registration';
     } catch (error: any) {
