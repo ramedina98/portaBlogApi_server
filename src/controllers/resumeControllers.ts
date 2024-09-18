@@ -16,13 +16,22 @@ import { getResume, createResume, updateAResumeRecord } from "../services/resume
  * */
 const getResumeResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id_user } = req.body;
 
-        const resumeData: IResumeService | null = await getResume(id);
+        const resumeData: IResumeService | number = await getResume( id_user);
 
-        // if the response is null...
-        if(resumeData === null){
-            res.status(404).json({ message: 'Resume not found'});
+        if(typeof resumeData === 'number'){
+            let message: string = '';
+
+            if(resumeData === 1){
+                message = 'User does not exist';
+            } else if(resumeData === 2){
+                message = 'User does not have a resume attached jet';
+            } else if(resumeData === 3){
+                message = 'Data not found';
+            }
+
+            res.status(404).json({ message });
         }
 
         res.status(200).json({ message: 'Successfully obtained!', resumeData });

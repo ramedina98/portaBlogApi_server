@@ -21,6 +21,7 @@ exports.EditUserInfo = exports.getUserData = exports.loginUser = void 0;
  */
 const usersModel_1 = require("../models/mysql/usersModel");
 const jwtUtils_1 = require("../utils/jwtUtils");
+const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const logging_1 = __importDefault(require("../config/logging"));
 /**
@@ -62,6 +63,7 @@ const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, functio
             id_user: user.id_user,
             jwt: token,
         };
+        (0, resumeModulesUtilF_1.loggingInfo)(`${user.name1} successfully logged in`);
         // we return the object we the needed info...
         return response;
     }
@@ -90,6 +92,7 @@ const getUserData = (id_user) => __awaiter(void 0, void 0, void 0, function* () 
             logging_1.default.warning(':::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('User found!');
         return user;
     }
     catch (error) {
@@ -127,6 +130,7 @@ const EditUserInfo = (id_user, data) => __awaiter(void 0, void 0, void 0, functi
             logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('User updated successfully');
         return 'User updated successfully';
     }
     catch (error) {

@@ -9,7 +9,7 @@ import {
 const resumeRoutes = Router();
 
 // GET
-resumeRoutes.get('/:id', getResumeResponse);
+resumeRoutes.get('/', getResumeResponse);
 // POST
 resumeRoutes.post('/create', createResumeResponse);
 // PUT

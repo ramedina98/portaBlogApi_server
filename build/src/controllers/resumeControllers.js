@@ -9,39 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAResumeRecordResponse = exports.createResumeResponse = exports.getResumeResponse = exports.getIdResumeResponse = void 0;
+exports.updateAResumeRecordResponse = exports.createResumeResponse = exports.getResumeResponse = void 0;
 const resumeServices_1 = require("../services/resumeServices");
 /**
  * @ResumeControllers ...
  */
-/**
- * This controller helps me to get the id of a resume searching by user_id...
- */
-const getIdResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.body;
-        const resumeId = yield (0, resumeServices_1.getIdResume)(id);
-        if (resumeId === null) {
-            res.status(404).json({ message: 'Id not found' });
-        }
-        res.status(200).json({ message: 'Successfully obtained!', resumeId });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Internal server error' + error.message });
-    }
-});
-exports.getIdResumeResponse = getIdResumeResponse;
 /**
  * this controller helps me to handle the getResume service and return
  * information related to a specific resume
  * */
 const getResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const resumeData = yield (0, resumeServices_1.getResume)(id);
-        // if the response is null...
-        if (resumeData === null) {
-            res.status(404).json({ message: 'Resume not found' });
+        const { id_user } = req.body;
+        const resumeData = yield (0, resumeServices_1.getResume)(id_user);
+        if (typeof resumeData === 'number') {
+            let message = '';
+            if (resumeData === 1) {
+                message = 'User does not exist';
+            }
+            else if (resumeData === 2) {
+                message = 'User does not have a resume attached jet';
+            }
+            else if (resumeData === 3) {
+                message = 'Data not found';
+            }
+            res.status(404).json({ message });
         }
         res.status(200).json({ message: 'Successfully obtained!', resumeData });
     }

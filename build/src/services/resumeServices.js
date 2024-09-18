@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateAResumeRecord = exports.createResume = exports.getResume = exports.getIdResume = void 0;
+exports.updateAResumeRecord = exports.createResume = exports.getResume = void 0;
 /**
  * @Services -> All the services that can be found here are for managing updates, creating records and
  * obtaining information about the resume and all the elements related to it...
@@ -25,34 +25,11 @@ const resumeModel_1 = require("../models/mysql/resumeModel");
 const usersModel_1 = require("../models/mysql/usersModel");
 const sequelize_1 = require("sequelize");
 const checkEmptyResults_1 = require("../utils/checkEmptyResults");
+const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const logging_1 = __importDefault(require("../config/logging"));
 /**
  * @ResumeServices ...
  */
-/**
- * @MethodGET ->
- * This service helps me to get the ID of a resume by seraching with the id of a user...
- */
-const getIdResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const resume = yield resumeModel_1.Resume.findOne({ where: { user_id: id } });
-        if (!resume) {
-            logging_1.default.warning(':::::::::::::::::::::::');
-            logging_1.default.warning('Resume not found!');
-            logging_1.default.warning(':::::::::::::::::::::::');
-            return null;
-        }
-        const resume_id = resume.id_resume;
-        return resume_id;
-    }
-    catch (error) {
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        logging_1.default.error('Error: ' + error.message);
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-});
-exports.getIdResume = getIdResume;
 /**
  * @MethodGET
  * This service helps to take the data from the tables:
@@ -63,18 +40,18 @@ exports.getIdResume = getIdResume;
  *  where the main table is "Resume" and the records obtained from the other tables
  *  must be obtained with the ID of the resume to which they correspond.
  */
-const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getResume = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const resume = yield resumeModel_1.Resume.findByPk(id);
-        if (!resume) {
-            logging_1.default.warning('Resume not found!');
-            return null;
+        const verification = yield (0, resumeModulesUtilF_1.userResumeVerifier)(id_user);
+        if (verification.id_resume === undefined) {
+            return verification.num_response;
         }
-        const [technologies, experience, courses, schooling] = yield Promise.all([
+        const [resume, technologies, experience, courses, schooling] = yield Promise.all([
+            resumeModel_1.Resume.findByPk(verification.id_resume),
             technologiesModel_1.Tech.findAll({
                 where: {
                     id_resume: {
-                        [sequelize_1.Op.eq]: id
+                        [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -84,7 +61,7 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
             experienceModel_1.Expe.findAll({
                 where: {
                     id_expe: {
-                        [sequelize_1.Op.eq]: id
+                        [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -94,7 +71,7 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
             coursesModel_1.Course.findAll({
                 where: {
                     id_course: {
-                        [sequelize_1.Op.eq]: id
+                        [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -104,7 +81,7 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
             schoolingModel_1.Schooling.findAll({
                 where: {
                     id_sch: {
-                        [sequelize_1.Op.eq]: id
+                        [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -117,8 +94,9 @@ const getResume = (id) => __awaiter(void 0, void 0, void 0, function* () {
             logging_1.default.warning(':::::::::::::::::::');
             logging_1.default.warning('Data not found!');
             logging_1.default.warning(':::::::::::::::::::');
-            return null;
+            return 3;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('Resume found!');
         return {
             resume: resume,
             technologies: technologies,
@@ -176,6 +154,7 @@ const createResume = (id_user, data) => __awaiter(void 0, void 0, void 0, functi
             logging_1.default.warning(':::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('Successfully registered the resume');
         return 'Successfully registration';
     }
     catch (error) {
@@ -203,6 +182,7 @@ const updateAResumeRecord = (id, data) => __awaiter(void 0, void 0, void 0, func
             logging_1.default.warning(':::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('Resume successfully updated!');
         return 'Resume successfully updated!';
     }
     catch (error) {

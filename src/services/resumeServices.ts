@@ -11,7 +11,7 @@ import { User }  from "../models/mysql/usersModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
 import { IResume, ICreateResume, IResumeService } from "../interfaces/IResume";
-import { loggingInfo } from "../utils/resumeModulesUtilF";
+import { Iverifier, loggingInfo, userResumeVerifier } from "../utils/resumeModulesUtilF";
 import logging from "../config/logging";
 
 /**
@@ -28,20 +28,21 @@ import logging from "../config/logging";
  *  where the main table is "Resume" and the records obtained from the other tables
  *  must be obtained with the ID of the resume to which they correspond.
  */
-const getResume = async (id: string): Promise<IResumeService | null> => {
+const getResume = async (id_user: string): Promise<IResumeService | number> => {
     try {
-        const resume: any = await Resume.findByPk(id);
 
-        if(!resume){
-            logging.warning('Resume not found!');
-            return null;
+        const verification: Iverifier = await userResumeVerifier(id_user);
+
+        if(verification.id_resume === undefined){
+            return verification.num_response;
         }
 
-        const [technologies, experience, courses, schooling]: any = await Promise.all([
+        const [resume, technologies, experience, courses, schooling]: any = await Promise.all([
+            Resume.findByPk(verification.id_resume),
             Tech.findAll({
                 where: {
                     id_resume: {
-                        [Op.eq]: id
+                        [Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -51,7 +52,7 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
             Expe.findAll({
                 where: {
                     id_expe: {
-                        [Op.eq]: id
+                        [Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -61,7 +62,7 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
             Course.findAll({
                 where: {
                     id_course: {
-                        [Op.eq]: id
+                        [Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -71,7 +72,7 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
             Schooling.findAll({
                 where: {
                     id_sch: {
-                        [Op.eq]: id
+                        [Op.eq]: verification.id_resume
                     }
                 },
                 attributes: {
@@ -86,7 +87,7 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
             logging.warning(':::::::::::::::::::');
             logging.warning('Data not found!');
             logging.warning(':::::::::::::::::::');
-            return null;
+            return 3;
         }
 
         loggingInfo('Resume found!');

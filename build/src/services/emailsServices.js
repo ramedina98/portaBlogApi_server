@@ -29,6 +29,7 @@ const IEmails_1 = require("../interfaces/IEmails");
 const webSocketServer_1 = require("../webSocketServer");
 const EmailFactory_1 = require("../classes/EmailFactory");
 const typeOfNotification_1 = require("../utils/typeOfNotification");
+const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const logging_1 = __importDefault(require("../config/logging"));
 /**
  * @MethodGET
@@ -52,6 +53,7 @@ const AllEmails = () => __awaiter(void 0, void 0, void 0, function* () {
             logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('No emails found! (type_emails != response)');
         return emails;
     }
     catch (error) {
@@ -80,10 +82,11 @@ const AllEmailsSent = () => __awaiter(void 0, void 0, void 0, function* () {
         });
         if (!emails || emails.length === 0) {
             logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-            logging_1.default.error('No emails found that do not have type_email = response');
+            logging_1.default.error('No emails found that have type_email = response');
             logging_1.default.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)('No emails found! (type_emails = response)');
         return emails;
     }
     catch (error) {
@@ -109,6 +112,7 @@ const AnEmail = (id_email) => __awaiter(void 0, void 0, void 0, function* () {
             logging_1.default.warning(':::::::::::::::::::::::::::::::::::::');
             return null;
         }
+        (0, resumeModulesUtilF_1.loggingInfo)(`Email found ${email.name_sender}`);
         return email;
     }
     catch (error) {
@@ -169,6 +173,7 @@ const insertEmail = (emailData, tzClient) => __awaiter(void 0, void 0, void 0, f
         const eamilCreator = EmailFactory_1.EmailFactory.CreateEmail(emailData.email_type, options);
         // put the send method into action...
         eamilCreator.send();
+        (0, resumeModulesUtilF_1.loggingInfo)('Email sent successfully');
         // return a message of success...
         return 'Email sent successfully';
     }
@@ -201,9 +206,7 @@ const updateIsReadField = (id) => __awaiter(void 0, void 0, void 0, function* ()
         const newIsReadStatus = !email.is_read;
         // update the is_read field to true...
         yield email.update({ is_read: newIsReadStatus });
-        logging_1.default.info('::::::::::::::::::::::::::');
-        logging_1.default.info(`Email ${id} has been updated.`);
-        logging_1.default.info('::::::::::::::::::::::::::');
+        (0, resumeModulesUtilF_1.loggingInfo)(`Email ${id} has been updated.`);
         return `Email ${id} has been updated.`;
     }
     catch (error) {
@@ -232,9 +235,7 @@ const updateAllEmailsTrueToFalse = () => __awaiter(void 0, void 0, void 0, funct
         }
         // update the status of all found emails...
         yield emailsModel_1.Email.update({ is_read: false }, { where: { is_read: true } });
-        logging_1.default.info('::::::::::::::::::::::::::');
-        logging_1.default.info(`${emailsToUpdate.length} emails have been updated to unread.`);
-        logging_1.default.info('::::::::::::::::::::::::::');
+        (0, resumeModulesUtilF_1.loggingInfo)(`${emailsToUpdate.length} emails have been updated to unread.`);
         return `${emailsToUpdate.length} emails have been updated to unread.`;
     }
     catch (error) {
@@ -261,9 +262,7 @@ const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
         }
         // delete email...
         yield emailsModel_1.Email.destroy({ where: { id_email: id } });
-        logging_1.default.info('::::::::::::::::::::::::::');
-        logging_1.default.info(`Email with ID ${id} has been deleted.`);
-        logging_1.default.info('::::::::::::::::::::::::::');
+        (0, resumeModulesUtilF_1.loggingInfo)(`Email with ID ${id} has been deleted.`);
         return 'The email has been deleted.';
     }
     catch (error) {
@@ -300,9 +299,7 @@ const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function*
             // return 'No emails found to delete.';
             return 2;
         }
-        logging_1.default.info('::::::::::::::::::::::::::');
-        logging_1.default.info(`${deletedCount} emails have been deleted.`);
-        logging_1.default.info('::::::::::::::::::::::::::');
+        (0, resumeModulesUtilF_1.loggingInfo)(`${deletedCount} emails have been deleted.`);
         return `${deletedCount} emails have been deleted.`;
     }
     catch (error) {
