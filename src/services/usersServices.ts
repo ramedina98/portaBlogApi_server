@@ -8,6 +8,7 @@ import { User } from "../models/mysql/usersModel";
 import { IUser, IUserLogin } from "../interfaces/IUser";
 import { IJwtPayload } from '../interfaces/IJwtPayload';
 import { generateJwToken } from '../utils/jwtUtils';
+import { loggingInfo } from "../utils/resumeModulesUtilF";
 import bcrypt from 'bcrypt';
 import logging from "../config/logging";
 
@@ -57,6 +58,8 @@ const loginUser = async (email:string, password:string): Promise<IUserLogin | nu
             jwt: token,
         }
 
+        loggingInfo(`${user.name1} successfully logged in`);
+
         // we return the object we the needed info...
         return response;
 
@@ -86,6 +89,8 @@ const getUserData = async (id_user: string): Promise<IUser | null> => {
             logging.warning(':::::::::::::::::');
             return null;
         }
+
+        loggingInfo('User found!');
 
         return user;
     } catch (error: any) {
@@ -124,6 +129,8 @@ const EditUserInfo = async (id_user: string, data: IUser): Promise<string | null
             logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+
+        loggingInfo('User updated successfully');
 
         return 'User updated successfully';
 

@@ -11,12 +11,14 @@ import { User }  from "../models/mysql/usersModel";
 import { Op } from "sequelize";
 import { checkEmptyResults } from "../utils/checkEmptyResults";
 import { IResume, ICreateResume, IResumeService } from "../interfaces/IResume";
+import { loggingInfo } from "../utils/resumeModulesUtilF";
 import logging from "../config/logging";
 
 /**
  * @ResumeServices ...
  */
 
+//TODO: Este es el servicio que posiblemente y no sea necesario...
 /**
  * @MethodGET ->
  * This service helps me to get the ID of a resume by seraching with the id of a user...
@@ -114,6 +116,8 @@ const getResume = async (id: string): Promise<IResumeService | null> => {
             return null;
         }
 
+        loggingInfo('Resume found!');
+
         return {
             resume: resume,
             technologies: technologies,
@@ -177,6 +181,8 @@ const createResume = async (id_user: string, data: ICreateResume): Promise<strin
             return null;
         }
 
+        loggingInfo('Successfully registered the resume');
+
         return 'Successfully registration';
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
@@ -204,6 +210,8 @@ const updateAResumeRecord = async (id: number, data: ICreateResume): Promise<str
             logging.warning(':::::::::::::::::::::::');
             return null;
         }
+
+        loggingInfo('Resume successfully updated!');
 
         return 'Resume successfully updated!';
 

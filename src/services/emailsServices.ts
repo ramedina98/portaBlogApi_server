@@ -14,6 +14,7 @@ import { Emails, IEFactory, INotificationTitle, EmailType } from "../interfaces/
 import { wss } from "../webSocketServer";
 import { EmailFactory } from "../classes/EmailFactory";
 import { notificationTitle } from "../utils/typeOfNotification";
+import { loggingInfo } from "../utils/resumeModulesUtilF";
 import logging from "../config/logging";
 
 /**
@@ -39,6 +40,8 @@ const AllEmails = async (): Promise<Emails[] | null> => {
             logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+
+        loggingInfo('No emails found! (type_emails != response)');
 
         return emails;
 
@@ -69,10 +72,12 @@ const AllEmailsSent = async (): Promise<Emails[] | null> => {
 
         if(!emails || emails.length === 0){
             logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-            logging.error('No emails found that do not have type_email = response');
+            logging.error('No emails found that have type_email = response');
             logging.warning(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
             return null;
         }
+
+        loggingInfo('No emails found! (type_emails = response)');
 
         return emails;
     } catch (error: any) {
@@ -99,6 +104,8 @@ const AnEmail = async (id_email: string): Promise<Emails | null> => {
             logging.warning(':::::::::::::::::::::::::::::::::::::');
             return null;
         }
+
+        loggingInfo(`Email found ${email.name_sender}`);
 
         return email;
     } catch(error: any){
@@ -174,6 +181,8 @@ const insertEmail = async (emailData: IEmailInserted, tzClient: string): Promise
         // put the send method into action...
         eamilCreator.send();
 
+        loggingInfo('Email sent successfully');
+
         // return a message of success...
         return 'Email sent successfully';
     } catch (error: any) {
@@ -208,9 +217,7 @@ const updateIsReadField = async (id: string): Promise<string | null> => {
         // update the is_read field to true...
         await email.update({ is_read: newIsReadStatus });
 
-        logging.info('::::::::::::::::::::::::::');
-        logging.info(`Email ${id} has been updated.`);
-        logging.info('::::::::::::::::::::::::::');
+        loggingInfo(`Email ${id} has been updated.`);
 
         return `Email ${id} has been updated.`;
     } catch (error: any) {
@@ -243,11 +250,9 @@ const updateAllEmailsTrueToFalse = async (): Promise<string | null> => {
         await Email.update(
             { is_read: false },
             { where: { is_read: true }}
-        )
+        );
 
-        logging.info('::::::::::::::::::::::::::');
-        logging.info(`${emailsToUpdate.length} emails have been updated to unread.`);
-        logging.info('::::::::::::::::::::::::::');
+        loggingInfo(`${emailsToUpdate.length} emails have been updated to unread.`);
 
         return `${emailsToUpdate.length} emails have been updated to unread.`;
     } catch(error: any){
@@ -277,9 +282,7 @@ const deleteAnEmail = async (id: string): Promise<string | null> => {
         // delete email...
         await Email.destroy( { where: { id_email: id }});
 
-        logging.info('::::::::::::::::::::::::::');
-        logging.info(`Email with ID ${id} has been deleted.`);
-        logging.info('::::::::::::::::::::::::::');
+        loggingInfo(`Email with ID ${id} has been deleted.`);
 
         return 'The email has been deleted.';
     } catch (error: any) {
@@ -319,9 +322,7 @@ const deleteSeveralEmails = async (ids: string[]): Promise<string| number> => {
             return 2;
         }
 
-        logging.info('::::::::::::::::::::::::::');
-        logging.info(`${deletedCount} emails have been deleted.`);
-        logging.info('::::::::::::::::::::::::::');
+        loggingInfo(`${deletedCount} emails have been deleted.`);
 
         return `${deletedCount} emails have been deleted.`;
     } catch (error: any) {
