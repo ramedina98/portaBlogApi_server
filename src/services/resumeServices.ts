@@ -18,33 +18,6 @@ import logging from "../config/logging";
  * @ResumeServices ...
  */
 
-//TODO: Este es el servicio que posiblemente y no sea necesario...
-/**
- * @MethodGET ->
- * This service helps me to get the ID of a resume by seraching with the id of a user...
- */
-const getIdResume = async (id: string): Promise<string | null> => {
-    try {
-        const resume: any = await Resume.findOne({ where: { user_id: id }});
-
-        if(!resume){
-            logging.warning(':::::::::::::::::::::::');
-            logging.warning('Resume not found!');
-            logging.warning(':::::::::::::::::::::::');
-            return null;
-        }
-
-        const resume_id: string = resume.id_resume;
-
-        return resume_id;
-    } catch (error: any) {
-        logging.warn('::::::::::::::::::::::::::::::::');
-        logging.error('Error: ' + error.message);
-        logging.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-}
-
 /**
  * @MethodGET
  * This service helps to take the data from the tables:
@@ -223,4 +196,4 @@ const updateAResumeRecord = async (id: number, data: ICreateResume): Promise<str
     }
 }
 
-export { getIdResume, getResume, createResume, updateAResumeRecord };
+export { getResume, createResume, updateAResumeRecord };
