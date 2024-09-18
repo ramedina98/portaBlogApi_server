@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTechnologies = void 0;
+exports.insertNewTechnologie = exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const resumeModel_1 = require("../models/mysql/resumeModel");
 const usersModel_1 = require("../models/mysql/usersModel");
@@ -85,3 +85,64 @@ const getTechnologies = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getTechnologies = getTechnologies;
+// TODO: consultar una forma para poder hacer que los datos se actualicen en tiempo real cuando haga un nuevo registro...
+// NOTE: ¿qué combiene más? -> en el frontend algo o un ws...
+/**
+ * @MethodPOST -> insertNewTechnologie
+ * This service helps me to create a new record in the technologies table...
+ *
+ * @param tech_data
+ *
+ * @messages -> to handle error or warnings...
+ */
+const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // verify if the user exists...
+        const user = yield usersModel_1.User.findByPk(id_user);
+        if (!user) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning('The user does not exists');
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+        // resume id...
+        const id_resume = yield resumeModel_1.Resume.findOne({
+            where: {
+                user_id: user.id_user
+            },
+            attributes: {
+                exclude: ['user_id', 'pdf_resume', 'profile_resume', 'logo_id', 'email']
+            } // I don't need all the attributes, just the id...
+        });
+        if (!id_resume) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning(`The user ${user.name1} does not have a resume attached`);
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
+        const newData = {
+            name_tech: data.name_tech,
+            icon_tech: data.icon_tech,
+            id_resume: id_resume.id_resume
+        };
+        // make the new register...
+        const tech = yield technologiesModel_1.Tech.create(newData);
+        if (!tech) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning('No registration was made');
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 3;
+        }
+        logging_1.default.info('::::::::::::::::::::::::::::::');
+        logging_1.default.info('Successfully registration!');
+        logging_1.default.info('::::::::::::::::::::::::::::::');
+        return 'Successfully registration';
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.insertNewTechnologie = insertNewTechnologie;

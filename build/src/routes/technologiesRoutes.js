@@ -9,4 +9,6 @@ const technologiesControllers_1 = require("../controllers/technologiesController
 const techRoutes = (0, express_1.Router)();
 // GET...
 techRoutes.get('/', technologiesControllers_1.getTechnologiesResponse);
+//POST...
+techRoutes.post('/newtech', technologiesControllers_1.insertNewTechnologieResponse);
 exports.default = techRoutes;

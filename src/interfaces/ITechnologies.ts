@@ -10,7 +10,10 @@ interface ITech {
     icon_tech: string;
     id_resume: number;
 }
+interface ITechNoId extends Omit<ITech, 'id_tech'>{};
 // technologies interface without id_resume...
 interface ITechNoResumeId extends Omit<ITech, 'id_resume'>{};
+// technologies interface without id_tech...
+interface ITechNoIdNoresumeId extends Omit<ITechNoResumeId, 'id_tech'>{};
 
-export { ITech, ITechNoResumeId };
+export { ITech, ITechNoResumeId, ITechNoIdNoresumeId, ITechNoId };

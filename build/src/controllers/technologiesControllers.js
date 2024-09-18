@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTechnologiesResponse = void 0;
+exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -39,3 +39,34 @@ const getTechnologiesResponse = (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 });
 exports.getTechnologiesResponse = getTechnologiesResponse;
+/**
+ * @MethodGET --> This controller helps me to handle the creation of new records in the technologies table...
+ *
+ * The frontend only needs to send the next:
+ * @reqBody tech_data --> "name_tech / icon_tech"
+ * @reqBody id_user
+ */
+const insertNewTechnologieResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_user, tech_data } = req.body;
+        const tech = yield (0, technologiesServices_1.insertNewTechnologie)(id_user, tech_data);
+        if (typeof tech === 'number') {
+            let message = '';
+            if (tech === 1) {
+                message = 'User does not exist';
+            }
+            else if (tech === 2) {
+                message = 'User does not have a resume attached jet';
+            }
+            else if (tech === 3) {
+                message = 'No registration was made';
+            }
+            res.status(404).json({ message });
+        }
+        res.status(200).json({ message: tech });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error' + error.message });
+    }
+});
+exports.insertNewTechnologieResponse = insertNewTechnologieResponse;
