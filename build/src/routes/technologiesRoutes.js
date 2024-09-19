@@ -11,4 +11,6 @@ const techRoutes = (0, express_1.Router)();
 techRoutes.get('/', technologiesControllers_1.getTechnologiesResponse);
 //POST...
 techRoutes.post('/newtech', technologiesControllers_1.insertNewTechnologieResponse);
+// PUT...
+techRoutes.put('/update', technologiesControllers_1.updateATechRecordResponse);
 exports.default = techRoutes;

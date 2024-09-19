@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
+exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -70,3 +70,24 @@ const insertNewTechnologieResponse = (req, res) => __awaiter(void 0, void 0, voi
     }
 });
 exports.insertNewTechnologieResponse = insertNewTechnologieResponse;
+/**
+ * @UpdateATechController --> this controller helps me handle the UpdateATech service, to update a specific
+ * record in the technologies table...
+ * @param id_tec
+ * @param tech_data --> this has the name and icon...
+ */
+const updateATechRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_tec, tech_data } = req.body;
+        const tech = yield (0, technologiesServices_1.updateATechRecord)(id_tec, tech_data);
+        if (typeof tech === 'number') {
+            let message = tech === 1 ? 'Tech does not exists' : tech === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
+            res.status(404).json({ message });
+        }
+        res.status(200).json({ message: tech });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.updateATechRecordResponse = updateATechRecordResponse;

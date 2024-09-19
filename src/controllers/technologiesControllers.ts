@@ -3,7 +3,7 @@
 */
 import { Request, Response } from "express";
 import { ITechNoResumeId } from "../interfaces/ITechnologies";
-import { getTechnologies, insertNewTechnologie } from "../services/technologiesServices";
+import { getTechnologies, insertNewTechnologie, updateATechRecord } from "../services/technologiesServices";
 
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -68,4 +68,29 @@ const insertNewTechnologieResponse = async (req:Request, res:Response): Promise<
     }
 }
 
-export { getTechnologiesResponse, insertNewTechnologieResponse };
+/**
+ * @UpdateATechController --> this controller helps me handle the UpdateATech service, to update a specific
+ * record in the technologies table...
+ * @param id_tec
+ * @param tech_data --> this has the name and icon...
+ */
+const updateATechRecordResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id_tech, tech_data } = req.body;
+
+        const tech: string | number = await updateATechRecord(id_tech, tech_data);
+
+        if(typeof tech === 'number'){
+
+            let message: string = tech === 1 ? 'Tech does not exists' : tech === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
+
+            res.status(404).json({ message });
+        }
+
+        res.status(200).json({ message: tech });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { getTechnologiesResponse, insertNewTechnologieResponse, updateATechRecordResponse };

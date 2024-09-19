@@ -5,7 +5,8 @@
 import { Router } from "express";
 import {
     getTechnologiesResponse,
-    insertNewTechnologieResponse
+    insertNewTechnologieResponse,
+    updateATechRecordResponse
 } from "../controllers/technologiesControllers";
 
 const techRoutes = Router();
@@ -14,5 +15,7 @@ const techRoutes = Router();
 techRoutes.get('/', getTechnologiesResponse);
 //POST...
 techRoutes.post('/newtech', insertNewTechnologieResponse);
+// PUT...
+techRoutes.put('/update', updateATechRecordResponse);
 
 export default techRoutes;

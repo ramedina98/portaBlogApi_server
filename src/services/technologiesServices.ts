@@ -115,4 +115,49 @@ const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId)
     }
 }
 
-export { getTechnologies, insertNewTechnologie};
+/**
+ * @methodPUT --> This service helps me to update a record in the technologies table...
+ *
+ * @param id_tec
+ * @param tech_data
+ */
+const updateATechRecord = async (id_tec: number, tech_data: ITechNoIdNoresumeId): Promise<string | number> => {
+    try {
+        const checkTechExists: ITech | null = await Tech.findByPk(id_tec);
+
+        if(!checkTechExists){
+            logging.warning(':::::::::::::::::::::::::');
+            logging.warning(`Tech with the id ${id_tec} does not exists!`);
+            logging.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+
+        const tech: any = await Tech.update({
+            name_tech: tech_data.name_tech,
+            icon_tech: tech_data.icon_tech,
+            id_resume: checkTechExists.id_resume
+        },{
+            where: {
+                id_tech: id_tec
+            }
+        });
+
+        if(tech.length === 0){
+            logging.warning(':::::::::::::::::::::::::');
+            logging.warning('Registration not updated, an error occurred');
+            logging.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
+
+        loggingInfo(`Successfuly technology update: ${tech_data.name_tech}`);
+
+        return `Successfuly technology update: ${tech_data.name_tech}`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getTechnologies, insertNewTechnologie, updateATechRecord };

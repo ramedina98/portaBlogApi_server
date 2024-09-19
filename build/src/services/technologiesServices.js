@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewTechnologie = exports.getTechnologies = void 0;
+exports.updateATechRecord = exports.insertNewTechnologie = exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -110,3 +110,44 @@ const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.insertNewTechnologie = insertNewTechnologie;
+/**
+ * @methodPUT --> This service helps me to update a record in the technologies table...
+ *
+ * @param id_tec
+ * @param tech_data
+ */
+const updateATechRecord = (id_tec, tech_data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const checkTechExists = yield technologiesModel_1.Tech.findByPk(id_tec);
+        if (!checkTechExists) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning(`Tech with the id ${id_tec} does not exists!`);
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+        const tech = yield technologiesModel_1.Tech.update({
+            name_tech: tech_data.name_tech,
+            icon_tech: tech_data.icon_tech,
+            id_resume: checkTechExists.id_resume
+        }, {
+            where: {
+                id_tech: id_tec
+            }
+        });
+        if (tech.length === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning('Registration not updated, an error occurred');
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
+        (0, resumeModulesUtilF_1.loggingInfo)(`Successfuly technology update: ${checkTechExists.name_tech}`);
+        return `Successfuly technology update: ${checkTechExists.name_tech}`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateATechRecord = updateATechRecord;
