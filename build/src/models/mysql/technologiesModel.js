@@ -24,6 +24,11 @@ Tech.init({
         type: sequelize_1.DataTypes.STRING(250),
         allowNull: false
     },
+    delet_tech: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     id_resume: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false

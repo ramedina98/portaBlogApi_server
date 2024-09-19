@@ -78,8 +78,8 @@ exports.insertNewTechnologieResponse = insertNewTechnologieResponse;
  */
 const updateATechRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_tec, tech_data } = req.body;
-        const tech = yield (0, technologiesServices_1.updateATechRecord)(id_tec, tech_data);
+        const { id_tech, tech_data } = req.body;
+        const tech = yield (0, technologiesServices_1.updateATechRecord)(id_tech, tech_data);
         if (typeof tech === 'number') {
             let message = tech === 1 ? 'Tech does not exists' : tech === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
             res.status(404).json({ message });

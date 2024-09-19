@@ -89,6 +89,7 @@ const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0
         const newData = {
             name_tech: data.name_tech,
             icon_tech: data.icon_tech,
+            delet_tech: false,
             id_resume: verification.id_resume
         };
         // make the new register...
@@ -140,8 +141,8 @@ const updateATechRecord = (id_tec, tech_data) => __awaiter(void 0, void 0, void 
             logging_1.default.warning(':::::::::::::::::::::::::');
             return 2;
         }
-        (0, resumeModulesUtilF_1.loggingInfo)(`Successfuly technology update: ${checkTechExists.name_tech}`);
-        return `Successfuly technology update: ${checkTechExists.name_tech}`;
+        (0, resumeModulesUtilF_1.loggingInfo)(`Successfuly technology update: ${tech_data.name_tech}`);
+        return `Successfuly technology update: ${tech_data.name_tech}`;
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');

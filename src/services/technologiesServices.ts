@@ -91,6 +91,7 @@ const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId)
         const newData: ITechNoId = {
             name_tech: data.name_tech,
             icon_tech: data.icon_tech,
+            delet_tech: false,
             id_resume: verification.id_resume
         }
 
