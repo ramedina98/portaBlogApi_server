@@ -32,8 +32,13 @@ Schooling.init({
         type: sequelize_1.DataTypes.DATE,
         allowNull: false
     },
+    delete_schooling: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     id_resume: {
-        type: sequelize_1.DataTypes.DATE,
+        type: sequelize_1.DataTypes.NUMBER,
         allowNull: false
     }
 }, {

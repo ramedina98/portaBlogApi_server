@@ -51,7 +51,7 @@ const getResume = async (id_user: string): Promise<IResumeService | number> => {
             }),
             Expe.findAll({
                 where: {
-                    id_expe: {
+                    id_resume: {
                         [Op.eq]: verification.id_resume
                     }
                 },
@@ -61,7 +61,7 @@ const getResume = async (id_user: string): Promise<IResumeService | number> => {
             }),
             Course.findAll({
                 where: {
-                    id_course: {
+                    id_resume: {
                         [Op.eq]: verification.id_resume
                     }
                 },
@@ -71,7 +71,7 @@ const getResume = async (id_user: string): Promise<IResumeService | number> => {
             }),
             Schooling.findAll({
                 where: {
-                    id_sch: {
+                    id_resume: {
                         [Op.eq]: verification.id_resume
                     }
                 },

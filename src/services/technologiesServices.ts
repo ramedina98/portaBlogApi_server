@@ -5,8 +5,6 @@
  * @GET
  * @POST
  * @PUT
- * TODO: hay que hacer modificaciones en el servicio getTechnologies para que solo obtenga las que no estan delete
- * TODO: y crear un serivicio get que solo jale las que esten delete...
  */
 import { ITech, ITechNoResumeId, ITechNoIdNoresumeId, ITechNoId } from "../interfaces/ITechnologies";
 import { Tech } from "../models/mysql/technologiesModel";

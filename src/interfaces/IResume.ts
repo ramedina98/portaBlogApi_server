@@ -3,6 +3,7 @@
  * services of the endpoint resume...
  */
 import { ITech } from "./ITechnologies";
+import { ISchooling } from "./ISchooling";
 
 // experience interface...
 // elemtns of this iinterface...
@@ -40,16 +41,6 @@ interface ICourse {
     id_resume: number;
 }
 
-// schooling interface...
-interface ISchooling {
-    id_sch: number;
-    career_name: string;
-    university_nam: string;
-    start_date: Date;
-    end_date: Date;
-    id_resume: number;
-}
-
 // resume interface
 interface IResume {
     id_resume: number;
@@ -72,4 +63,4 @@ interface IResumeService {
 }
 
 
-export{ IExperience, Position, TypeExpe, ICourse, ISchooling ,IResume, ICreateResume, IResumeService };
+export{ IExperience, Position, TypeExpe, ICourse ,IResume, ICreateResume, IResumeService };

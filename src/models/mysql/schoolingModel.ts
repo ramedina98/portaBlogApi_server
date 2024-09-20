@@ -3,7 +3,7 @@
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
-import { ISchooling } from "../../interfaces/IResume";
+import { ISchooling } from "../../interfaces/ISchooling";
 
 interface SchoolingAtributtes extends Optional<ISchooling, 'id_sch'>{}
 
@@ -13,6 +13,7 @@ class Schooling extends Model <ISchooling, SchoolingAtributtes>{
     university_nam!: string;
     start_date!: Date;
     end_date!: Date;
+    delete_schooling!: boolean;
     id_resume!: number;
 }
 
@@ -32,15 +33,20 @@ Schooling.init({
         allowNull: false
     },
     start_date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false
     },
     end_date: {
         type: DataTypes.DATE,
         allowNull: false
     },
+    delete_schooling: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     id_resume: {
-        type: DataTypes.DATE,
+        type: DataTypes.INTEGER,
         allowNull: false
     }
 }, {

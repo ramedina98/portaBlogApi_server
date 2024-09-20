@@ -60,7 +60,7 @@ const getResume = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
             }),
             experienceModel_1.Expe.findAll({
                 where: {
-                    id_expe: {
+                    id_resume: {
                         [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
@@ -70,7 +70,7 @@ const getResume = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
             }),
             coursesModel_1.Course.findAll({
                 where: {
-                    id_course: {
+                    id_resume: {
                         [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
@@ -80,7 +80,7 @@ const getResume = (id_user) => __awaiter(void 0, void 0, void 0, function* () {
             }),
             schoolingModel_1.Schooling.findAll({
                 where: {
-                    id_sch: {
+                    id_resume: {
                         [sequelize_1.Op.eq]: verification.id_resume
                     }
                 },
