@@ -10,4 +10,6 @@ const schoolingControllers_1 = require("../controllers/schoolingControllers");
 const schoolingRouter = (0, express_1.Router)();
 // GET...
 schoolingRouter.get('/', schoolingControllers_1.getSchoolingDataResponse);
+// PUT...
+schoolingRouter.post('/new', schoolingControllers_1.insertNewSchoolingDataResponse);
 exports.default = schoolingRouter;

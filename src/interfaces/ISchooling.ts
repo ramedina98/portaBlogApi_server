@@ -11,7 +11,8 @@ interface ISchooling {
     delete_schooling: boolean;
     id_resume: number;
 }
-
 interface ISchoolingNoIdResume extends Omit<ISchooling, 'id_resume'>{};
+interface ISchoolingNoIdNoResumeId extends Omit<ISchoolingNoIdResume, 'id_sch'>{};
+interface ISchoolingNoId extends Omit<ISchooling, 'id_sch'>{};
 
-export { ISchooling, ISchoolingNoIdResume };
+export { ISchooling, ISchoolingNoIdResume, ISchoolingNoIdNoResumeId, ISchoolingNoId };

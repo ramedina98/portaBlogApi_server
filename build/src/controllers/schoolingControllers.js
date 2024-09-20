@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchoolingDataResponse = void 0;
+exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
 const schoolingServices_1 = require("../services/schoolingServices");
 /**
  * @method GET
@@ -42,3 +42,36 @@ const getSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.getSchoolingDataResponse = getSchoolingDataResponse;
+/**
+ * @method POST
+ *
+ * this controller helps me to handle the insert new record service, and create a new record in the
+ * schooling table...
+ *
+ * @param id --> id user...
+ * @param schooling_data -->
+ */
+const insertNewSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id, schooling_data } = req.body;
+        const schooling = yield (0, schoolingServices_1.insertNewSchoolingData)(id, schooling_data);
+        if (typeof schooling === 'number') {
+            let message = '';
+            if (schooling === 1) {
+                message = 'User does not exist';
+            }
+            else if (schooling === 2) {
+                message = 'User does not have a resume attached jet';
+            }
+            else if (schooling === 3) {
+                message = 'Unable to register';
+            }
+            res.status(404).json({ message });
+        }
+        res.status(200).json({ message: 'Successfuly registration of schooling data' });
+    }
+    catch (error) {
+        res.status(500).json({ message: `Internal server error ${error.message}` });
+    }
+});
+exports.insertNewSchoolingDataResponse = insertNewSchoolingDataResponse;
