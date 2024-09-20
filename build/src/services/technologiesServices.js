@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateATechRecord = exports.insertNewTechnologie = exports.getTechnologies = void 0;
+exports.toggleDeleteTech = exports.updateATechRecord = exports.insertNewTechnologie = exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -89,7 +89,7 @@ const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0
         const newData = {
             name_tech: data.name_tech,
             icon_tech: data.icon_tech,
-            delet_tech: false,
+            delete_tech: false,
             id_resume: verification.id_resume
         };
         // make the new register...
@@ -152,3 +152,36 @@ const updateATechRecord = (id_tec, tech_data) => __awaiter(void 0, void 0, void 
     }
 });
 exports.updateATechRecord = updateATechRecord;
+/**
+ * @MethdoPATCH
+ *
+ * @ActiveOrnot --> this sevice helps me to toggle the "delete_tech" field, this to mark and
+ * item as active or inactive...
+ * @param id_tech
+ * @method patch
+ */
+const toggleDeleteTech = (id_tech) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Check if the technology exists...
+        const tech = yield technologiesModel_1.Tech.findByPk(id_tech);
+        if (!tech) {
+            logging_1.default.warning('::::::::::::::::::::::::');
+            logging_1.default.warning(`Tech with the id ${id_tech} does not exists!`);
+            logging_1.default.warning('::::::::::::::::::::::::');
+            return 1;
+        }
+        // change the status...
+        const newDeleteStatus = !tech.delete_tech;
+        // update the delete status...
+        yield tech.update({ delete_tech: newDeleteStatus });
+        (0, resumeModulesUtilF_1.loggingInfo)(`Delete status updated successfuly: ${tech.name_tech}`);
+        return `Delete status updated successfuly: ${tech.name_tech}`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.toggleDeleteTech = toggleDeleteTech;

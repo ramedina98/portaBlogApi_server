@@ -5,6 +5,8 @@
  * @GET
  * @POST
  * @PUT
+ * TODO: hay que hacer modificaciones en el servicio getTechnologies para que solo obtenga las que no estan delete
+ * TODO: y crear un serivicio get que solo jale las que esten delete...
  */
 import { ITech, ITechNoResumeId, ITechNoIdNoresumeId, ITechNoId } from "../interfaces/ITechnologies";
 import { Tech } from "../models/mysql/technologiesModel";
@@ -91,7 +93,7 @@ const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId)
         const newData: ITechNoId = {
             name_tech: data.name_tech,
             icon_tech: data.icon_tech,
-            delet_tech: false,
+            delete_tech: false,
             id_resume: verification.id_resume
         }
 
@@ -161,4 +163,40 @@ const updateATechRecord = async (id_tec: number, tech_data: ITechNoIdNoresumeId)
     }
 }
 
-export { getTechnologies, insertNewTechnologie, updateATechRecord };
+/**
+ * @MethdoPATCH
+ *
+ * @ActiveOrnot --> this sevice helps me to toggle the "delete_tech" field, this to mark and
+ * item as active or inactive...
+ * @param id_tech
+ * @method patch
+ */
+const toggleDeleteTech = async (id_tech: number): Promise<string | number> => {
+    try {
+        // Check if the technology exists...
+        const tech: any = await Tech.findByPk(id_tech);
+
+        if(!tech){
+            logging.warning('::::::::::::::::::::::::');
+            logging.warning(`Tech with the id ${id_tech} does not exists!`);
+            logging.warning('::::::::::::::::::::::::');
+            return 1;
+        }
+
+        // change the status...
+        const newDeleteStatus: boolean = !tech.delete_tech;
+        // update the delete status...
+        await tech.update({ delete_tech: newDeleteStatus });
+
+        loggingInfo(`Delete status updated successfuly: ${tech.name_tech}`);
+
+        return `Delete status updated successfuly: ${tech.name_tech}`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getTechnologies, insertNewTechnologie, updateATechRecord, toggleDeleteTech };

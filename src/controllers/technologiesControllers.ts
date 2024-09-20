@@ -3,7 +3,12 @@
 */
 import { Request, Response } from "express";
 import { ITechNoResumeId } from "../interfaces/ITechnologies";
-import { getTechnologies, insertNewTechnologie, updateATechRecord } from "../services/technologiesServices";
+import {
+    getTechnologies,
+    insertNewTechnologie,
+    updateATechRecord,
+    toggleDeleteTech
+} from "../services/technologiesServices";
 
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -93,4 +98,27 @@ const updateATechRecordResponse = async (req: Request, res: Response): Promise<v
     }
 }
 
-export { getTechnologiesResponse, insertNewTechnologieResponse, updateATechRecordResponse };
+/**
+ * @UpdateDeleteStatusController -> this controller helps me to handle the change of the delete_tech
+ * status field, to change from false to true, or veseversa...
+ *
+ * @param id_tech
+ */
+const toggleDeleteTechStatus = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const id_tech: number = parseInt(id);
+        const techResponse: string | number = await toggleDeleteTech(id_tech);
+
+        if(typeof techResponse === 'number'){
+            res.status(404).json({ message: 'Technology does not exists!' });
+        }
+
+        res.status(200).json({ message: techResponse });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { getTechnologiesResponse, insertNewTechnologieResponse, updateATechRecordResponse, toggleDeleteTechStatus };

@@ -12,7 +12,7 @@ class Tech extends Model <ITech, TechAtributtes>{
     id_tech!: number;
     name_tech!: string;
     icon_tech!: string;
-    delet_tech!: boolean;
+    delete_tech!: boolean;
     id_resume!: number;
 }
 
@@ -30,7 +30,7 @@ Tech.init({
         type: DataTypes.STRING(250),
         allowNull: false
     },
-    delet_tech: {
+    delete_tech: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false

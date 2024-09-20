@@ -8,9 +8,10 @@ interface ITech {
     id_tech: number;
     name_tech: string;
     icon_tech: string;
-    delet_tech: boolean;
+    delete_tech: boolean;
     id_resume: number;
 }
+
 interface ITechNoId extends Omit<ITech, 'id_tech'>{};
 // technologies interface without id_resume...
 interface ITechNoResumeId extends Omit<ITech, 'id_resume'>{};

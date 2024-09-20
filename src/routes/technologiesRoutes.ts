@@ -6,16 +6,19 @@ import { Router } from "express";
 import {
     getTechnologiesResponse,
     insertNewTechnologieResponse,
-    updateATechRecordResponse
+    updateATechRecordResponse,
+    toggleDeleteTechStatus
 } from "../controllers/technologiesControllers";
 
 const techRoutes = Router();
 
 // GET...
 techRoutes.get('/', getTechnologiesResponse);
-//POST...
+// POST...
 techRoutes.post('/newtech', insertNewTechnologieResponse);
 // PUT...
 techRoutes.put('/update', updateATechRecordResponse);
+// PATCH
+techRoutes.patch('/:id/deletetech-status', toggleDeleteTechStatus);
 
 export default techRoutes;
