@@ -3,7 +3,7 @@
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
-import { ICourse } from "../../interfaces/IResume";
+import { ICourse } from "../../interfaces/ICourses";
 
 interface CoursesAtributtes extends Optional<ICourse, 'id_course'>{};
 

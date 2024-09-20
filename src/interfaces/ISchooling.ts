@@ -1,3 +1,6 @@
+/**
+ * In this file I have all the needed interfaces for schooling's module...
+ */
 // schooling interface...
 interface ISchooling {
     id_sch: number;

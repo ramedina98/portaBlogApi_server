@@ -3,7 +3,8 @@
  */
 import { Model, DataTypes, Optional } from "sequelize";
 import { sequelizeMysql } from "../../config/db";
-import { IExperience, Position, TypeExpe} from "../../interfaces/IResume";
+import { Position, TypeExpe} from "../../interfaces/IResume";
+import { IExperience } from "../../interfaces/IExperience";
 
 interface ExperienceAtributtes extends Optional<IExperience, 'id_expe'>{}
 

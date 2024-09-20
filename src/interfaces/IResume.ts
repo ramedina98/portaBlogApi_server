@@ -2,8 +2,10 @@
  * In this file we have all the necessary interfaces to work with the models, controllers and
  * services of the endpoint resume...
  */
-import { ITech } from "./ITechnologies";
-import { ISchooling } from "./ISchooling";
+import { ITechNoResumeId } from "./ITechnologies";
+import { ISchoolingNoIdResume } from "./ISchooling";
+import { ICourseNoResumeId } from "./ICourses";
+import { IExperienceNoResumeId } from "./IExperience";
 
 // experience interface...
 // elemtns of this iinterface...
@@ -16,29 +18,6 @@ enum Position {
 enum TypeExpe {
     Work = 'work',
     Project = 'project'
-}
-
-interface IExperience {
-    id_expe: number;
-    title_expe: string;
-    text_expe: string;
-    position: Position;
-    list_techs: string;
-    type_expe: TypeExpe;
-    start_date: Date;
-    end_date: Date;
-    id_resume: number;
-}
-
-// courses interface...
-interface ICourse {
-    id_course: number;
-    course_title: string;
-    text_course: string;
-    provider: string;
-    start_date: Date;
-    end_date: Date;
-    id_resume: number;
 }
 
 // resume interface
@@ -56,11 +35,11 @@ interface ICreateResume extends Omit<IResume, 'id_resume'>{}
 // resume service interfece...
 interface IResumeService {
     resume: IResume;
-    technologies: ITech [];
-    experience: IExperience [];
-    courses: ICourse [];
-    schooling: ISchooling [];
+    technologies: ITechNoResumeId [];
+    experience: IExperienceNoResumeId [];
+    courses: ICourseNoResumeId [];
+    schooling: ISchoolingNoIdResume [];
 }
 
 
-export{ IExperience, Position, TypeExpe, ICourse ,IResume, ICreateResume, IResumeService };
+export{ Position, TypeExpe ,IResume, ICreateResume, IResumeService };

@@ -25,7 +25,7 @@ Schooling.init({
         allowNull: false
     },
     start_date: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.DATE,
         allowNull: false
     },
     end_date: {
@@ -38,7 +38,7 @@ Schooling.init({
         defaultValue: false
     },
     id_resume: {
-        type: sequelize_1.DataTypes.NUMBER,
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
     }
 }, {
