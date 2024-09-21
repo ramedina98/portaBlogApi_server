@@ -179,4 +179,39 @@ const updateASchoolingRecord = async (id_sch: number, data_sch: ISchoolingNoIdNo
     }
 }
 
-export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord };
+/**
+ * @method PATCH
+ *
+ * This service helps me to toggle the "delete_schooling" filed, from false to true and veseversa...
+ *
+ * @param id_sch
+ */
+const toggleDeleteSchoolingStatus = async (id_sch: number): Promise<string | number> => {
+    try {
+        // check if the schooling data record exists...
+        const sch: any = await Schooling.findByPk(id_sch);
+
+        if(!sch){
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            logging.warning(`Schooling record does not exists with id: ${id_sch}`);
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            return 1;
+        }
+
+        // change the status...
+        const newStatus: boolean = !sch.delete_schooling;
+        // update the delete_schooling status...
+        await sch.update({ delete_schooling: newStatus });
+
+        loggingInfo(`Delete status updated successfuly: ${sch.name_tech}`);
+
+        return `Delete status updated successfuly: ${sch.name_tech}`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord, toggleDeleteSchoolingStatus };

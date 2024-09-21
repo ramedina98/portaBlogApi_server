@@ -14,4 +14,6 @@ schoolingRouter.get('/', schoolingControllers_1.getSchoolingDataResponse);
 schoolingRouter.post('/new', schoolingControllers_1.insertNewSchoolingDataResponse);
 // PUT...
 schoolingRouter.put('/update', schoolingControllers_1.updateASchoolingRecordResponse);
+// PATCH...
+schoolingRouter.patch('/:id/deletetech-status', schoolingControllers_1.toggleDeleteSchoolingStatusResponse);
 exports.default = schoolingRouter;

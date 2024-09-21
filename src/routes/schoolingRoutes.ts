@@ -7,7 +7,8 @@ import { Router } from "express";
 import {
     getSchoolingDataResponse,
     insertNewSchoolingDataResponse,
-    updateASchoolingRecordResponse
+    updateASchoolingRecordResponse,
+    toggleDeleteSchoolingStatusResponse
 } from "../controllers/schoolingControllers";
 
 const schoolingRouter = Router();
@@ -18,5 +19,7 @@ schoolingRouter.get('/', getSchoolingDataResponse);
 schoolingRouter.post('/new', insertNewSchoolingDataResponse);
 // PUT...
 schoolingRouter.put('/update', updateASchoolingRecordResponse);
+// PATCH...
+schoolingRouter.patch('/:id/deletetech-status', toggleDeleteSchoolingStatusResponse);
 
 export default schoolingRouter;

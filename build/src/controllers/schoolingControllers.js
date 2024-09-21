@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
+exports.toggleDeleteSchoolingStatusResponse = exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
 const schoolingServices_1 = require("../services/schoolingServices");
 /**
  * @method GET
@@ -100,3 +100,27 @@ const updateASchoolingRecordResponse = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.updateASchoolingRecordResponse = updateASchoolingRecordResponse;
+/**
+ * @method PATCH
+ *
+ * This controller helps me to handle the toggle delete schooling status service, which update the
+ * field delete_schooling, this in a specific record...
+ *
+ * @param id_sch
+ */
+const toggleDeleteSchoolingStatusResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        // parse the id from string to number...
+        const id_sch = parseInt(id);
+        const sch = yield (0, schoolingServices_1.toggleDeleteSchoolingStatus)(id_sch);
+        if (sch === 1) {
+            res.status(404).json({ message: `Schooling record does not exists with id: ${id_sch}` });
+        }
+        res.status(200).json({ message: sch });
+    }
+    catch (error) {
+        res.status(500).json({ message: `Internal server error: ${error.message}` });
+    }
+});
+exports.toggleDeleteSchoolingStatusResponse = toggleDeleteSchoolingStatusResponse;

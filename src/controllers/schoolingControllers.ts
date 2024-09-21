@@ -14,7 +14,8 @@ import { ISchoolingNoIdResume } from "../interfaces/ISchooling";
 import {
     getSchoolingData,
     insertNewSchoolingData,
-    updateASchoolingRecord
+    updateASchoolingRecord,
+    toggleDeleteSchoolingStatus
 } from "../services/schoolingServices";
 
 /**
@@ -113,4 +114,31 @@ const updateASchoolingRecordResponse = async (req: Request, res: Response): Prom
     }
 }
 
-export { getSchoolingDataResponse, insertNewSchoolingDataResponse, updateASchoolingRecordResponse };
+/**
+ * @method PATCH
+ *
+ * This controller helps me to handle the toggle delete schooling status service, which update the
+ * field delete_schooling, this in a specific record...
+ *
+ * @param id_sch
+ */
+const toggleDeleteSchoolingStatusResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        // parse the id from string to number...
+        const id_sch: number = parseInt(id);
+
+        const sch: string | number = await toggleDeleteSchoolingStatus(id_sch);
+
+        if(sch === 1){
+            res.status(404).json({ message: `Schooling record does not exists with id: ${id_sch}` });
+        }
+
+        res.status(200).json({ message: sch });
+    } catch (error: any) {
+        res.status(500).json({ message: `Internal server error: ${error.message}`});
+    }
+}
+
+export { getSchoolingDataResponse, insertNewSchoolingDataResponse, updateASchoolingRecordResponse, toggleDeleteSchoolingStatusResponse };
