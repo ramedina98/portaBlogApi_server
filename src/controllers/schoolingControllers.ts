@@ -13,7 +13,8 @@ import { Request, Response } from "express";
 import { ISchoolingNoIdResume } from "../interfaces/ISchooling";
 import {
     getSchoolingData,
-    insertNewSchoolingData
+    insertNewSchoolingData,
+    updateASchoolingRecord
 } from "../services/schoolingServices";
 
 /**
@@ -84,4 +85,32 @@ const insertNewSchoolingDataResponse = async (req: Request, res: Response): Prom
     }
 }
 
-export { getSchoolingDataResponse, insertNewSchoolingDataResponse };
+/**
+ * @method PUT
+ *
+ * This controller helps me to handle the update a schooling record service, which update the info of a
+ * rercord in the schooling table...
+ *
+ * @param id_sch
+ * @param data_sch
+ */
+const updateASchoolingRecordResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id_sch, data_sch } = req.body;
+
+        const sch: string | number = await updateASchoolingRecord(id_sch, data_sch);
+
+        if(typeof sch === 'number'){
+            const message = sch === 1 ? `Schooling record does not exists with id: ${id_sch}` :
+            sch === 2 ? 'Any schooling record was not update!' : 'Unknow error!';
+
+            res.status(404).json({ message });
+        }
+
+        res.status(200).json({ message: sch });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message })
+    }
+}
+
+export { getSchoolingDataResponse, insertNewSchoolingDataResponse, updateASchoolingRecordResponse };

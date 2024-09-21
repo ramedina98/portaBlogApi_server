@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
+exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
 const schoolingServices_1 = require("../services/schoolingServices");
 /**
  * @method GET
@@ -75,3 +75,28 @@ const insertNewSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.insertNewSchoolingDataResponse = insertNewSchoolingDataResponse;
+/**
+ * @method PUT
+ *
+ * This controller helps me to handle the update a schooling record service, which update the info of a
+ * rercord in the schooling table...
+ *
+ * @param id_sch
+ * @param data_sch
+ */
+const updateASchoolingRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_sch, data_sch } = req.body;
+        const sch = yield (0, schoolingServices_1.updateASchoolingRecord)(id_sch, data_sch);
+        if (typeof sch === 'number') {
+            const message = sch === 1 ? `Schooling record does not exists with id: ${id_sch}` :
+                sch === 2 ? 'Any schooling record was not update!' : 'Unknow error!';
+            res.status(404).json({ message });
+        }
+        res.status(200).json({ message: sch });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.updateASchoolingRecordResponse = updateASchoolingRecordResponse;

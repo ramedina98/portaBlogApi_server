@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewSchoolingData = exports.getSchoolingData = void 0;
+exports.updateASchoolingRecord = exports.insertNewSchoolingData = exports.getSchoolingData = void 0;
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const schoolingModel_1 = require("../models/mysql/schoolingModel");
 const resumeModulesUtilF_2 = require("../utils/resumeModulesUtilF");
@@ -118,3 +118,54 @@ const insertNewSchoolingData = (id, schooling_data) => __awaiter(void 0, void 0,
     }
 });
 exports.insertNewSchoolingData = insertNewSchoolingData;
+/**
+ * @method PUT
+ *
+ * This service helps me to update an specific record in the schooling table...
+ *
+ * @param id_shcooling
+ * @param data_sch
+ *
+ * @async
+ * @returns It returns a message of succssess or a number, that the controller knows what it means (warning message)
+ */
+const updateASchoolingRecord = (id_sch, data_sch) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // check if the schooling record exists...
+        const sch = yield schoolingModel_1.Schooling.findByPk(id_sch);
+        if (!sch) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
+            logging_1.default.warning(`Schooling record does not exists with id: ${id_sch}`);
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
+            return 1;
+        }
+        // if everything is ok, update the record...
+        const schooling = yield schoolingModel_1.Schooling.update({
+            career_name: data_sch.career_name,
+            university_nam: data_sch.university_nam,
+            start_date: data_sch.start_date,
+            end_date: data_sch.end_date,
+            delete_schooling: data_sch.delete_schooling,
+            id_resume: sch.id_resume
+        }, {
+            where: {
+                id_sch
+            }
+        });
+        if (schooling.length === 0) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
+            logging_1.default.warning(`Any schooling record was not update!`);
+            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
+            return 2;
+        }
+        (0, resumeModulesUtilF_1.loggingInfo)(`The "${data_sch.career_name}" record was update successfuly!`);
+        return `The "${data_sch.career_name}" record was update successfuly!`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateASchoolingRecord = updateASchoolingRecord;

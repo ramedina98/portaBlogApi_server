@@ -7,7 +7,7 @@
  * @PUT
  * @PATCH
  */
-import { ISchooling, ISchoolingNoIdResume, ISchoolingNoId } from "../interfaces/ISchooling";
+import { ISchooling, ISchoolingNoIdResume, ISchoolingNoId, ISchoolingNoIdNoResumeId } from "../interfaces/ISchooling";
 import { Iverifier, loggingInfo } from "../utils/resumeModulesUtilF";
 import { Schooling } from "../models/mysql/schoolingModel";
 import { userResumeVerifier } from "../utils/resumeModulesUtilF";
@@ -124,4 +124,59 @@ const insertNewSchoolingData = async (id: string, schooling_data: ISchoolingNoId
     }
 }
 
-export { getSchoolingData, insertNewSchoolingData };
+/**
+ * @method PUT
+ *
+ * This service helps me to update an specific record in the schooling table...
+ *
+ * @param id_shcooling
+ * @param data_sch
+ *
+ * @async
+ * @returns It returns a message of succssess or a number, that the controller knows what it means (warning message)
+ */
+const updateASchoolingRecord = async (id_sch: number, data_sch: ISchoolingNoIdNoResumeId): Promise<string | number> => {
+    try {
+        // check if the schooling record exists...
+        const sch: ISchooling | null = await Schooling.findByPk(id_sch);
+
+        if(!sch){
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            logging.warning(`Schooling record does not exists with id: ${id_sch}`);
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            return 1;
+        }
+
+        // if everything is ok, update the record...
+        const schooling: any = await Schooling.update({
+            career_name: data_sch.career_name,
+            university_nam: data_sch.university_nam,
+            start_date: data_sch.start_date,
+            end_date: data_sch.end_date,
+            delete_schooling: data_sch.delete_schooling,
+            id_resume: sch.id_resume
+        },{
+            where: {
+                id_sch
+            }
+        });
+
+        if(schooling.length === 0){
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            logging.warning(`Any schooling record was not update!`);
+            logging.warning('::::::::::::::::::::::::::::::::::::');
+            return 2;
+        }
+
+        loggingInfo(`The "${data_sch.career_name}" record was update successfuly!`);
+
+        return `The "${data_sch.career_name}" record was update successfuly!`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord };

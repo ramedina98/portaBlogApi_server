@@ -6,14 +6,17 @@
 import { Router } from "express";
 import {
     getSchoolingDataResponse,
-    insertNewSchoolingDataResponse
+    insertNewSchoolingDataResponse,
+    updateASchoolingRecordResponse
 } from "../controllers/schoolingControllers";
 
 const schoolingRouter = Router();
 
 // GET...
 schoolingRouter.get('/', getSchoolingDataResponse);
-// PUT...
+// POT...
 schoolingRouter.post('/new', insertNewSchoolingDataResponse);
+// PUT...
+schoolingRouter.put('/update', updateASchoolingRecordResponse);
 
 export default schoolingRouter;
