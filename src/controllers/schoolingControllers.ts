@@ -15,7 +15,8 @@ import {
     getSchoolingData,
     insertNewSchoolingData,
     updateASchoolingRecord,
-    toggleDeleteSchoolingStatus
+    toggleDeleteSchoolingStatus,
+    toggleSeveralDeleteSchRecords
 } from "../services/schoolingServices";
 
 /**
@@ -141,4 +142,31 @@ const toggleDeleteSchoolingStatusResponse = async (req: Request, res: Response):
     }
 }
 
-export { getSchoolingDataResponse, insertNewSchoolingDataResponse, updateASchoolingRecordResponse, toggleDeleteSchoolingStatusResponse };
+/**
+ * @method PATCH
+ *
+ * This controller helps me to handle the toggle several delete sch status records, receiveing an array
+ * with the ids of the records to be toggled...
+ *
+ * @param sch_ids --> an array
+ */
+const toggleSeveralDeleteSchRecordsResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { sch_ids }: { sch_ids: number[] } = req.body;
+
+        if(!sch_ids || sch_ids.length === 0){
+            res.status(400).json({ message: 'No schooling IDs provided' });
+        }
+
+        // call the function...
+        const sch: string[] = await toggleSeveralDeleteSchRecords(sch_ids);
+
+        // if evrything is ok, returns a success response...
+        res.status(200).json({ message: 'Schooling records updated successfully.', details: sch });
+
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { getSchoolingDataResponse, insertNewSchoolingDataResponse, updateASchoolingRecordResponse, toggleDeleteSchoolingStatusResponse, toggleSeveralDeleteSchRecordsResponse };

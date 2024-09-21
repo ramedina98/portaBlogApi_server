@@ -8,7 +8,8 @@ import {
     getSchoolingDataResponse,
     insertNewSchoolingDataResponse,
     updateASchoolingRecordResponse,
-    toggleDeleteSchoolingStatusResponse
+    toggleDeleteSchoolingStatusResponse,
+    toggleSeveralDeleteSchRecordsResponse
 } from "../controllers/schoolingControllers";
 
 const schoolingRouter = Router();
@@ -20,6 +21,7 @@ schoolingRouter.post('/new', insertNewSchoolingDataResponse);
 // PUT...
 schoolingRouter.put('/update', updateASchoolingRecordResponse);
 // PATCH...
-schoolingRouter.patch('/:id/deletetech-status', toggleDeleteSchoolingStatusResponse);
+schoolingRouter.patch('/:id/deletesch-status', toggleDeleteSchoolingStatusResponse);
+schoolingRouter.patch('/delete_status', toggleSeveralDeleteSchRecordsResponse);
 
 export default schoolingRouter;

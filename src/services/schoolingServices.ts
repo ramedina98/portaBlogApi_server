@@ -214,4 +214,44 @@ const toggleDeleteSchoolingStatus = async (id_sch: number): Promise<string | num
     }
 }
 
-export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord, toggleDeleteSchoolingStatus };
+/**
+ * @method PATCH
+ *
+ * This service helps me to toggle the status of the delete_schooling, of several records...
+ *
+ * @param sch_ids --> this is an array which contains all the ids of the records that have to be toggled
+ */
+const toggleSeveralDeleteSchRecords = async (sch_ids: number[]): Promise<string[]> => {
+    try {
+        // check if the schooling records exists and update them...
+        const checkSchRecords: any = await Promise.all(
+            sch_ids.map(async (id) => {
+                const record: any = await Schooling.findByPk(id); // search each record by its id...
+                if(!record) {
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    logging.warning(`Schooling record with id ${id} does not exists.`);
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    throw new Error(`Schooling record with id ${id} does not exists.`);
+                }
+                //toggle the delete status...
+                const newStatus: boolean = !record.delete_schooling;
+                await record.update({ delete_schooling: newStatus });
+
+                loggingInfo(`Record with id ${id} updated successfully!`);
+
+                return `Education in "${record.career_name}" updated successfully!`;
+            })
+        );
+
+        loggingInfo(`All records updated successfully: ${checkSchRecords.join(',')}`);
+
+        return checkSchRecords;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord, toggleDeleteSchoolingStatus, toggleSeveralDeleteSchRecords };

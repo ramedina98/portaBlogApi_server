@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleDeleteSchoolingStatusResponse = exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
+exports.toggleSeveralDeleteSchRecordsResponse = exports.toggleDeleteSchoolingStatusResponse = exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
 const schoolingServices_1 = require("../services/schoolingServices");
 /**
  * @method GET
@@ -124,3 +124,27 @@ const toggleDeleteSchoolingStatusResponse = (req, res) => __awaiter(void 0, void
     }
 });
 exports.toggleDeleteSchoolingStatusResponse = toggleDeleteSchoolingStatusResponse;
+/**
+ * @method PATCH
+ *
+ * This controller helps me to handle the toggle several delete sch status records, receiveing an array
+ * with the ids of the records to be toggled...
+ *
+ * @param sch_ids --> an array
+ */
+const toggleSeveralDeleteSchRecordsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { sch_ids } = req.body;
+        if (!sch_ids || sch_ids.length === 0) {
+            res.status(400).json({ message: 'No schooling IDs provided' });
+        }
+        // call the function...
+        const sch = yield (0, schoolingServices_1.toggleSeveralDeleteSchRecords)(sch_ids);
+        // if evrything is ok, returns a success response...
+        res.status(200).json({ message: 'Schooling records updated successfully.', details: sch });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.toggleSeveralDeleteSchRecordsResponse = toggleSeveralDeleteSchRecordsResponse;
