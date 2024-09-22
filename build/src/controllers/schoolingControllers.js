@@ -54,7 +54,10 @@ exports.getSchoolingDataResponse = getSchoolingDataResponse;
 const insertNewSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id, schooling_data } = req.body;
-        const schooling = yield (0, schoolingServices_1.insertNewSchoolingData)(id, schooling_data);
+        if (schooling_data.length === 0) {
+            res.status(400).json({ message: 'No data was provided' });
+        }
+        const schooling = yield (0, schoolingServices_1.insertNewSchRecords)(id, schooling_data);
         if (typeof schooling === 'number') {
             let message = '';
             if (schooling === 1) {
@@ -64,11 +67,11 @@ const insertNewSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, v
                 message = 'User does not have a resume attached jet';
             }
             else if (schooling === 3) {
-                message = 'Unable to register';
+                message = 'Some records could not be entered into the schooling table';
             }
             res.status(404).json({ message });
         }
-        res.status(200).json({ message: 'Successfuly registration of schooling data' });
+        res.status(200).json({ message: schooling });
     }
     catch (error) {
         res.status(500).json({ message: `Internal server error ${error.message}` });

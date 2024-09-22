@@ -22,6 +22,6 @@ schoolingRouter.post('/new', insertNewSchoolingDataResponse);
 schoolingRouter.put('/update', updateASchoolingRecordResponse);
 // PATCH...
 schoolingRouter.patch('/:id/deletesch-status', toggleDeleteSchoolingStatusResponse);
-schoolingRouter.patch('/delete_status', toggleSeveralDeleteSchRecordsResponse);
+schoolingRouter.patch('/delete-status', toggleSeveralDeleteSchRecordsResponse);
 
 export default schoolingRouter;

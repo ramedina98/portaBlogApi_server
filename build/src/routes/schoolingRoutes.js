@@ -16,5 +16,5 @@ schoolingRouter.post('/new', schoolingControllers_1.insertNewSchoolingDataRespon
 schoolingRouter.put('/update', schoolingControllers_1.updateASchoolingRecordResponse);
 // PATCH...
 schoolingRouter.patch('/:id/deletesch-status', schoolingControllers_1.toggleDeleteSchoolingStatusResponse);
-schoolingRouter.patch('/delete_status', schoolingControllers_1.toggleSeveralDeleteSchRecordsResponse);
+schoolingRouter.patch('/delete-status', schoolingControllers_1.toggleSeveralDeleteSchRecordsResponse);
 exports.default = schoolingRouter;

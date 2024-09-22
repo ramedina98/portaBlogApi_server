@@ -13,7 +13,7 @@ import { Request, Response } from "express";
 import { ISchoolingNoIdResume } from "../interfaces/ISchooling";
 import {
     getSchoolingData,
-    insertNewSchoolingData,
+    insertNewSchRecords,
     updateASchoolingRecord,
     toggleDeleteSchoolingStatus,
     toggleSeveralDeleteSchRecords
@@ -63,9 +63,13 @@ const getSchoolingDataResponse = async (req: Request, res: Response): Promise<vo
  */
 const insertNewSchoolingDataResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id, schooling_data } = req.body;
+        const { id, schooling_data }: {id: string, schooling_data: ISchoolingNoIdResume[]} = req.body;
 
-        const schooling: string | number = await insertNewSchoolingData(id, schooling_data);
+        if(schooling_data.length === 0){
+            res.status(400).json({ message: 'No data was provided' });
+        }
+
+        const schooling: string | number  = await insertNewSchRecords(id, schooling_data);
 
         if(typeof schooling === 'number'){
             let message: string = '';
@@ -75,13 +79,13 @@ const insertNewSchoolingDataResponse = async (req: Request, res: Response): Prom
             } else if(schooling === 2){
                 message = 'User does not have a resume attached jet';
             } else if(schooling === 3){
-                message = 'Unable to register';
+                message = 'Some records could not be entered into the schooling table';
             }
 
             res.status(404).json({ message });
         }
 
-        res.status(200).json({ message: 'Successfuly registration of schooling data' });
+        res.status(200).json({ message: schooling });
     } catch (error:any) {
         res.status(500).json({ message: `Internal server error ${error.message}` });
     }

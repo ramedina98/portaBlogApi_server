@@ -7,7 +7,7 @@
  * @PUT
  * @PATCH
  */
-import { ISchooling, ISchoolingNoIdResume, ISchoolingNoId, ISchoolingNoIdNoResumeId } from "../interfaces/ISchooling";
+import { ISchooling, ISchoolingNoIdResume, ISchoolingNoIdNoResumeId } from "../interfaces/ISchooling";
 import { Iverifier, loggingInfo } from "../utils/resumeModulesUtilF";
 import { Schooling } from "../models/mysql/schoolingModel";
 import { userResumeVerifier } from "../utils/resumeModulesUtilF";
@@ -72,50 +72,58 @@ const getSchoolingData = async (id: string): Promise<ISchoolingNoIdResume[] | nu
 
 /**
  * @method POST
+ * @type service
  *
- * This service helps me to create a new register in the schooling table...
+ * This service helps me to insert new data in the schooling table, creating new records in it...
  *
- * @param id
- * @param schooling_data
- *
- * @async
- * @returns a message of success, or a number which will be handle for its controller to let the user knows the problem...
+ * @param sch_data --> this is an object array... (type = ISchoolingNoIdNoResumeId)
+ * @returns --> if everything was created successfully it returns a message of success, and if something
+ * went wrong, it returns a number, that the controllers knows how to handle and which message of error has to send to
+ * the client...
  */
-const insertNewSchoolingData = async (id: string, schooling_data: ISchoolingNoIdResume): Promise<string | number> => {
+const insertNewSchRecords = async (id_user: string, sch_data: ISchoolingNoIdNoResumeId[]): Promise<string | number> => {
     try {
-        // check if the user exists, and check if the user has an attached resume...
-        const verification: Iverifier = await userResumeVerifier(id);
-
         /**
-         * If the id resume field is undefine, then it only returns the response number,
-         * which the controller will already know how to handle it...
+         * Check if the user exists, and if the user already exists check if they have an
+         * attached resume, and then obtain the id_resume...
+         * If they do not exists or they do not have an attached resume, returns an error number,
+         * which the controller already knows how to handle...
+         *
+         * 1 = user does not exists
+         * 2 = the user does not have an attached resume
          */
+        const verification: Iverifier = await userResumeVerifier(id_user);
+
+        // if the id_resume is undefine, returns the corresponding error number...
         if(verification.id_resume === undefined){
             return verification.num_response;
         }
 
-        // create a new object with the required fields to create a new record in the table...
-        const NewSchoolingData: ISchoolingNoId = {
-            career_name: schooling_data.career_name,
-            university_nam: schooling_data.university_nam,
-            start_date: schooling_data.start_date,
-            end_date: schooling_data.end_date,
-            delete_schooling: schooling_data.delete_schooling,
-            id_resume: verification.id_resume
-        }
 
-        const schInsert: ISchooling | null= await Schooling.create(NewSchoolingData);
+        // transfer the value of the id resume to a variable with that name...
+        const id_resume: number = verification.id_resume;
+        // insert new records into the schooling table...
+        const sch_result: ISchooling[] | null = await Promise.all(
+            sch_data.map(async (data) => {
+                const sch: ISchooling = await Schooling.create({
+                    ...data,
+                    id_resume
+                });
+                return sch;
+            })
+        );
 
-        if(!schInsert){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning('No registration was made');
-            logging.warning(':::::::::::::::::::::::::');
+        // If there is a record that was not made...
+        if(sch_result.length < sch_data.length){
+            logging.warning('::::::::::::::::::::::::::::::');
+            logging.warning(`There were ${sch_result.length - sch_data.length} records missing`);
+            logging.warning('::::::::::::::::::::::::::::::');
             return 3;
         }
 
-        loggingInfo(`Successfully registration of ${schInsert.career_name}!`);
+        loggingInfo('All registrations were successful');
 
-        return `Successfully registration of ${schInsert.career_name}!`;
+        return `All registrations were successful: ${sch_result.length}`;
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
@@ -203,9 +211,9 @@ const toggleDeleteSchoolingStatus = async (id_sch: number): Promise<string | num
         // update the delete_schooling status...
         await sch.update({ delete_schooling: newStatus });
 
-        loggingInfo(`Delete status updated successfuly: ${sch.name_tech}`);
+        loggingInfo(`Delete status updated successfuly: ${sch.career_name}`);
 
-        return `Delete status updated successfuly: ${sch.name_tech}`;
+        return `Delete status updated successfuly: ${sch.career_name}`;
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
@@ -239,7 +247,7 @@ const toggleSeveralDeleteSchRecords = async (sch_ids: number[]): Promise<string[
 
                 loggingInfo(`Record with id ${id} updated successfully!`);
 
-                return `Education in "${record.career_name}" updated successfully!`;
+                return `Education in ${record.career_name} updated successfully!`;
             })
         );
 
@@ -254,4 +262,4 @@ const toggleSeveralDeleteSchRecords = async (sch_ids: number[]): Promise<string[
     }
 }
 
-export { getSchoolingData, insertNewSchoolingData, updateASchoolingRecord, toggleDeleteSchoolingStatus, toggleSeveralDeleteSchRecords };
+export { getSchoolingData, insertNewSchRecords, updateASchoolingRecord, toggleDeleteSchoolingStatus, toggleSeveralDeleteSchRecords };

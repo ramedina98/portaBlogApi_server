@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleSeveralDeleteSchRecords = exports.toggleDeleteSchoolingStatus = exports.updateASchoolingRecord = exports.insertNewSchoolingData = exports.getSchoolingData = void 0;
+exports.toggleSeveralDeleteSchRecords = exports.toggleDeleteSchoolingStatus = exports.updateASchoolingRecord = exports.insertNewSchRecords = exports.getSchoolingData = void 0;
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const schoolingModel_1 = require("../models/mysql/schoolingModel");
 const resumeModulesUtilF_2 = require("../utils/resumeModulesUtilF");
@@ -71,44 +71,47 @@ const getSchoolingData = (id) => __awaiter(void 0, void 0, void 0, function* () 
 exports.getSchoolingData = getSchoolingData;
 /**
  * @method POST
+ * @type service
  *
- * This service helps me to create a new register in the schooling table...
+ * This service helps me to insert new data in the schooling table, creating new records in it...
  *
- * @param id
- * @param schooling_data
- *
- * @async
- * @returns a message of success, or a number which will be handle for its controller to let the user knows the problem...
+ * @param sch_data --> this is an object array... (type = ISchoolingNoIdNoResumeId)
+ * @returns --> if everything was created successfully it returns a message of success, and if something
+ * went wrong, it returns a number, that the controllers knows how to handle and which message of error has to send to
+ * the client...
  */
-const insertNewSchoolingData = (id, schooling_data) => __awaiter(void 0, void 0, void 0, function* () {
+const insertNewSchRecords = (id_user, sch_data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // check if the user exists, and check if the user has an attached resume...
-        const verification = yield (0, resumeModulesUtilF_2.userResumeVerifier)(id);
         /**
-         * If the id resume field is undefine, then it only returns the response number,
-         * which the controller will already know how to handle it...
+         * Check if the user exists, and if the user already exists check if they have an
+         * attached resume, and then obtain the id_resume...
+         * If they do not exists or they do not have an attached resume, returns an error number,
+         * which the controller already knows how to handle...
+         *
+         * 1 = user does not exists
+         * 2 = the user does not have an attached resume
          */
+        const verification = yield (0, resumeModulesUtilF_2.userResumeVerifier)(id_user);
+        // if the id_resume is undefine, returns the corresponding error number...
         if (verification.id_resume === undefined) {
             return verification.num_response;
         }
-        // create a new object with the required fields to create a new record in the table...
-        const NewSchoolingData = {
-            career_name: schooling_data.career_name,
-            university_nam: schooling_data.university_nam,
-            start_date: schooling_data.start_date,
-            end_date: schooling_data.end_date,
-            delete_schooling: schooling_data.delete_schooling,
-            id_resume: verification.id_resume
-        };
-        const schInsert = yield schoolingModel_1.Schooling.create(NewSchoolingData);
-        if (!schInsert) {
-            logging_1.default.warning(':::::::::::::::::::::::::');
-            logging_1.default.warning('No registration was made');
-            logging_1.default.warning(':::::::::::::::::::::::::');
+        // transfer the value of the id resume to a variable with that name...
+        const id_resume = verification.id_resume;
+        // insert new records into the schooling table...
+        const sch_result = yield Promise.all(sch_data.map((data) => __awaiter(void 0, void 0, void 0, function* () {
+            const sch = yield schoolingModel_1.Schooling.create(Object.assign(Object.assign({}, data), { id_resume }));
+            return sch;
+        })));
+        // If there is a record that was not made...
+        if (sch_result.length < sch_data.length) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
+            logging_1.default.warning(`There were ${sch_result.length - sch_data.length} records missing`);
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
             return 3;
         }
-        (0, resumeModulesUtilF_1.loggingInfo)(`Successfully registration of ${schInsert.career_name}!`);
-        return `Successfully registration of ${schInsert.career_name}!`;
+        (0, resumeModulesUtilF_1.loggingInfo)('All registrations were successful');
+        return `All registrations were successful: ${sch_result.length}`;
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');
@@ -117,7 +120,7 @@ const insertNewSchoolingData = (id, schooling_data) => __awaiter(void 0, void 0,
         throw error;
     }
 });
-exports.insertNewSchoolingData = insertNewSchoolingData;
+exports.insertNewSchRecords = insertNewSchRecords;
 /**
  * @method PUT
  *
@@ -190,8 +193,8 @@ const toggleDeleteSchoolingStatus = (id_sch) => __awaiter(void 0, void 0, void 0
         const newStatus = !sch.delete_schooling;
         // update the delete_schooling status...
         yield sch.update({ delete_schooling: newStatus });
-        (0, resumeModulesUtilF_1.loggingInfo)(`Delete status updated successfuly: ${sch.name_tech}`);
-        return `Delete status updated successfuly: ${sch.name_tech}`;
+        (0, resumeModulesUtilF_1.loggingInfo)(`Delete status updated successfuly: ${sch.career_name}`);
+        return `Delete status updated successfuly: ${sch.career_name}`;
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');
