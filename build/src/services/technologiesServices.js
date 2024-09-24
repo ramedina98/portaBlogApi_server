@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleDeleteTech = exports.updateATechRecord = exports.insertNewTechnologie = exports.getTechnologies = void 0;
+exports.toggleDeleteTech = exports.updateATechRecord = exports.insertNewTchRecords = exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -69,39 +69,45 @@ const getTechnologies = (id) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTechnologies = getTechnologies;
 /**
- * @MethodPOST -> insertNewTechnologie
- * This service helps me to create a new record in the technologies table...
+ * @method POST
  *
- * @param tech_data
+ * This service helps me to create new records in the technologies table...
  *
- * @messages -> to handle error or warnings...
+ * @param id_user
+ * @param tech_data --> this is an object array, that contains all the records to save in the
+ * technologies table...
+ *
+ * @returns --> a message of success or a number indicating if an specific error, controller knows
+ * how to handle the number returned...
  */
-const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0, function* () {
+const insertNewTchRecords = (id_user, tech_data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const verification = yield (0, resumeModulesUtilF_1.userResumeVerifier)(id_user);
         /**
-         * If the id resume field is undefine, then it only returns the response number,
-         * which the controller will already know how to handle...
+         * Check if the user exists, if the do not exists return an number (1 = user does not exisit), then if the user exists check if
+         * they have an attached resume, if they do not have one, return an error (2 = user does not have an attached resume)...
          */
+        const verification = yield (0, resumeModulesUtilF_1.userResumeVerifier)(id_user);
+        // if user does not exists or the user does not have an attached resume, return an error number
+        // controller knows how to handle with the returned number...
         if (verification.id_resume === undefined) {
             return verification.num_response;
         }
-        const newData = {
-            name_tech: data.name_tech,
-            icon_tech: data.icon_tech,
-            delete_tech: false,
-            id_resume: verification.id_resume
-        };
-        // make the new register...
-        const tech = yield technologiesModel_1.Tech.create(newData);
-        if (!tech) {
-            logging_1.default.warning(':::::::::::::::::::::::::');
-            logging_1.default.warning('No registration was made');
-            logging_1.default.warning(':::::::::::::::::::::::::');
+        // transfer the value of the id_resume to a number variable...
+        const id_resume = verification.id_resume;
+        // make the registers...
+        const tech_results = yield Promise.all(tech_data.map((data) => __awaiter(void 0, void 0, void 0, function* () {
+            const tech = yield technologiesModel_1.Tech.create(Object.assign(Object.assign({}, data), { id_resume }));
+            return tech;
+        })));
+        // if there is a record that was not made...
+        if (tech_results.length < tech_data.length) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
+            logging_1.default.warning(`There were ${tech_results.length - tech_data.length} records missing`);
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
             return 3;
         }
-        (0, resumeModulesUtilF_1.loggingInfo)('Successfully registration!');
-        return 'Successfully registration';
+        (0, resumeModulesUtilF_1.loggingInfo)('All registrations were successful');
+        return `All registrations were successful: ${tech_results.length}`;
     }
     catch (error) {
         logging_1.default.warn('::::::::::::::::::::::::::::::::');
@@ -110,7 +116,7 @@ const insertNewTechnologie = (id_user, data) => __awaiter(void 0, void 0, void 0
         throw error;
     }
 });
-exports.insertNewTechnologie = insertNewTechnologie;
+exports.insertNewTchRecords = insertNewTchRecords;
 /**
  * @methodPUT --> This service helps me to update a record in the technologies table...
  *

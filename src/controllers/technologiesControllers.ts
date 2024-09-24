@@ -2,10 +2,10 @@
  * @TechnologiesCotrollers ...
 */
 import { Request, Response } from "express";
-import { ITechNoResumeId } from "../interfaces/ITechnologies";
+import { ITechNoIdNoresumeId, ITechNoResumeId } from "../interfaces/ITechnologies";
 import {
     getTechnologies,
-    insertNewTechnologie,
+    insertNewTchRecords,
     updateATechRecord,
     toggleDeleteTech
 } from "../services/technologiesServices";
@@ -16,7 +16,7 @@ import {
  */
 const getTechnologiesResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_user } = req.body;
+        const { id_user }: { id_user: string } = req.body;
 
         const technologies: ITechNoResumeId[] | number = await getTechnologies(id_user);
 
@@ -49,9 +49,14 @@ const getTechnologiesResponse = async (req: Request, res: Response): Promise<voi
  */
 const insertNewTechnologieResponse = async (req:Request, res:Response): Promise<void> => {
     try {
-        const { id_user, tech_data }  = req.body;
+        const { id_user, tech_data }: { id_user: string, tech_data: ITechNoIdNoresumeId[] }= req.body;
 
-        const tech: string | number = await insertNewTechnologie(id_user, tech_data);
+        // the tech_data object array is empty, let the user knows...
+        if(tech_data.length === 0){
+            res.status(400).json({ message: 'No new technology has been received for storage!' })
+        }
+
+        const tech: string | number = await insertNewTchRecords(id_user, tech_data);
 
         if(typeof tech === 'number'){
             let message: string = '';
@@ -81,7 +86,12 @@ const insertNewTechnologieResponse = async (req:Request, res:Response): Promise<
  */
 const updateATechRecordResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_tech, tech_data } = req.body;
+        const { id_tech, tech_data }: { id_tech: number, tech_data: ITechNoIdNoresumeId } = req.body;
+
+        // the tech_data object array is empty, let the user knows...
+        if(!tech_data){
+            res.status(400).json({ message: 'No new technology has been received for update!' })
+        }
 
         const tech: string | number = await updateATechRecord(id_tech, tech_data);
 

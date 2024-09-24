@@ -6,7 +6,7 @@
  * @POST
  * @PUT
  */
-import { ITech, ITechNoResumeId, ITechNoIdNoresumeId, ITechNoId } from "../interfaces/ITechnologies";
+import { ITech, ITechNoResumeId, ITechNoIdNoresumeId } from "../interfaces/ITechnologies";
 import { Tech } from "../models/mysql/technologiesModel";
 import { Op } from "sequelize";
 import { loggingInfo, userResumeVerifier, Iverifier} from "../utils/resumeModulesUtilF";
@@ -69,45 +69,55 @@ const getTechnologies = async (id: string): Promise<ITechNoResumeId[] | number> 
 }
 
 /**
- * @MethodPOST -> insertNewTechnologie
- * This service helps me to create a new record in the technologies table...
+ * @method POST
  *
- * @param tech_data
+ * This service helps me to create new records in the technologies table...
  *
- * @messages -> to handle error or warnings...
+ * @param id_user
+ * @param tech_data --> this is an object array, that contains all the records to save in the
+ * technologies table...
+ *
+ * @returns --> a message of success or a number indicating if an specific error, controller knows
+ * how to handle the number returned...
  */
-const insertNewTechnologie = async (id_user: string , data: ITechNoIdNoresumeId): Promise<string | number> => {
+const insertNewTchRecords = async (id_user: string, tech_data: ITechNoIdNoresumeId[]): Promise<string | number> => {
     try {
+        /**
+         * Check if the user exists, if the do not exists return an number (1 = user does not exisit), then if the user exists check if
+         * they have an attached resume, if they do not have one, return an error (2 = user does not have an attached resume)...
+         */
         const verification: Iverifier = await userResumeVerifier(id_user);
 
-        /**
-         * If the id resume field is undefine, then it only returns the response number,
-         * which the controller will already know how to handle...
-         */
+        // if user does not exists or the user does not have an attached resume, return an error number
+        // controller knows how to handle with the returned number...
         if(verification.id_resume === undefined){
             return verification.num_response;
         }
 
-        const newData: ITechNoId = {
-            name_tech: data.name_tech,
-            icon_tech: data.icon_tech,
-            delete_tech: false,
-            id_resume: verification.id_resume
-        }
+        // transfer the value of the id_resume to a number variable...
+        const id_resume: number = verification.id_resume;
+        // make the registers...
+        const tech_results: ITech[] | null = await Promise.all(
+            tech_data.map(async (data) => {
+                const tech: ITech = await Tech.create({
+                    ...data,
+                    id_resume
+                });
+                return tech;
+            })
+        );
 
-        // make the new register...
-        const tech: ITech | null = await Tech.create(newData);
-
-        if(!tech){
-            logging.warning(':::::::::::::::::::::::::');
-            logging.warning('No registration was made');
-            logging.warning(':::::::::::::::::::::::::');
+        // if there is a record that was not made...
+        if(tech_results.length < tech_data.length){
+            logging.warning('::::::::::::::::::::::::::::::');
+            logging.warning(`There were ${tech_results.length - tech_data.length} records missing`);
+            logging.warning('::::::::::::::::::::::::::::::');
             return 3;
         }
 
-        loggingInfo('Successfully registration!');
+        loggingInfo('All registrations were successful');
 
-        return 'Successfully registration';
+        return `All registrations were successful: ${tech_results.length}`;
     } catch (error: any) {
         logging.warn('::::::::::::::::::::::::::::::::');
         logging.error('Error: ' + error.message);
@@ -197,4 +207,4 @@ const toggleDeleteTech = async (id_tech: number): Promise<string | number> => {
     }
 }
 
-export { getTechnologies, insertNewTechnologie, updateATechRecord, toggleDeleteTech };
+export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleDeleteTech };

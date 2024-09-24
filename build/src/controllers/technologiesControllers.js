@@ -49,7 +49,11 @@ exports.getTechnologiesResponse = getTechnologiesResponse;
 const insertNewTechnologieResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id_user, tech_data } = req.body;
-        const tech = yield (0, technologiesServices_1.insertNewTechnologie)(id_user, tech_data);
+        // the tech_data object array is empty, let the user knows...
+        if (tech_data.length === 0) {
+            res.status(400).json({ message: 'No new technology has been received for storage!' });
+        }
+        const tech = yield (0, technologiesServices_1.insertNewTchRecords)(id_user, tech_data);
         if (typeof tech === 'number') {
             let message = '';
             if (tech === 1) {
@@ -79,6 +83,10 @@ exports.insertNewTechnologieResponse = insertNewTechnologieResponse;
 const updateATechRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id_tech, tech_data } = req.body;
+        // the tech_data object array is empty, let the user knows...
+        if (!tech_data) {
+            res.status(400).json({ message: 'No new technology has been received for update!' });
+        }
         const tech = yield (0, technologiesServices_1.updateATechRecord)(id_tech, tech_data);
         if (typeof tech === 'number') {
             let message = tech === 1 ? 'Tech does not exists' : tech === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
