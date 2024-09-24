@@ -75,7 +75,7 @@ exports.getSchoolingData = getSchoolingData;
  *
  * This service helps me to insert new data in the schooling table, creating new records in it...
  *
- * @param sch_data --> this is an object array... (type = ISchoolingNoIdNoResumeId)
+ * @param sch_data --> this is an object array... (type = ISchoolingNoIdNoResumeId[])...
  * @returns --> if everything was created successfully it returns a message of success, and if something
  * went wrong, it returns a number, that the controllers knows how to handle and which message of error has to send to
  * the client...
@@ -226,7 +226,7 @@ const toggleSeveralDeleteSchRecords = (sch_ids) => __awaiter(void 0, void 0, voi
             const newStatus = !record.delete_schooling;
             yield record.update({ delete_schooling: newStatus });
             (0, resumeModulesUtilF_1.loggingInfo)(`Record with id ${id} updated successfully!`);
-            return `Education in "${record.career_name}" updated successfully!`;
+            return `Education in ${record.career_name} updated successfully!`;
         })));
         (0, resumeModulesUtilF_1.loggingInfo)(`All records updated successfully: ${checkSchRecords.join(',')}`);
         return checkSchRecords;

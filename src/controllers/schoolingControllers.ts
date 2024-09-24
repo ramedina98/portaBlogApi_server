@@ -28,7 +28,7 @@ import {
  */
 const getSchoolingDataResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.body;
+        const { id }: { id: string }= req.body;
 
         const schooling: ISchoolingNoIdResume[] | number = await getSchoolingData(id);
 
@@ -102,7 +102,7 @@ const insertNewSchoolingDataResponse = async (req: Request, res: Response): Prom
  */
 const updateASchoolingRecordResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_sch, data_sch } = req.body;
+        const { id_sch, data_sch }: { id_sch: number, data_sch: ISchoolingNoIdResume }= req.body;
 
         const sch: string | number = await updateASchoolingRecord(id_sch, data_sch);
 
