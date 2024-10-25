@@ -207,4 +207,5 @@ const toggleDeleteTech = async (id_tech: number): Promise<string | number> => {
     }
 }
 
+//TODO: Hacer el toggle several delete_tech status...
 export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleDeleteTech };
