@@ -207,5 +207,44 @@ const toggleDeleteTech = async (id_tech: number): Promise<string | number> => {
     }
 }
 
-//TODO: Hacer el toggle several delete_tech status...
-export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleDeleteTech };
+/**
+ *  @method patch
+ *
+ * This service helps me to toggle the status of the delete_tech, of several records...
+ *
+ * @param id_tec --> this is an array which contains all the ids of the records that have to be toggle...
+ */
+const toggleSeveralDeleteTechRecords = async (tech_id: number[]): Promise<string[]> => {
+    try {
+        // check if the tech records exists and update them...
+        const checkTechRecords: any = await Promise.all(
+            tech_id.map(async (id) => {
+                const record: any = await Tech.findByPk(id); // search each record by its id...
+                if(!record){
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    logging.warning(`Schooling record with id ${id} does not exists.`);
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    throw new Error(`Tech record with id ${id} does not exists.`);
+                }
+                // toggle the delete status...
+                const newStatus: boolean = !record.delete_tech;
+                await record.update({ delete_tech: newStatus });
+
+                loggingInfo(`Record with id ${id} update successfully!`);
+
+                return `Technologie delete status "${record.delete_tech}" updated successfully!`;
+            })
+        );
+
+        loggingInfo(`All records update successfully: ${checkTechRecords.join(',')}`);
+
+        return checkTechRecords;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleDeleteTech, toggleSeveralDeleteTechRecords };

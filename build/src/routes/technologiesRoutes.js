@@ -15,4 +15,5 @@ techRoutes.post('/newtech', technologiesControllers_1.insertNewTechnologieRespon
 techRoutes.put('/update', technologiesControllers_1.updateATechRecordResponse);
 // PATCH
 techRoutes.patch('/:id/deletetech-status', technologiesControllers_1.toggleDeleteTechStatus);
+techRoutes.patch('/delete-status', technologiesControllers_1.toggleSeveralDeleteTechRecordsResponse);
 exports.default = techRoutes;

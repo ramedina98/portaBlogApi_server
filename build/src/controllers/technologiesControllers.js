@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleDeleteTechStatus = exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
+exports.toggleSeveralDeleteTechRecordsResponse = exports.toggleDeleteTechStatus = exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -120,3 +120,27 @@ const toggleDeleteTechStatus = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.toggleDeleteTechStatus = toggleDeleteTechStatus;
+/**
+ * @method patch
+ *
+ * This controller helps me to handle the toggle several delete Tech status records, receiveing an array
+ * with the ids of the records to be toggle...
+ *
+ * @param tech_id --> an array...
+ */
+const toggleSeveralDeleteTechRecordsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { tech_ids } = req.body;
+        if (!tech_ids || tech_ids.length === 0) {
+            res.status(400).json({ message: "No tecnologies IDs provided!" });
+        }
+        // call the function...
+        const tech = yield (0, technologiesServices_1.toggleSeveralDeleteTechRecords)(tech_ids);
+        // if everything is ok, returns a success response
+        res.status(200).json({ message: 'Technologies records updated successfully', details: tech });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+});
+exports.toggleSeveralDeleteTechRecordsResponse = toggleSeveralDeleteTechRecordsResponse;

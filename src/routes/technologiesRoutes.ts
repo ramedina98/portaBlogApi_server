@@ -7,7 +7,8 @@ import {
     getTechnologiesResponse,
     insertNewTechnologieResponse,
     updateATechRecordResponse,
-    toggleDeleteTechStatus
+    toggleDeleteTechStatus,
+    toggleSeveralDeleteTechRecordsResponse
 } from "../controllers/technologiesControllers";
 
 const techRoutes = Router();
@@ -20,5 +21,6 @@ techRoutes.post('/newtech', insertNewTechnologieResponse);
 techRoutes.put('/update', updateATechRecordResponse);
 // PATCH
 techRoutes.patch('/:id/deletetech-status', toggleDeleteTechStatus);
+techRoutes.patch('/delete-status', toggleSeveralDeleteTechRecordsResponse);
 
 export default techRoutes;

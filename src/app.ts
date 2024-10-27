@@ -30,6 +30,7 @@ app.use(express.json());
 logging.info('Logging & configuration');
 app.use(loggingHandler);
 
+// TODO: descomentar cuando ya lo necesite...
 // start the whats app web.js client...
 //client.initialize();
 

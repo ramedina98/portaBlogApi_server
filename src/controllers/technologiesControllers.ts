@@ -7,7 +7,8 @@ import {
     getTechnologies,
     insertNewTchRecords,
     updateATechRecord,
-    toggleDeleteTech
+    toggleDeleteTech,
+    toggleSeveralDeleteTechRecords
 } from "../services/technologiesServices";
 
 /**
@@ -131,4 +132,30 @@ const toggleDeleteTechStatus = async (req: Request, res: Response): Promise<void
     }
 }
 
-export { getTechnologiesResponse, insertNewTechnologieResponse, updateATechRecordResponse, toggleDeleteTechStatus };
+/**
+ * @method patch
+ *
+ * This controller helps me to handle the toggle several delete Tech status records, receiveing an array
+ * with the ids of the records to be toggle...
+ *
+ * @param tech_id --> an array...
+ */
+const toggleSeveralDeleteTechRecordsResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { tech_ids }: { tech_ids: number[] } = req.body;
+
+        if(!tech_ids || tech_ids.length === 0){
+            res.status(400).json({ message: "No tecnologies IDs provided!"});
+        }
+
+        // call the function...
+        const tech: string[] = await toggleSeveralDeleteTechRecords(tech_ids);
+
+        // if everything is ok, returns a success response
+        res.status(200).json({ message: 'Technologies records updated successfully', details: tech });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Internal server error: ' + error.message });
+    }
+}
+
+export { getTechnologiesResponse, insertNewTechnologieResponse, updateATechRecordResponse, toggleDeleteTechStatus, toggleSeveralDeleteTechRecordsResponse};

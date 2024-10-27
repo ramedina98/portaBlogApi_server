@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleDeleteTech = exports.updateATechRecord = exports.insertNewTchRecords = exports.getTechnologies = void 0;
+exports.toggleSeveralDeleteTechRecords = exports.toggleDeleteTech = exports.updateATechRecord = exports.insertNewTchRecords = exports.getTechnologies = void 0;
 const technologiesModel_1 = require("../models/mysql/technologiesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -191,3 +191,38 @@ const toggleDeleteTech = (id_tech) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.toggleDeleteTech = toggleDeleteTech;
+/**
+ *  @method patch
+ *
+ * This service helps me to toggle the status of the delete_tech, of several records...
+ *
+ * @param id_tec --> this is an array which contains all the ids of the records that have to be toggle...
+ */
+const toggleSeveralDeleteTechRecords = (tech_id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // check if the tech records exists and update them...
+        const checkTechRecords = yield Promise.all(tech_id.map((id) => __awaiter(void 0, void 0, void 0, function* () {
+            const record = yield technologiesModel_1.Tech.findByPk(id); // search each record by its id...
+            if (!record) {
+                logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                logging_1.default.warning(`Schooling record with id ${id} does not exists.`);
+                logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                throw new Error(`Tech record with id ${id} does not exists.`);
+            }
+            // toggle the delete status...
+            const newStatus = !record.delete_tech;
+            yield record.update({ delete_tech: newStatus });
+            (0, resumeModulesUtilF_1.loggingInfo)(`Record with id ${id} update successfully!`);
+            return `Technologie delete status "${record.delete_tech}" updated successfully!`;
+        })));
+        (0, resumeModulesUtilF_1.loggingInfo)(`All records update successfully: ${checkTechRecords.join(',')}`);
+        return checkTechRecords;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.toggleSeveralDeleteTechRecords = toggleSeveralDeleteTechRecords;
