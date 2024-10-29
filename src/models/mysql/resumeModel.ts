@@ -12,7 +12,7 @@ class Resume extends Model<IResume, ResumeAtributtes>{
     user_id!: string;
     pdf_resume!: string;
     profile_resume!: string;
-    logo_id!: number;
+    logo!: number;
     email!: string;
 }
 
@@ -34,8 +34,8 @@ Resume.init({
         type: DataTypes.TEXT,
         allowNull: false
     },
-    logo_id: {
-        type: DataTypes.INTEGER,
+    logo: {
+        type: DataTypes.STRING(255),
         allowNull: false
     },
     email: {

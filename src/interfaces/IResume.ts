@@ -26,7 +26,7 @@ interface IResume {
     user_id: string;
     pdf_resume: string;
     profile_resume: string;
-    logo_id: number;
+    logo: number;
     email: string;
 }
 // to recive information...
