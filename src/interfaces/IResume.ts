@@ -24,7 +24,7 @@ enum TypeExpe {
 interface IResume {
     id_resume: number;
     user_id: string;
-    pdf_resume: Buffer;
+    pdf_resume: string;
     profile_resume: string;
     logo_id: number;
     email: string;
