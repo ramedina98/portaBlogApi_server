@@ -7,7 +7,7 @@ interface IUser {
     phone?: string;
     email?: string;
     passwrd?: string;
-    photo?: Buffer;
+    photo?: string;
 }
 
 interface IUserLogin {

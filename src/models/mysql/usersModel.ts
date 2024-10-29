@@ -15,7 +15,7 @@ class User extends Model<IUser, UserCreationAttributes>{
     public phone!: string;
     public email!: string;
     public passwrd!: string;
-    public photo?: Buffer;
+    public photo?: string;
 }
 
 User.init({
@@ -49,7 +49,7 @@ User.init({
         allowNull: false,
     },
     photo: {
-        type: DataTypes.BLOB,
+        type: DataTypes.STRING(255),
         allowNull: true,
     },
 },{
