@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCourses = void 0;
+exports.insertNewCourseRecord = exports.getCourses = void 0;
 const coursesModel_1 = require("../models/mysql/coursesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -68,3 +68,51 @@ const getCourses = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getCourses = getCourses;
+/**
+ * @method post
+ *
+ * This service helps me to create new records in the courses table...
+ *
+ * @param id_user
+ * @param course_data --> this is an object array, that contains all the records...
+ *
+ * @return --> a message of success or a number indicating if an specific error, controller knows
+ * how to handle the number returned...
+ */
+const insertNewCourseRecord = (id_user, course_data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        /**
+         * Check if the user exists, if the user does not exists retunr a number (1 = user does not exists), then if the user exists check if
+         * they have an attached resume, if they don't have one, return an error (2 = user does not have an attached resume)...
+         */
+        const verification = yield (0, resumeModulesUtilF_1.userResumeVerifier)(id_user);
+        // if user does not exists or the user does not have an attached resum, return an error number...
+        // controller knows how to handle with the number...
+        if (verification.id_resume === undefined) {
+            return verification.num_response;
+        }
+        // transfer the value of the id_resume to a number varible...
+        const id_resume = verification.id_resume;
+        // make the registers...
+        const courses_results = yield Promise.all(course_data.map((data) => __awaiter(void 0, void 0, void 0, function* () {
+            const course = yield coursesModel_1.Course.create(Object.assign(Object.assign({}, data), { id_resume }));
+            return course;
+        })));
+        // if there is a record that was not made...
+        if (courses_results.length < course_data.length) {
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
+            logging_1.default.warning(`There were ${courses_results.length - course_data.length} records missing`);
+            logging_1.default.warning('::::::::::::::::::::::::::::::');
+            return 3;
+        }
+        (0, resumeModulesUtilF_1.loggingInfo)('All registrations were successful');
+        return `All registrations were successfully: ${courses_results.length}`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.insertNewCourseRecord = insertNewCourseRecord;

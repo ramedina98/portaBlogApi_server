@@ -65,4 +65,63 @@ const getCourses = async (id: string): Promise<ICourseNoResumeId[] | number> => 
     }
 }
 
-export { getCourses };
+/**
+ * @method post
+ *
+ * This service helps me to create new records in the courses table...
+ *
+ * @param id_user
+ * @param course_data --> this is an object array, that contains all the records...
+ *
+ * @return --> a message of success or a number indicating if an specific error, controller knows
+ * how to handle the number returned...
+ */
+const insertNewCourseRecord = async (id_user: string, course_data: ICourseNoResumeId[]): Promise<string | number> => {
+    try {
+        /**
+         * Check if the user exists, if the user does not exists retunr a number (1 = user does not exists), then if the user exists check if
+         * they have an attached resume, if they don't have one, return an error (2 = user does not have an attached resume)...
+         */
+        const verification: Iverifier = await userResumeVerifier(id_user);
+
+        // if user does not exists or the user does not have an attached resum, return an error number...
+        // controller knows how to handle with the number...
+        if(verification.id_resume === undefined){
+            return verification.num_response;
+        }
+
+        // transfer the value of the id_resume to a number varible...
+        const id_resume: number = verification.id_resume;
+        // make the registers...
+        const courses_results: ICourse[] | null = await Promise.all(
+            course_data.map(async (data) => {
+                const course: ICourse = await Course.create({
+                    ...data,
+                    id_resume
+                });
+                return course;
+            })
+        );
+
+        // if there is a record that was not made...
+        if(courses_results.length < course_data.length){
+            logging.warning('::::::::::::::::::::::::::::::');
+            logging.warning(`There were ${courses_results.length - course_data.length} records missing`);
+            logging.warning('::::::::::::::::::::::::::::::');
+            return 3;
+        }
+
+        loggingInfo('All registrations were successful');
+
+        return `All registrations were successfully: ${courses_results.length}`;
+
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+
+    }
+}
+
+export { getCourses, insertNewCourseRecord };

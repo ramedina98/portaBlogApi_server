@@ -6,4 +6,6 @@ const coursesControllers_1 = require("../controllers/coursesControllers");
 const courseRouter = (0, express_1.Router)();
 // GET...
 courseRouter.get('/', coursesControllers_1.getCoursesResponse);
+// POST...
+courseRouter.post('/newcourse', coursesControllers_1.insertNewCourseRecordResponse);
 exports.default = courseRouter;
