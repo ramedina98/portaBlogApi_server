@@ -21,15 +21,15 @@ Resume.init({
         allowNull: false
     },
     pdf_resume: {
-        type: sequelize_1.DataTypes.BLOB,
+        type: sequelize_1.DataTypes.STRING(255),
         allowNull: false
     },
     profile_resume: {
         type: sequelize_1.DataTypes.TEXT,
         allowNull: false
     },
-    logo_id: {
-        type: sequelize_1.DataTypes.INTEGER,
+    logo: {
+        type: sequelize_1.DataTypes.STRING(255),
         allowNull: false
     },
     email: {

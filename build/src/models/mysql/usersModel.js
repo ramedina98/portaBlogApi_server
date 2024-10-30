@@ -40,7 +40,7 @@ User.init({
         allowNull: false,
     },
     photo: {
-        type: sequelize_1.DataTypes.BLOB,
+        type: sequelize_1.DataTypes.STRING(255),
         allowNull: true,
     },
 }, {
