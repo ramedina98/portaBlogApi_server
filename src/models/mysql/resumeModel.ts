@@ -12,7 +12,7 @@ class Resume extends Model<IResume, ResumeAtributtes>{
     user_id!: string;
     pdf_resume!: string;
     profile_resume!: string;
-    logo!: number;
+    logo!: string;
     email!: string;
 }
 
