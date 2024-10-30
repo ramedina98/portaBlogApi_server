@@ -4,7 +4,7 @@
   "main": "build/src/server.js",
   "scripts": {
     "start": "",
-    "dev":"node build/src/server.js",
+    "dev": "node build/src/server.js",
     "test": "jest --config jest.config.ts --coverage",
     "build": "rm -rf build/ && tsc"
   },
