@@ -8,4 +8,6 @@ const courseRouter = (0, express_1.Router)();
 courseRouter.get('/', coursesControllers_1.getCoursesResponse);
 // POST...
 courseRouter.post('/newcourse', coursesControllers_1.insertNewCourseRecordResponse);
+//PUT...
+courseRouter.put('/update-course', coursesControllers_1.updateACourseRecordResponse);
 exports.default = courseRouter;

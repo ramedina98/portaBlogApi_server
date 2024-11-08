@@ -12,5 +12,6 @@ interface ICourse {
     id_resume: number;
 }
 interface ICourseNoResumeId extends Omit<ICourse, 'id_resume'>{};
+interface ICourseNoIdAndResumeId extends Omit<ICourse, 'id_course' | 'id_resume'>{};
 
-export { ICourse, ICourseNoResumeId };
+export { ICourse, ICourseNoResumeId, ICourseNoIdAndResumeId};

@@ -2,7 +2,8 @@
 import { Router } from "express";
 import {
     getCoursesResponse,
-    insertNewCourseRecordResponse
+    insertNewCourseRecordResponse,
+    updateACourseRecordResponse
 } from "../controllers/coursesControllers";
 
 const courseRouter = Router();
@@ -11,4 +12,6 @@ const courseRouter = Router();
 courseRouter.get('/', getCoursesResponse);
 // POST...
 courseRouter.post('/newcourse', insertNewCourseRecordResponse);
+//PUT...
+courseRouter.put('/update-course', updateACourseRecordResponse);
 export default courseRouter;

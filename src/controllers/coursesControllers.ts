@@ -2,10 +2,11 @@
  * @module Courses
  */
 import { Request, Response } from "express";
-import { ICourseNoResumeId } from "../interfaces/ICourses";
+import { ICourseNoResumeId, ICourseNoIdAndResumeId } from "../interfaces/ICourses";
 import {
     getCourses,
-    insertNewCourseRecord
+    insertNewCourseRecord,
+    updateACourseRecord
 } from "../services/coursesServices";
 
 /**
@@ -78,4 +79,38 @@ const insertNewCourseRecordResponse = async (req: Request, res: Response): Promi
     }
 }
 
-export { getCoursesResponse, insertNewCourseRecordResponse };
+/**
+ * @method PUT
+ *
+ * this controller helps me with the process of update a register of a cuourse...
+ *
+ * @reqBody courses_data
+ * @reqBody id_course
+ */
+const updateACourseRecordResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id_course, course_data }: { id_course: number, course_data: ICourseNoIdAndResumeId } = req.body;
+
+        // if the course data object array is empty, let the client knows...
+        if(!course_data){
+            res.status(400).json({
+                message: 'No new course has been received for update!'
+            });
+        }
+
+        const course: string | number = await updateACourseRecord(id_course, course_data);
+
+        if(typeof course === 'number'){
+            let message: string = course === 1 ? 'Course does not exists' : course === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
+
+            res.status(404).json({ message });
+
+        }
+
+        res.status(200).json({ message: course });
+    } catch (error: any) {
+        res.status(500).json({ message: `Internal server error: ${error.message}` });
+    }
+}
+
+export { getCoursesResponse, insertNewCourseRecordResponse, updateACourseRecordResponse };

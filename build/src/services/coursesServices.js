@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewCourseRecord = exports.getCourses = void 0;
+exports.updateACourseRecord = exports.insertNewCourseRecord = exports.getCourses = void 0;
 const coursesModel_1 = require("../models/mysql/coursesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -116,3 +116,47 @@ const insertNewCourseRecord = (id_user, course_data) => __awaiter(void 0, void 0
     }
 });
 exports.insertNewCourseRecord = insertNewCourseRecord;
+/**
+ * @method put
+ * This service helps me to update a record in the courses table...
+ *
+ * @param id_course
+ * @param courses_data
+ */
+const updateACourseRecord = (id_course, course_data) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const checkCourseExists = yield coursesModel_1.Course.findByPk(id_course);
+        if (!checkCourseExists) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning(`Course with the id ${id_course} does not exists!`);
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+        const course = yield coursesModel_1.Course.update({
+            course_title: course_data.course_title,
+            text_course: course_data.text_course,
+            provider: course_data.provider,
+            start_date: course_data.start_date,
+            end_date: course_data.end_date
+        }, {
+            where: {
+                id_course: id_course
+            }
+        });
+        if (course.length === 0) {
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            logging_1.default.warning('Registration not updated, an error occurred');
+            logging_1.default.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
+        (0, resumeModulesUtilF_1.loggingInfo)(`Successfuly technology update: ${course_data.course_title}`);
+        return `Successfuly technology update: ${course_data.course_title}`;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.updateACourseRecord = updateACourseRecord;

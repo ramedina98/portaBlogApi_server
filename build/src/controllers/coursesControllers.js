@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertNewCourseRecordResponse = exports.getCoursesResponse = void 0;
+exports.updateACourseRecordResponse = exports.insertNewCourseRecordResponse = exports.getCoursesResponse = void 0;
 const coursesServices_1 = require("../services/coursesServices");
 /**
  * @method get
@@ -76,3 +76,32 @@ const insertNewCourseRecordResponse = (req, res) => __awaiter(void 0, void 0, vo
     }
 });
 exports.insertNewCourseRecordResponse = insertNewCourseRecordResponse;
+/**
+ * @method PUT
+ *
+ * this controller helps me with the process of update a register of a cuourse...
+ *
+ * @reqBody courses_data
+ * @reqBody id_course
+ */
+const updateACourseRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id_course, course_data } = req.body;
+        // if the course data object array is empty, let the client knows...
+        if (!course_data) {
+            res.status(400).json({
+                message: 'No new course has been received for update!'
+            });
+        }
+        const course = yield (0, coursesServices_1.updateACourseRecord)(id_course, course_data);
+        if (typeof course === 'number') {
+            let message = course === 1 ? 'Course does not exists' : course === 2 ? 'Registration not updated, an error occurred' : 'Unknow error';
+            res.status(404).json({ message });
+        }
+        res.status(200).json({ message: course });
+    }
+    catch (error) {
+        res.status(500).json({ message: `Internal server error: ${error.message}` });
+    }
+});
+exports.updateACourseRecordResponse = updateACourseRecordResponse;

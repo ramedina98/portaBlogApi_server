@@ -3,7 +3,7 @@
  *
  * 1. @method GET --> getCourses...
  */
-import { ICourse, ICourseNoResumeId } from "../interfaces/ICourses";
+import { ICourse, ICourseNoResumeId, ICourseNoIdAndResumeId} from "../interfaces/ICourses";
 import { Course } from "../models/mysql/coursesModel";
 import { Op } from "sequelize";
 import { loggingInfo, userResumeVerifier, Iverifier } from "../utils/resumeModulesUtilF";
@@ -124,4 +124,52 @@ const insertNewCourseRecord = async (id_user: string, course_data: ICourseNoResu
     }
 }
 
-export { getCourses, insertNewCourseRecord };
+/**
+ * @method put
+ * This service helps me to update a record in the courses table...
+ *
+ * @param id_course
+ * @param courses_data
+ */
+const updateACourseRecord = async (id_course: number, course_data: ICourseNoIdAndResumeId): Promise<string | number> => {
+    try {
+        const checkCourseExists: ICourse | null = await Course.findByPk(id_course);
+
+        if(!checkCourseExists){
+            logging.warning(':::::::::::::::::::::::::');
+            logging.warning(`Course with the id ${id_course} does not exists!`);
+            logging.warning(':::::::::::::::::::::::::');
+            return 1;
+        }
+
+        const course: any = await Course.update({
+            course_title: course_data.course_title,
+            text_course: course_data.text_course,
+            provider: course_data.provider,
+            start_date: course_data.start_date,
+            end_date: course_data.end_date
+        },{
+            where: {
+                id_course: id_course
+            }
+        });
+
+        if(course.length === 0){
+            logging.warning(':::::::::::::::::::::::::');
+            logging.warning('Registration not updated, an error occurred');
+            logging.warning(':::::::::::::::::::::::::');
+            return 2;
+        }
+
+        loggingInfo(`Successfuly technology update: ${course_data.course_title}`);
+
+        return `Successfuly technology update: ${course_data.course_title}`;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getCourses, insertNewCourseRecord, updateACourseRecord };
