@@ -1,4 +1,5 @@
 /**
+ * @module courses
  * In this file I have all the needed interfaces for courses' module...
  */
 // courses interface...
@@ -10,6 +11,7 @@ interface ICourse {
     start_date: Date;
     end_date: Date;
     id_resume: number;
+    course_deleted: boolean;
 }
 interface ICourseNoResumeId extends Omit<ICourse, 'id_resume'>{};
 interface ICourseNoIdAndResumeId extends Omit<ICourse, 'id_course' | 'id_resume'>{};

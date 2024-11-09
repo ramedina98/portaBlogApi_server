@@ -6,7 +6,8 @@ import { ICourseNoResumeId, ICourseNoIdAndResumeId } from "../interfaces/ICourse
 import {
     getCourses,
     insertNewCourseRecord,
-    updateACourseRecord
+    updateACourseRecord,
+    toggleDeleteCourse
 } from "../services/coursesServices";
 
 /**
@@ -113,4 +114,32 @@ const updateACourseRecordResponse = async (req: Request, res: Response): Promise
     }
 }
 
-export { getCoursesResponse, insertNewCourseRecordResponse, updateACourseRecordResponse };
+/**
+ * @method PATCH
+ *
+ * this controller helps me with the process of change the status of the deleted courses...
+ *
+ * @param id_course []
+ */
+const toggleDeleteCourseResponse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { courses_ids }: { courses_ids: number[] } = req.body;
+
+        if(!courses_ids || courses_ids.length === 0){
+            res.status(400).json({ message: "No courses IDs provided!"});
+        }
+
+        // call the function...
+        const courses: string[] = await toggleDeleteCourse(courses_ids);
+
+        // if everything went well, returns a success message...
+        res.status(200).json({
+            message: 'Courses records updated successfully.',
+            details: courses
+        });
+    } catch (error: any) {
+        res.status(500).json({ error: `Internal server error: ${error.message}`})
+    }
+}
+
+export { getCoursesResponse, insertNewCourseRecordResponse, updateACourseRecordResponse, toggleDeleteCourseResponse };

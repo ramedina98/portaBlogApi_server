@@ -172,4 +172,45 @@ const updateACourseRecord = async (id_course: number, course_data: ICourseNoIdAn
     }
 }
 
-export { getCourses, insertNewCourseRecord, updateACourseRecord };
+/**
+ * @method PATCH
+ *
+ * This service helps me to toggle the "delete_course" field, this to mark
+ * and item as active or inactive...
+ * @param id_course
+ * @method patch
+ */
+const toggleDeleteCourse = async (id_course: number[]): Promise<string[]> => {
+    try {
+        // check if the courses recrods exists and update them all...
+        const checkCoursesRecords: any = await Promise.all(
+            id_course.map(async (id: number) => {
+                const record: any = await Course.findByPk(id); // search each record by its id...
+                if(!record){
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    logging.warning(`Course record with id ${id} does not exists.`);
+                    logging.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                    throw new Error(`Course record with id ${id} does not exists.`);
+                }
+                // toggle the delete status...
+                const newStatus: boolean = !record.course_deleted;
+                await record.update({ course_deleted: newStatus });
+
+                loggingInfo(`Record with id ${id} update successfully!`);
+
+                return `Course delete status "${record.delete_tech}" updated successfully!`;
+            })
+        );
+
+        loggingInfo(`All records update successfully: ${checkCoursesRecords.join(',')}`);
+
+        return checkCoursesRecords;
+    } catch (error: any) {
+        logging.warn('::::::::::::::::::::::::::::::::');
+        logging.error('Error: ' + error.message);
+        logging.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+}
+
+export { getCourses, insertNewCourseRecord, updateACourseRecord, toggleDeleteCourse };

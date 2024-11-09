@@ -1,4 +1,5 @@
 /**
+ * @module courses
  * Here we have the course model...
  */
 import { Model, DataTypes, Optional } from "sequelize";
@@ -15,6 +16,7 @@ class Course extends Model <ICourse, CoursesAtributtes>{
     start_date!: Date;
     end_date!: Date;
     id_resume!: number;
+    course_deleted!: boolean;
 }
 
 Course.init({
@@ -46,6 +48,11 @@ Course.init({
     id_resume: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    course_deleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize: sequelizeMysql,

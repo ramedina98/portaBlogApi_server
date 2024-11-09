@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Course = void 0;
 /**
+ * @module courses
  * Here we have the course model...
  */
 const sequelize_1 = require("sequelize");
@@ -39,6 +40,11 @@ Course.init({
     id_resume: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
+    },
+    course_deleted: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     sequelize: db_1.sequelizeMysql,

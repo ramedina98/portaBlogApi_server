@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateACourseRecord = exports.insertNewCourseRecord = exports.getCourses = void 0;
+exports.toggleDeleteCourse = exports.updateACourseRecord = exports.insertNewCourseRecord = exports.getCourses = void 0;
 const coursesModel_1 = require("../models/mysql/coursesModel");
 const sequelize_1 = require("sequelize");
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
@@ -160,3 +160,39 @@ const updateACourseRecord = (id_course, course_data) => __awaiter(void 0, void 0
     }
 });
 exports.updateACourseRecord = updateACourseRecord;
+/**
+ * @method PATCH
+ *
+ * This service helps me to toggle the "delete_course" field, this to mark
+ * and item as active or inactive...
+ * @param id_course
+ * @method patch
+ */
+const toggleDeleteCourse = (id_course) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // check if the courses recrods exists and update them all...
+        const checkCoursesRecords = yield Promise.all(id_course.map((id) => __awaiter(void 0, void 0, void 0, function* () {
+            const record = yield coursesModel_1.Course.findByPk(id); // search each record by its id...
+            if (!record) {
+                logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                logging_1.default.warning(`Course record with id ${id} does not exists.`);
+                logging_1.default.warning('::::::::::::::::::::::::::::::::::::::::::::::::::::');
+                throw new Error(`Course record with id ${id} does not exists.`);
+            }
+            // toggle the delete status...
+            const newStatus = !record.course_deleted;
+            yield record.update({ course_deleted: newStatus });
+            (0, resumeModulesUtilF_1.loggingInfo)(`Record with id ${id} update successfully!`);
+            return `Course delete status "${record.delete_tech}" updated successfully!`;
+        })));
+        (0, resumeModulesUtilF_1.loggingInfo)(`All records update successfully: ${checkCoursesRecords.join(',')}`);
+        return checkCoursesRecords;
+    }
+    catch (error) {
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        logging_1.default.error('Error: ' + error.message);
+        logging_1.default.warn('::::::::::::::::::::::::::::::::');
+        throw error;
+    }
+});
+exports.toggleDeleteCourse = toggleDeleteCourse;

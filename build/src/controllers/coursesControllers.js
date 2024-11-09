@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateACourseRecordResponse = exports.insertNewCourseRecordResponse = exports.getCoursesResponse = void 0;
+exports.toggleDeleteCourseResponse = exports.updateACourseRecordResponse = exports.insertNewCourseRecordResponse = exports.getCoursesResponse = void 0;
 const coursesServices_1 = require("../services/coursesServices");
 /**
  * @method get
@@ -105,3 +105,29 @@ const updateACourseRecordResponse = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.updateACourseRecordResponse = updateACourseRecordResponse;
+/**
+ * @method PATCH
+ *
+ * this controller helps me with the process of change the status of the deleted courses...
+ *
+ * @param id_course []
+ */
+const toggleDeleteCourseResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { courses_ids } = req.body;
+        if (!courses_ids || courses_ids.length === 0) {
+            res.status(400).json({ message: "No courses IDs provided!" });
+        }
+        // call the function...
+        const courses = yield (0, coursesServices_1.toggleDeleteCourse)(courses_ids);
+        // if everything went well, returns a success message...
+        res.status(200).json({
+            message: 'Courses records updated successfully.',
+            details: courses
+        });
+    }
+    catch (error) {
+        res.status(500).json({ error: `Internal server error: ${error.message}` });
+    }
+});
+exports.toggleDeleteCourseResponse = toggleDeleteCourseResponse;

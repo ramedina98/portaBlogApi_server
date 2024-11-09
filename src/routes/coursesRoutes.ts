@@ -1,9 +1,14 @@
-// in this file we can find all the needed courses module routes...
+/**
+ * @module courses
+ *
+ * in this file we can find all the needed courses module routes...
+ */
 import { Router } from "express";
 import {
     getCoursesResponse,
     insertNewCourseRecordResponse,
-    updateACourseRecordResponse
+    updateACourseRecordResponse,
+    toggleDeleteCourseResponse
 } from "../controllers/coursesControllers";
 
 const courseRouter = Router();
@@ -14,4 +19,7 @@ courseRouter.get('/', getCoursesResponse);
 courseRouter.post('/newcourse', insertNewCourseRecordResponse);
 //PUT...
 courseRouter.put('/update-course', updateACourseRecordResponse);
+//PATCH...
+courseRouter.patch('/delete-status', toggleDeleteCourseResponse);
+
 export default courseRouter;
