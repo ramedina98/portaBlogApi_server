@@ -174,42 +174,6 @@ const updateATechRecord = async (id_tec: number, tech_data: ITechNoIdNoresumeId)
 }
 
 /**
- * @MethdoPATCH
- *
- * @ActiveOrnot --> this sevice helps me to toggle the "delete_tech" field, this to mark and
- * item as active or inactive...
- * @param id_tech
- * @method patch
- */
-const toggleDeleteTech = async (id_tech: number): Promise<string | number> => {
-    try {
-        // Check if the technology exists...
-        const tech: any = await Tech.findByPk(id_tech);
-
-        if(!tech){
-            logging.warning('::::::::::::::::::::::::');
-            logging.warning(`Tech with the id ${id_tech} does not exists!`);
-            logging.warning('::::::::::::::::::::::::');
-            return 1;
-        }
-
-        // change the status...
-        const newDeleteStatus: boolean = !tech.delete_tech;
-        // update the delete status...
-        await tech.update({ delete_tech: newDeleteStatus });
-
-        loggingInfo(`Delete status updated successfuly: ${tech.name_tech}`);
-
-        return `Delete status updated successfuly: ${tech.name_tech}`;
-    } catch (error: any) {
-        logging.warn('::::::::::::::::::::::::::::::::');
-        logging.error('Error: ' + error.message);
-        logging.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-}
-
-/**
  *  @method patch
  *
  * This service helps me to toggle the status of the delete_tech, of several records...
@@ -249,4 +213,4 @@ const toggleSeveralDeleteTechRecords = async (tech_id: number[]): Promise<string
     }
 }
 
-export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleDeleteTech, toggleSeveralDeleteTechRecords };
+export { getTechnologies, insertNewTchRecords, updateATechRecord, toggleSeveralDeleteTechRecords };

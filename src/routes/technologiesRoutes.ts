@@ -8,7 +8,6 @@ import {
     getTechnologiesResponse,
     insertNewTechnologieResponse,
     updateATechRecordResponse,
-    toggleDeleteTechStatus,
     toggleSeveralDeleteTechRecordsResponse
 } from "../controllers/technologiesControllers";
 
@@ -20,8 +19,7 @@ techRoutes.get('/', getTechnologiesResponse);
 techRoutes.post('/newtech', insertNewTechnologieResponse);
 // PUT...
 techRoutes.put('/update', updateATechRecordResponse);
-// PATCH
-techRoutes.patch('/:id/deletetech-status', toggleDeleteTechStatus);
+// PATCH...
 techRoutes.patch('/delete-status', toggleSeveralDeleteTechRecordsResponse);
 
 export default techRoutes;

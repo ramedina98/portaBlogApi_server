@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleSeveralDeleteSchRecords = exports.toggleDeleteSchoolingStatus = exports.updateASchoolingRecord = exports.insertNewSchRecords = exports.getSchoolingData = void 0;
+exports.toggleSeveralDeleteSchRecords = exports.updateASchoolingRecord = exports.insertNewSchRecords = exports.getSchoolingData = void 0;
 const resumeModulesUtilF_1 = require("../utils/resumeModulesUtilF");
 const schoolingModel_1 = require("../models/mysql/schoolingModel");
 const resumeModulesUtilF_2 = require("../utils/resumeModulesUtilF");
@@ -172,38 +172,6 @@ const updateASchoolingRecord = (id_sch, data_sch) => __awaiter(void 0, void 0, v
     }
 });
 exports.updateASchoolingRecord = updateASchoolingRecord;
-/**
- * @method PATCH
- *
- * This service helps me to toggle the "delete_schooling" filed, from false to true and veseversa...
- *
- * @param id_sch
- */
-const toggleDeleteSchoolingStatus = (id_sch) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // check if the schooling data record exists...
-        const sch = yield schoolingModel_1.Schooling.findByPk(id_sch);
-        if (!sch) {
-            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
-            logging_1.default.warning(`Schooling record does not exists with id: ${id_sch}`);
-            logging_1.default.warning('::::::::::::::::::::::::::::::::::::');
-            return 1;
-        }
-        // change the status...
-        const newStatus = !sch.delete_schooling;
-        // update the delete_schooling status...
-        yield sch.update({ delete_schooling: newStatus });
-        (0, resumeModulesUtilF_1.loggingInfo)(`Delete status updated successfuly: ${sch.career_name}`);
-        return `Delete status updated successfuly: ${sch.career_name}`;
-    }
-    catch (error) {
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        logging_1.default.error('Error: ' + error.message);
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-});
-exports.toggleDeleteSchoolingStatus = toggleDeleteSchoolingStatus;
 /**
  * @method PATCH
  *

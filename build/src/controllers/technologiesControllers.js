@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toggleSeveralDeleteTechRecordsResponse = exports.toggleDeleteTechStatus = exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
+exports.toggleSeveralDeleteTechRecordsResponse = exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -99,27 +99,6 @@ const updateATechRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.updateATechRecordResponse = updateATechRecordResponse;
-/**
- * @UpdateDeleteStatusController -> this controller helps me to handle the change of the delete_tech
- * status field, to change from false to true, or veseversa...
- *
- * @param id_tech
- */
-const toggleDeleteTechStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.params;
-        const id_tech = parseInt(id);
-        const techResponse = yield (0, technologiesServices_1.toggleDeleteTech)(id_tech);
-        if (typeof techResponse === 'number') {
-            res.status(404).json({ message: 'Technology does not exists!' });
-        }
-        res.status(200).json({ message: techResponse });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Internal server error: ' + error.message });
-    }
-});
-exports.toggleDeleteTechStatus = toggleDeleteTechStatus;
 /**
  * @method patch
  *
