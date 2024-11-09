@@ -1,4 +1,6 @@
 /**
+ * @module users
+ *
  * @UserServices --> Here I have all the required services to handle the users controllers...
  * 1. Get all the data.
  * 2. Login.

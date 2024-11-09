@@ -1,5 +1,6 @@
 // here we have all the users controllers...
 /**
+ * @module users
  * @UserControllers --> Here I have all the users controllers needed to handle all the endpoints...
  */
 import { Request, Response } from "express";

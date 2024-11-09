@@ -1,4 +1,8 @@
-// This is the user Interfaces...
+/**
+ * @module Technologies
+ *
+ * This is the user Interfaces...
+ */
 interface IUser {
     id_user: string;
     name1?: string;

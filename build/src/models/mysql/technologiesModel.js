@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tech = void 0;
 /**
+ * @module technologies
  * @TechModel
  * Here I have the technologies model...
  */

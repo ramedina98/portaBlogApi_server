@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// here we have all the emails routes...
+/**
+ * @module Emails
+ * here we have all the emails routes...
+ */
 const express_1 = require("express");
 const emailsControllers_1 = require("../controllers/emailsControllers");
 const emailRoutes = (0, express_1.Router)();

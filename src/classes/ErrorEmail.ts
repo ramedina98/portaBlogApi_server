@@ -1,4 +1,5 @@
 /**
+ * @ErrorEmail
  * This class helps me to handle the error emails type...
  */
 import { EmailBaseMethods } from "../interfaces/IEmails";

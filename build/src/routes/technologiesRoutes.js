@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @module technologies
  * @TechRoutes
  * This file has all the needed routes to handle the technologies endpoint...
  */

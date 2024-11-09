@@ -1,4 +1,5 @@
 /**
+ * @EmailFactory
  * This class call email factory will help me to determine which is the correct object to create...
  * 1. Grettings
  * 2. Error

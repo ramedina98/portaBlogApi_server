@@ -1,4 +1,7 @@
 /**
+ * @module Technologies
+ *
+ * This file contains all the required controllers for the technologies module...
  * @TechnologiesCotrollers ...
 */
 import { Request, Response } from "express";

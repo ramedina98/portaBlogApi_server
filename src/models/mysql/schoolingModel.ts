@@ -1,4 +1,5 @@
 /**
+ * @module Schooling
  * Here we have the schooling model...
  */
 import { Model, DataTypes, Optional } from "sequelize";

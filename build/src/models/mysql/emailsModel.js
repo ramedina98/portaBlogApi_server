@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Email = void 0;
 /**
+ * @module Emails
  * Here we have the emails model...
  */
 const sequelize_1 = require("sequelize");

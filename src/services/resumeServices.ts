@@ -1,4 +1,6 @@
 /**
+ * @module resume
+ *
  * @Services -> All the services that can be found here are for managing updates, creating records and
  * obtaining information about the resume and all the elements related to it...
  */

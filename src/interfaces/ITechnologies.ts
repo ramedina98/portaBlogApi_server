@@ -1,4 +1,5 @@
 /**
+ * @module Schooling
  * @TechnologiesInterfaces
  * This file has all the interfeces needed to handle the technologies module...
  */

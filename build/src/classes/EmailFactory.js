@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailFactory = void 0;
 /**
+ * @EmailFactory
  * This class call email factory will help me to determine which is the correct object to create...
  * 1. Grettings
  * 2. Error

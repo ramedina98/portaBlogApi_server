@@ -1,4 +1,6 @@
 /**
+ * @module technologies
+ *
  * @TechnologiesServices -> This file has all the services needed to handle the
  * to handle data retrieval, update and creation for the technologies table...
  *

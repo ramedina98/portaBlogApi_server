@@ -1,4 +1,7 @@
-// we have all the emails controllers here...
+/**
+ * @module Emails
+ * we have all the emails controllers here...
+ */
 import { Request, Response } from "express";
 import {
     AllEmails,

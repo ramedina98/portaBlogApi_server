@@ -1,4 +1,5 @@
 /**
+ * @GreetingEmail
  * This class is for handle the greetings emails type...
  */
 import { EmailBaseMethods } from "../interfaces/IEmails";

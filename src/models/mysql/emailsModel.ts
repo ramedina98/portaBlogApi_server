@@ -1,4 +1,5 @@
 /**
+ * @module Emails
  * Here we have the emails model...
  */
 import { Model, DataTypes, Optional } from "sequelize";

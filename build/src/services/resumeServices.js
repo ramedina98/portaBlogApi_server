@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateAResumeRecord = exports.createResume = exports.getResume = void 0;
 /**
+ * @module resume
+ *
  * @Services -> All the services that can be found here are for managing updates, creating records and
  * obtaining information about the resume and all the elements related to it...
  */

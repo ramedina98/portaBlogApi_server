@@ -1,4 +1,7 @@
-// here we have all the users routes...
+/**
+ * @module users
+ * here we have all the users routes...
+ */
 import { Router } from "express";
 import { getUser, loginSession, putUpdatedUserInfo} from "../controllers/usersControllers";
 

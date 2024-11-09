@@ -1,4 +1,5 @@
 /**
+ * @module resume
  * @Controller --> In this file can find all the controllers of the endpoint resume
  * and all the elements related to it...
  */

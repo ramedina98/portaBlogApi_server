@@ -1,4 +1,5 @@
 /**
+ * @module resume
  * Here we have the resume model...
  */
 import { Model, DataTypes, Optional } from "sequelize";

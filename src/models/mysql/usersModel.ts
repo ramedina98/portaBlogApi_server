@@ -1,4 +1,5 @@
 /**
+ * @module users
  * Here we have the model of the users instances...
  */
 import { Model, DataTypes, Optional } from "sequelize";

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Resume = void 0;
 /**
+ * @module resume
  * Here we have the resume model...
  */
 const sequelize_1 = require("sequelize");

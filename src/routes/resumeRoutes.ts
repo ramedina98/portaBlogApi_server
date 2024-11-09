@@ -1,4 +1,7 @@
-// here I have all the routes of the endpoint resume...
+/**
+ * @module resume
+ * here I have all the routes of the endpoint resume...
+ */
 import { Router } from "express";
 import {
     getResumeResponse,

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 /**
+ * @module users
  * Here we have the model of the users instances...
  */
 const sequelize_1 = require("sequelize");

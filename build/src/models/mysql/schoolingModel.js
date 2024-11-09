@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Schooling = void 0;
 /**
+ * @module Schooling
  * Here we have the schooling model...
  */
 const sequelize_1 = require("sequelize");

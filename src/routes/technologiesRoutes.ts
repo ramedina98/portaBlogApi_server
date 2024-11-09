@@ -1,4 +1,5 @@
 /**
+ * @module technologies
  * @TechRoutes
  * This file has all the needed routes to handle the technologies endpoint...
  */

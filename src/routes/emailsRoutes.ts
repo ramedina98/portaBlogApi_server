@@ -1,4 +1,7 @@
-// here we have all the emails routes...
+/**
+ * @module Emails
+ * here we have all the emails routes...
+ */
 import { Router } from "express";
 import {
     AllEmailsResponse,

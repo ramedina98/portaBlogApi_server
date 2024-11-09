@@ -1,4 +1,5 @@
 /**
+ * @module technologies
  * @TechModel
  * Here I have the technologies model...
  */

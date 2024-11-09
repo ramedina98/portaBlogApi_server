@@ -1,4 +1,5 @@
 /**
+ * @OpinionEmail
  * This class is for handle the opinions emails type...
  */
 import { EmailBaseMethods } from "../interfaces/IEmails";

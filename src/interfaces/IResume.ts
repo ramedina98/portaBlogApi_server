@@ -1,4 +1,5 @@
 /**
+ * @module Resume
  * In this file we have all the necessary interfaces to work with the models, controllers and
  * services of the endpoint resume...
  */

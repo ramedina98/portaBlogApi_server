@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Expe = void 0;
 /**
+ * @module experience
  * Here we have the experience model...
  */
 const sequelize_1 = require("sequelize");

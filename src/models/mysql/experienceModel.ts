@@ -1,4 +1,5 @@
 /**
+ * @module experience
  * Here we have the experience model...
  */
 import { Model, DataTypes, Optional } from "sequelize";

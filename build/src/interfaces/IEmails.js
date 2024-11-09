@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @module Emails
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailType = void 0;
 var EmailType;

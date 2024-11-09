@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EditUserInfo = exports.getUserData = exports.loginUser = void 0;
 /**
+ * @module users
+ *
  * @UserServices --> Here I have all the required services to handle the users controllers...
  * 1. Get all the data.
  * 2. Login.
