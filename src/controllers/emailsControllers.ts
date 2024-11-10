@@ -9,8 +9,7 @@ import {
     AnEmail, insertEmail,
     updateAllEmailsTrueToFalse,
     updateIsReadField,
-    deleteAnEmail,
-    deleteSeveralEmails
+    deleteEmails
 } from "../services/emailsServices";
 import { Emails } from "../interfaces/IEmails";
 
@@ -134,38 +133,17 @@ const updateAllEmailsTrueToFalseResponse = async (_req: Request, res: Response):
 }
 
 /**
- * @DeleteAnEmailController --> This controller helps me to delete an specific email by its id...
- *
- * @status404 --> if no email is found with the provided id...
- */
-const deleteAnEmailResponse = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { id } = req.body;
-
-        const email: string | null = await deleteAnEmail(id);
-
-        if(email === null){
-            res.status(404).json({ message: 'Email not deleted!' });
-        }
-
-        res.status(200).json({ message: email });
-    } catch (error: any) {
-        res.status(500).json({ message: 'Internal server error: ' + error.message });
-    }
-}
-
-/**
  * @deleteSeveralEmailsController --> this controller helps me to delete several emails at the same time with their ids...
  *
  * @status404 --> the service will return 2 numbers, which are:
  * 1 = No IDs provided for deletion!
  * 2 = No emails found to delete!
  */
-const deleteSeveralEmailsResponse = async (req: Request, res: Response): Promise<void> => {
+const deleteEmailsResponse = async (req: Request, res: Response): Promise<void> => {
     try {
         const { ids } = req.body;
 
-        const email: string | number = await deleteSeveralEmails(ids);
+        const email: string | number = await deleteEmails(ids);
 
         if(typeof email === 'number'){
             const message = email === 1 ? 'No IDs provided for deletion' : email === 2 ? 'No emails found to delete' : 'Unknow error';
@@ -178,4 +156,4 @@ const deleteSeveralEmailsResponse = async (req: Request, res: Response): Promise
     }
 }
 
-export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse, updateAllEmailsTrueToFalseResponse, deleteAnEmailResponse, deleteSeveralEmailsResponse };
+export { AllEmailsResponse, AllEmailsSentResponse, AnEmailResponse, insertEmailResponse, updateAnEmailResponse, updateAllEmailsTrueToFalseResponse, deleteEmailsResponse };

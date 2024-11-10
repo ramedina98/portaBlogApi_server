@@ -267,43 +267,13 @@ const updateAllEmailsTrueToFalse = async (): Promise<string | null> => {
 
 /**
  * @methodDELETE
- * This service helps me to delete and specific email by its id...
- */
-const deleteAnEmail = async (id: string): Promise<string | null> => {
-    try {
-        // find email by its id...
-        const email: any = await Email.findByPk(id);
-
-        if(!email){
-            logging.warning('::::::::::::::::::::::::::');
-            logging.warning('Email not found!');
-            logging.warning('::::::::::::::::::::::::::');
-            return null;
-        }
-
-        // delete email...
-        await Email.destroy( { where: { id_email: id }});
-
-        loggingInfo(`Email with ID ${id} has been deleted.`);
-
-        return 'The email has been deleted.';
-    } catch (error: any) {
-        logging.warn('::::::::::::::::::::::::::::::::');
-        logging.error('Error: ' + error.message);
-        logging.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-}
-
-/**
- * @methodDELETE
  * This service helps me to delete several emails at the same time with their ids...
  * @param ids - an array of email IDs to delete...
  *
  * 1 = No IDs provided for deletion.
  * 2 = No emails found to delete.
  */
-const deleteSeveralEmails = async (ids: string[]): Promise<string| number> => {
+const deleteEmails = async (ids: string[]): Promise<string| number> => {
     try {
         if(ids.length === 0){
             logging.warning('::::::::::::::::::::::::::');
@@ -335,4 +305,4 @@ const deleteSeveralEmails = async (ids: string[]): Promise<string| number> => {
     }
 }
 
-export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsTrueToFalse, deleteAnEmail, deleteSeveralEmails };
+export { AllEmails, AllEmailsSent, AnEmail, insertEmail, updateIsReadField, updateAllEmailsTrueToFalse, deleteEmails };
