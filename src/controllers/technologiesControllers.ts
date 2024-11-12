@@ -6,6 +6,8 @@
 */
 import { Request, Response } from "express";
 import { ITechNoIdNoresumeId, ITechNoResumeId } from "../interfaces/ITechnologies";
+import { extractJwtInfo } from "../utils/jwtUtils";
+import { JwtFields } from "../interfaces/IJwtPayload";
 import {
     getTechnologies,
     insertNewTchRecords,
@@ -19,7 +21,18 @@ import {
  */
 const getTechnologiesResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_user }: { id_user: string } = req.body;
+        const { token }: { token: string } = req.body;
+
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         const technologies: ITechNoResumeId[] | number = await getTechnologies(id_user);
 
@@ -52,7 +65,18 @@ const getTechnologiesResponse = async (req: Request, res: Response): Promise<voi
  */
 const insertNewTechnologieResponse = async (req:Request, res:Response): Promise<void> => {
     try {
-        const { id_user, tech_data }: { id_user: string, tech_data: ITechNoIdNoresumeId[] }= req.body;
+        const { token, tech_data }: { token: string, tech_data: ITechNoIdNoresumeId[] }= req.body;
+
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         // the tech_data object array is empty, let the user knows...
         if(tech_data.length === 0){

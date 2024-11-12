@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleSeveralDeleteSchRecordsResponse = exports.updateASchoolingRecordResponse = exports.insertNewSchoolingDataResponse = exports.getSchoolingDataResponse = void 0;
+const jwtUtils_1 = require("../utils/jwtUtils");
+const IJwtPayload_1 = require("../interfaces/IJwtPayload");
 const schoolingServices_1 = require("../services/schoolingServices");
 /**
  * @method GET
@@ -20,8 +22,16 @@ const schoolingServices_1 = require("../services/schoolingServices");
  */
 const getSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.body;
-        const schooling = yield (0, schoolingServices_1.getSchoolingData)(id);
+        const { token } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
+        const schooling = yield (0, schoolingServices_1.getSchoolingData)(id_user);
         if (typeof schooling === 'number') {
             let message = '';
             if (schooling === 1) {
@@ -53,11 +63,19 @@ exports.getSchoolingDataResponse = getSchoolingDataResponse;
  */
 const insertNewSchoolingDataResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id, schooling_data } = req.body;
+        const { token, schooling_data } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         if (schooling_data.length === 0) {
             res.status(400).json({ message: 'No data was provided' });
         }
-        const schooling = yield (0, schoolingServices_1.insertNewSchRecords)(id, schooling_data);
+        const schooling = yield (0, schoolingServices_1.insertNewSchRecords)(id_user, schooling_data);
         if (typeof schooling === 'number') {
             let message = '';
             if (schooling === 1) {

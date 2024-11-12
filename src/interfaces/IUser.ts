@@ -14,9 +14,4 @@ interface IUser {
     photo?: string;
 }
 
-interface IUserLogin {
-    id_user: string;
-    jwt: string;
-}
-
-export { IUser, IUserLogin }
+export { IUser }

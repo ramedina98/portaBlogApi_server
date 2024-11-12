@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleSeveralDeleteTechRecordsResponse = exports.updateATechRecordResponse = exports.insertNewTechnologieResponse = exports.getTechnologiesResponse = void 0;
+const jwtUtils_1 = require("../utils/jwtUtils");
+const IJwtPayload_1 = require("../interfaces/IJwtPayload");
 const technologiesServices_1 = require("../services/technologiesServices");
 /**
  * @GetTechsController --> This controller helps me to manage the
@@ -17,7 +19,15 @@ const technologiesServices_1 = require("../services/technologiesServices");
  */
 const getTechnologiesResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user } = req.body;
+        const { token } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         const technologies = yield (0, technologiesServices_1.getTechnologies)(id_user);
         if (typeof technologies === 'number') {
             let message = '';
@@ -48,7 +58,15 @@ exports.getTechnologiesResponse = getTechnologiesResponse;
  */
 const insertNewTechnologieResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user, tech_data } = req.body;
+        const { token, tech_data } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         // the tech_data object array is empty, let the user knows...
         if (tech_data.length === 0) {
             res.status(400).json({ message: 'No new technology has been received for storage!' });

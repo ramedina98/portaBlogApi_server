@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSeveralEmailsResponse = exports.deleteAnEmailResponse = exports.updateAllEmailsTrueToFalseResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
+exports.deleteEmailsResponse = exports.updateAllEmailsTrueToFalseResponse = exports.updateAnEmailResponse = exports.insertEmailResponse = exports.AnEmailResponse = exports.AllEmailsSentResponse = exports.AllEmailsResponse = void 0;
 const emailsServices_1 = require("../services/emailsServices");
 /**
  * @allEmailsController -> All emails that its type is diferent to "response" controller...
@@ -122,35 +122,16 @@ const updateAllEmailsTrueToFalseResponse = (_req, res) => __awaiter(void 0, void
 });
 exports.updateAllEmailsTrueToFalseResponse = updateAllEmailsTrueToFalseResponse;
 /**
- * @DeleteAnEmailController --> This controller helps me to delete an specific email by its id...
- *
- * @status404 --> if no email is found with the provided id...
- */
-const deleteAnEmailResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { id } = req.body;
-        const email = yield (0, emailsServices_1.deleteAnEmail)(id);
-        if (email === null) {
-            res.status(404).json({ message: 'Email not deleted!' });
-        }
-        res.status(200).json({ message: email });
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Internal server error: ' + error.message });
-    }
-});
-exports.deleteAnEmailResponse = deleteAnEmailResponse;
-/**
  * @deleteSeveralEmailsController --> this controller helps me to delete several emails at the same time with their ids...
  *
  * @status404 --> the service will return 2 numbers, which are:
  * 1 = No IDs provided for deletion!
  * 2 = No emails found to delete!
  */
-const deleteSeveralEmailsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteEmailsResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { ids } = req.body;
-        const email = yield (0, emailsServices_1.deleteSeveralEmails)(ids);
+        const email = yield (0, emailsServices_1.deleteEmails)(ids);
         if (typeof email === 'number') {
             const message = email === 1 ? 'No IDs provided for deletion' : email === 2 ? 'No emails found to delete' : 'Unknow error';
             res.status(404).json({ message });
@@ -161,4 +142,4 @@ const deleteSeveralEmailsResponse = (req, res) => __awaiter(void 0, void 0, void
         res.status(500).json({ message: 'Internal server error: ' + error.message });
     }
 });
-exports.deleteSeveralEmailsResponse = deleteSeveralEmailsResponse;
+exports.deleteEmailsResponse = deleteEmailsResponse;

@@ -4,7 +4,9 @@
  * @UserControllers --> Here I have all the users controllers needed to handle all the endpoints...
  */
 import { Request, Response } from "express";
-import { IUser, IUserLogin } from "../interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
+import { extractJwtInfo } from "../utils/jwtUtils";
+import { JwtFields } from "../interfaces/IJwtPayload";
 import { getUserData, loginUser, EditUserInfo } from "../services/usersServices";
 
 /**
@@ -16,7 +18,7 @@ const loginSession = async (req:Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     try {
-        const login: IUserLogin | number = await loginUser(email, password);
+        const login: string | number = await loginUser(email, password);
 
         // Here is the correct answer...
         if(typeof login === 'number'){
@@ -37,9 +39,20 @@ const loginSession = async (req:Request, res: Response): Promise<void> => {
  */
 const getUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { token } = req.body;
 
-        const user: IUser | null = await getUserData(id);
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
+
+        const user: IUser | null = await getUserData(id_user);
 
         if(user === null){
             res.status(404).json({ message: 'User not found' });
@@ -57,7 +70,18 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
  */
 const putUpdatedUserInfo = async (req: Request, res:Response): Promise<void> => {
     try {
-        const { id_user, userData } = req.body;
+        const { token, userData } = req.body;
+
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         const response: string | null = await EditUserInfo(id_user, userData);
 

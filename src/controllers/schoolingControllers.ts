@@ -11,6 +11,8 @@
  */
 import { Request, Response } from "express";
 import { ISchoolingNoIdResume } from "../interfaces/ISchooling";
+import { extractJwtInfo } from "../utils/jwtUtils";
+import { JwtFields } from "../interfaces/IJwtPayload";
 import {
     getSchoolingData,
     insertNewSchRecords,
@@ -27,9 +29,20 @@ import {
  */
 const getSchoolingDataResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id }: { id: string }= req.body;
+        const { token }: { token: string }= req.body;
 
-        const schooling: ISchoolingNoIdResume[] | number = await getSchoolingData(id);
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
+
+        const schooling: ISchoolingNoIdResume[] | number = await getSchoolingData(id_user);
 
         if(typeof schooling === 'number'){
             let message: string = '';
@@ -62,13 +75,24 @@ const getSchoolingDataResponse = async (req: Request, res: Response): Promise<vo
  */
 const insertNewSchoolingDataResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id, schooling_data }: {id: string, schooling_data: ISchoolingNoIdResume[]} = req.body;
+        const { token, schooling_data }: {token: string, schooling_data: ISchoolingNoIdResume[]} = req.body;
+
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         if(schooling_data.length === 0){
             res.status(400).json({ message: 'No data was provided' });
         }
 
-        const schooling: string | number  = await insertNewSchRecords(id, schooling_data);
+        const schooling: string | number  = await insertNewSchRecords(id_user, schooling_data);
 
         if(typeof schooling === 'number'){
             let message: string = '';

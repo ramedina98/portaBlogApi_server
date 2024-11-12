@@ -31,7 +31,7 @@ interface IResume {
     email: string;
 }
 // to recive information...
-interface ICreateResume extends Omit<IResume, 'id_resume'>{}
+interface ICreateResume extends Omit<IResume, 'id_resume' | 'user_id'>{}
 
 // resume service interfece...
 interface IResumeService {

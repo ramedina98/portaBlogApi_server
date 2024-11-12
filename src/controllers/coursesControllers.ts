@@ -3,6 +3,8 @@
  */
 import { Request, Response } from "express";
 import { ICourseNoResumeId, ICourseNoIdAndResumeId } from "../interfaces/ICourses";
+import { JwtFields } from "../interfaces/IJwtPayload";
+import { extractJwtInfo } from "../utils/jwtUtils";
 import {
     getCourses,
     insertNewCourseRecord,
@@ -17,7 +19,20 @@ import {
  */
 const getCoursesResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_user }: { id_user: string } = req.body;
+        // extract the token...
+        const { token }: { token: string } = req.body;
+
+        // decoded the token...
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         const courses: ICourseNoResumeId[] | number = await getCourses(id_user);
 
@@ -51,7 +66,19 @@ const getCoursesResponse = async (req: Request, res: Response): Promise<void> =>
  */
 const insertNewCourseRecordResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_user, courses_data }: {id_user: string, courses_data: ICourseNoResumeId[] } = req.body;
+        const { token, courses_data }: {token: string, courses_data: ICourseNoResumeId[] } = req.body;
+
+        // decode the token...
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         // the course data object array is empty, let the user knows...
         if(courses_data.length === 0){

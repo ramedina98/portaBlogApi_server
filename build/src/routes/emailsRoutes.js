@@ -17,6 +17,5 @@ emailRoutes.post('/newemail', emailsControllers_1.insertEmailResponse);
 emailRoutes.patch('/:id/toggle-read', emailsControllers_1.updateAnEmailResponse);
 emailRoutes.patch('/mark-unread', emailsControllers_1.updateAllEmailsTrueToFalseResponse);
 //DELETE
-emailRoutes.delete('/delete', emailsControllers_1.deleteAnEmailResponse);
-emailRoutes.delete('/delete-multiple', emailsControllers_1.deleteSeveralEmailsResponse);
+emailRoutes.delete('/delete', emailsControllers_1.deleteEmailsResponse);
 exports.default = emailRoutes;

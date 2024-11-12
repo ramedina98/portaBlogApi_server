@@ -6,6 +6,8 @@
 import { Request, Response } from "express";
 import { ICreateResume, IResumeService } from "../interfaces/IResume";
 import { getResume, createResume, updateAResumeRecord } from "../services/resumeServices";
+import { extractJwtInfo } from "../utils/jwtUtils";
+import { JwtFields } from "../interfaces/IJwtPayload";
 
 /**
  * @ResumeControllers ...
@@ -17,7 +19,19 @@ import { getResume, createResume, updateAResumeRecord } from "../services/resume
  * */
 const getResumeResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_user } = req.body;
+        const {token }: { token: string } = req.body;
+
+        //decode the token...
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
 
         const resumeData: IResumeService | number = await getResume( id_user);
 
@@ -47,10 +61,20 @@ const getResumeResponse = async (req: Request, res: Response): Promise<void> => 
  */
 const createResumeResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { resumeData } = req.body;
-        const data: ICreateResume = resumeData;
+        const { token, resumeData }: {token: string, resumeData: ICreateResume} = req.body;
 
-        const resume: string | null = await createResume(data.user_id, data);
+        const decodedToken: string | null = extractJwtInfo(token, JwtFields.ID);
+
+        if(decodedToken === null){
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            })
+            return;
+        }
+
+        const id_user: string = decodedToken;
+
+        const resume: string | null = await createResume(id_user, resumeData);
 
         if(resume === null){
             res.status(404).json({ message: 'Record not made!'});
@@ -67,10 +91,9 @@ const createResumeResponse = async (req: Request, res: Response): Promise<void> 
  */
 const updateAResumeRecordResponse = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { id_resume, resumeData } = req.body;
-        const data: ICreateResume = resumeData;
+        const { id_resume, resumeData }: { id_resume: number, resumeData: ICreateResume} = req.body;
 
-        const updateResume: string | null = await updateAResumeRecord(id_resume, data);
+        const updateResume: string | null = await updateAResumeRecord(id_resume, resumeData);
 
         if(updateResume === null){
             res.status(404).json({ message: 'Record not found!' });

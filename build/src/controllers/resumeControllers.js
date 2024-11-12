@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateAResumeRecordResponse = exports.createResumeResponse = exports.getResumeResponse = void 0;
 const resumeServices_1 = require("../services/resumeServices");
+const jwtUtils_1 = require("../utils/jwtUtils");
+const IJwtPayload_1 = require("../interfaces/IJwtPayload");
 /**
  * @ResumeControllers ...
  */
@@ -20,7 +22,16 @@ const resumeServices_1 = require("../services/resumeServices");
  * */
 const getResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user } = req.body;
+        const { token } = req.body;
+        //decode the token...
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         const resumeData = yield (0, resumeServices_1.getResume)(id_user);
         if (typeof resumeData === 'number') {
             let message = '';
@@ -48,9 +59,16 @@ exports.getResumeResponse = getResumeResponse;
  */
 const createResumeResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { resumeData } = req.body;
-        const data = resumeData;
-        const resume = yield (0, resumeServices_1.createResume)(data.user_id, data);
+        const { token, resumeData } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
+        const resume = yield (0, resumeServices_1.createResume)(id_user, resumeData);
         if (resume === null) {
             res.status(404).json({ message: 'Record not made!' });
         }
@@ -67,8 +85,7 @@ exports.createResumeResponse = createResumeResponse;
 const updateAResumeRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id_resume, resumeData } = req.body;
-        const data = resumeData;
-        const updateResume = yield (0, resumeServices_1.updateAResumeRecord)(id_resume, data);
+        const updateResume = yield (0, resumeServices_1.updateAResumeRecord)(id_resume, resumeData);
         if (updateResume === null) {
             res.status(404).json({ message: 'Record not found!' });
         }

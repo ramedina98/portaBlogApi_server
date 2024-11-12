@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.putUpdatedUserInfo = exports.getUser = exports.loginSession = void 0;
+const jwtUtils_1 = require("../utils/jwtUtils");
+const IJwtPayload_1 = require("../interfaces/IJwtPayload");
 const usersServices_1 = require("../services/usersServices");
 /**
  * @LoginSessionController --> To log in
@@ -39,8 +41,16 @@ exports.loginSession = loginSession;
  */
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const user = yield (0, usersServices_1.getUserData)(id);
+        const { token } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
+        const user = yield (0, usersServices_1.getUserData)(id_user);
         if (user === null) {
             res.status(404).json({ message: 'User not found' });
         }
@@ -57,7 +67,15 @@ exports.getUser = getUser;
  */
 const putUpdatedUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user, userData } = req.body;
+        const { token, userData } = req.body;
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         const response = yield (0, usersServices_1.EditUserInfo)(id_user, userData);
         if (response === null) {
             res.status(404).json({ message: 'Non-existent user' });

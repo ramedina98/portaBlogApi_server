@@ -148,7 +148,13 @@ const createResume = async (id_user: string, data: ICreateResume): Promise<strin
             return 'There is already a resume associated with the user';
         }
 
-        const resume: IResume = await Resume.create(data);
+        const resume: IResume = await Resume.create({
+            user_id: id_user,
+            pdf_resume: data.pdf_resume,
+            profile_resume: data.profile_resume,
+            logo: data.logo,
+            email: data.email
+        });
 
         if(!resume){
             logging.warning(':::::::::::::::::::::::');

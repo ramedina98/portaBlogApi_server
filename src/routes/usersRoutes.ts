@@ -9,7 +9,7 @@ const userRoutes = Router();
 
 // GET
 userRoutes.get('/login', loginSession);
-userRoutes.get('/:id', getUser);
+userRoutes.get('/', getUser);
 //PUT
 userRoutes.put('/updateuser', putUpdatedUserInfo);
 

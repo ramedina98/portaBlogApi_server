@@ -60,14 +60,9 @@ const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, functio
             phone: user.phone
         };
         const token = (0, jwtUtils_1.generateJwToken)(payload);
-        //create the object that we have to return...
-        const response = {
-            id_user: user.id_user,
-            jwt: token,
-        };
         (0, resumeModulesUtilF_1.loggingInfo)(`${user.name1} successfully logged in`);
         // we return the object we the needed info...
-        return response;
+        return token;
     }
     catch (error) {
         logging_1.default.warning(':::::::::::::::::::::::::::');

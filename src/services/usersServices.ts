@@ -7,7 +7,7 @@
  * 3. Update data.
  */
 import { User } from "../models/mysql/usersModel";
-import { IUser, IUserLogin } from "../interfaces/IUser";
+import { IUser } from "../interfaces/IUser";
 import { IJwtPayload } from '../interfaces/IJwtPayload';
 import { generateJwToken } from '../utils/jwtUtils';
 import { loggingInfo } from "../utils/resumeModulesUtilF";
@@ -24,7 +24,7 @@ import logging from "../config/logging";
  * 1 = Invalid email
  * 2 = Invalid password
  */
-const loginUser = async (email:string, password:string): Promise<IUserLogin | number> => {
+const loginUser = async (email:string, password:string): Promise<string | number> => {
     try{
         const user: any = await User.findOne({ where: { email }});
 
@@ -54,16 +54,10 @@ const loginUser = async (email:string, password:string): Promise<IUserLogin | nu
 
         const token: string = generateJwToken(payload);
 
-        //create the object that we have to return...
-        const response: IUserLogin = {
-            id_user: user.id_user,
-            jwt: token,
-        }
-
         loggingInfo(`${user.name1} successfully logged in`);
 
         // we return the object we the needed info...
-        return response;
+        return token;
 
     } catch(error: any){
         logging.warning(':::::::::::::::::::::::::::');

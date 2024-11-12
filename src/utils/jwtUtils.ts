@@ -23,7 +23,7 @@ const extractJwtInfo = (token: string, field: JwtFields): string | null => {
         const decoded: any = jwt.verify(token, SERVER.KEY);
 
         // return the required data...
-        return decoded[field] || null;
+        return decoded.payload[field] || null;
     } catch (error: any) {
         logging.error(`Error decoding token: ${error.message}`);
         return null;

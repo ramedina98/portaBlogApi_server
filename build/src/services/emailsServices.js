@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSeveralEmails = exports.deleteAnEmail = exports.updateAllEmailsTrueToFalse = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
+exports.deleteEmails = exports.updateAllEmailsTrueToFalse = exports.updateIsReadField = exports.insertEmail = exports.AnEmail = exports.AllEmailsSent = exports.AllEmails = void 0;
 /**
  * @module Emails
  *
@@ -250,40 +250,13 @@ const updateAllEmailsTrueToFalse = () => __awaiter(void 0, void 0, void 0, funct
 exports.updateAllEmailsTrueToFalse = updateAllEmailsTrueToFalse;
 /**
  * @methodDELETE
- * This service helps me to delete and specific email by its id...
- */
-const deleteAnEmail = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // find email by its id...
-        const email = yield emailsModel_1.Email.findByPk(id);
-        if (!email) {
-            logging_1.default.warning('::::::::::::::::::::::::::');
-            logging_1.default.warning('Email not found!');
-            logging_1.default.warning('::::::::::::::::::::::::::');
-            return null;
-        }
-        // delete email...
-        yield emailsModel_1.Email.destroy({ where: { id_email: id } });
-        (0, resumeModulesUtilF_1.loggingInfo)(`Email with ID ${id} has been deleted.`);
-        return 'The email has been deleted.';
-    }
-    catch (error) {
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        logging_1.default.error('Error: ' + error.message);
-        logging_1.default.warn('::::::::::::::::::::::::::::::::');
-        throw error;
-    }
-});
-exports.deleteAnEmail = deleteAnEmail;
-/**
- * @methodDELETE
  * This service helps me to delete several emails at the same time with their ids...
  * @param ids - an array of email IDs to delete...
  *
  * 1 = No IDs provided for deletion.
  * 2 = No emails found to delete.
  */
-const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteEmails = (ids) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (ids.length === 0) {
             logging_1.default.warning('::::::::::::::::::::::::::');
@@ -311,4 +284,4 @@ const deleteSeveralEmails = (ids) => __awaiter(void 0, void 0, void 0, function*
         throw error;
     }
 });
-exports.deleteSeveralEmails = deleteSeveralEmails;
+exports.deleteEmails = deleteEmails;

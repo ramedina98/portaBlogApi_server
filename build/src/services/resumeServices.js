@@ -149,7 +149,13 @@ const createResume = (id_user, data) => __awaiter(void 0, void 0, void 0, functi
             logging_1.default.warning(':::::::::::::::::::::::::::');
             return 'There is already a resume associated with the user';
         }
-        const resume = yield resumeModel_1.Resume.create(data);
+        const resume = yield resumeModel_1.Resume.create({
+            user_id: id_user,
+            pdf_resume: data.pdf_resume,
+            profile_resume: data.profile_resume,
+            logo: data.logo,
+            email: data.email
+        });
         if (!resume) {
             logging_1.default.warning(':::::::::::::::::::::::');
             logging_1.default.warning('Record not made!');

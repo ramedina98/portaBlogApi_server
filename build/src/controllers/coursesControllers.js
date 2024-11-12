@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.toggleDeleteCourseResponse = exports.updateACourseRecordResponse = exports.insertNewCourseRecordResponse = exports.getCoursesResponse = void 0;
+const IJwtPayload_1 = require("../interfaces/IJwtPayload");
+const jwtUtils_1 = require("../utils/jwtUtils");
 const coursesServices_1 = require("../services/coursesServices");
 /**
  * @method get
@@ -18,7 +20,17 @@ const coursesServices_1 = require("../services/coursesServices");
  */
 const getCoursesResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user } = req.body;
+        // extract the token...
+        const { token } = req.body;
+        // decoded the token...
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         const courses = yield (0, coursesServices_1.getCourses)(id_user);
         if (typeof courses === 'number') {
             let message = '';
@@ -50,7 +62,16 @@ exports.getCoursesResponse = getCoursesResponse;
  */
 const insertNewCourseRecordResponse = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id_user, courses_data } = req.body;
+        const { token, courses_data } = req.body;
+        // decode the token...
+        const decodedToken = (0, jwtUtils_1.extractJwtInfo)(token, IJwtPayload_1.JwtFields.ID);
+        if (decodedToken === null) {
+            res.status(404).json({
+                error: 'Received token is invalid or expired',
+            });
+            return;
+        }
+        const id_user = decodedToken;
         // the course data object array is empty, let the user knows...
         if (courses_data.length === 0) {
             res.status(400).json({ message: 'No new courses has been received for storage!' });
