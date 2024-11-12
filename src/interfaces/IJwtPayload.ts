@@ -4,4 +4,10 @@ interface IJwtPayload {
     phone: string;
 }
 
-export { IJwtPayload };
+enum JwtFields {
+    ID = 'userId',
+    NAME = 'name',
+    PHONE = 'phone'
+}
+
+export { IJwtPayload, JwtFields };

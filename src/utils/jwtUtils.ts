@@ -1,21 +1,33 @@
-import jwt from 'jsonwebtoken';
+/**
+ * In this file we can find util functions to handle some jwt process like: create them and
+ * extract information  from them...
+ */
 import { SERVER } from '../config/config';
-import { IJwtPayload } from '../interfaces/IJwtPayload';
+import { IJwtPayload, JwtFields } from '../interfaces/IJwtPayload';
+import jwt from 'jsonwebtoken';
+import logging from '../config/logging';
 
-// define the secret key to sign the tokens...
-const SECRET_KEY = SERVER.KEY;
-
-// Function for generate a token...
-function generateJwToken(payload: IJwtPayload): string {
-    // token configuration...
-    const options = {
-        expiresIn: SERVER.TIME,
-    }
-
-    /// generate a token...
-    const token = jwt.sign(payload, SECRET_KEY, options);
-
-    return token;
+// This function helps me to create a JWT...
+const generateJwToken = (payload: IJwtPayload): string => {
+    return jwt.sign(
+        { payload },
+        SERVER.KEY,
+        { expiresIn: SERVER.TIME }
+    );
 }
 
-export { generateJwToken };
+// This other function helps me to extract information from the JWT generated...
+const extractJwtInfo = (token: string, field: JwtFields): string | null => {
+    try {
+        // verify and decodify the token...
+        const decoded: any = jwt.verify(token, SERVER.KEY);
+
+        // return the required data...
+        return decoded[field] || null;
+    } catch (error: any) {
+        logging.error(`Error decoding token: ${error.message}`);
+        return null;
+    }
+}
+
+export { generateJwToken, extractJwtInfo };
